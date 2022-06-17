@@ -106,6 +106,7 @@ async function linkAllPkgsInOrder (
         filesResponse,
         force: opts.force || depNode.depPath !== prevGraph[dir]?.depPath,
         targetEngine,
+        requiresBuild: depNode.requiresBuild,
       })
       if (importMethod) {
         progressLogger.debug({

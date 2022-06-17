@@ -21,14 +21,17 @@ export type PackageFilesResponse = {
   filesIndex: Record<string, PackageFileInfo>
 })
 
+export interface ImportPackageOpts {
+  patchPath?: string
+  requiresBuild?: boolean
+  targetEngine?: string
+  filesResponse: PackageFilesResponse
+  force: boolean
+}
+
 export type ImportPackageFunction = (
   to: string,
-  opts: {
-    patchPath?: string
-    targetEngine?: string
-    filesResponse: PackageFilesResponse
-    force: boolean
-  }
+  opts: ImportPackageOpts
 ) => Promise<{ isBuilt: boolean, importMethod: undefined | string }>
 
 export interface Cafs {
