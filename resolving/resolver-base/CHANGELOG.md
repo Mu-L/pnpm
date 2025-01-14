@@ -1,5 +1,178 @@
 # @pnpm/resolver-base
 
+## 1000.1.1
+
+### Patch Changes
+
+- Updated dependencies [9591a18]
+  - @pnpm/types@1000.1.0
+
+## 1000.1.0
+
+### Minor Changes
+
+- 6483b64: A new setting, `inject-workspace-packages`, has been added to allow hard-linking all local workspace dependencies instead of symlinking them. Previously, this behavior was achievable via the [`dependenciesMeta[].injected`](https://pnpm.io/package_json#dependenciesmetainjected) setting, which remains supported [#8836](https://github.com/pnpm/pnpm/pull/8836).
+
+## 13.0.4
+
+### Patch Changes
+
+- Updated dependencies [d500d9f]
+  - @pnpm/types@12.2.0
+
+## 13.0.3
+
+### Patch Changes
+
+- Updated dependencies [7ee59a1]
+  - @pnpm/types@12.1.0
+
+## 13.0.2
+
+### Patch Changes
+
+- Updated dependencies [cb006df]
+  - @pnpm/types@12.0.0
+
+## 13.0.1
+
+### Patch Changes
+
+- Updated dependencies [0ef168b]
+  - @pnpm/types@11.1.0
+
+## 13.0.0
+
+### Major Changes
+
+- dd00eeb: Renamed dir to rootDir in the Project object.
+
+### Patch Changes
+
+- Updated dependencies [dd00eeb]
+- Updated dependencies
+  - @pnpm/types@11.0.0
+
+## 12.0.2
+
+### Patch Changes
+
+- Updated dependencies [13e55b2]
+  - @pnpm/types@10.1.1
+
+## 12.0.1
+
+### Patch Changes
+
+- Updated dependencies [45f4262]
+  - @pnpm/types@10.1.0
+
+## 12.0.0
+
+### Major Changes
+
+- 43cdd87: Node.js v16 support dropped. Use at least Node.js v18.12.
+
+### Minor Changes
+
+- b13d2dc: It is now possible to install only a subdirectory from a Git repository.
+
+  For example, `pnpm add github:user/repo#path:packages/foo` will add a dependency from the `packages/foo` subdirectory.
+
+  This new parameter may be combined with other supported parameters separated by `&`. For instance, the next command will install the same package from the `dev` branch: `pnpm add github:user/repo#dev&path:packages/bar`.
+
+  Related issue: [#4765](https://github.com/pnpm/pnpm/issues/4765).
+  Related PR: [#7487](https://github.com/pnpm/pnpm/pull/7487).
+
+### Patch Changes
+
+- Updated dependencies [7733f3a]
+- Updated dependencies [43cdd87]
+- Updated dependencies [730929e]
+  - @pnpm/types@10.0.0
+
+## 11.1.0
+
+### Minor Changes
+
+- 31054a63e: Running `pnpm update -r --latest` will no longer downgrade prerelease dependencies [#7436](https://github.com/pnpm/pnpm/issues/7436).
+
+## 11.0.2
+
+### Patch Changes
+
+- Updated dependencies [4d34684f1]
+  - @pnpm/types@9.4.2
+
+## 11.0.1
+
+### Patch Changes
+
+- Updated dependencies
+  - @pnpm/types@9.4.1
+
+## 11.0.0
+
+### Major Changes
+
+- 4c2450208: (Important) Tarball resolutions in `pnpm-lock.yaml` will no longer contain a `registry` field. This field has been unused for a long time. This change should not cause any issues besides backward compatible modifications to the lockfile [#7262](https://github.com/pnpm/pnpm/pull/7262).
+
+## 10.0.4
+
+### Patch Changes
+
+- Updated dependencies [43ce9e4a6]
+  - @pnpm/types@9.4.0
+
+## 10.0.3
+
+### Patch Changes
+
+- Updated dependencies [d774a3196]
+  - @pnpm/types@9.3.0
+
+## 10.0.2
+
+### Patch Changes
+
+- Updated dependencies [aa2ae8fe2]
+  - @pnpm/types@9.2.0
+
+## 10.0.1
+
+### Patch Changes
+
+- Updated dependencies [a9e0b7cbf]
+  - @pnpm/types@9.1.0
+
+## 10.0.0
+
+### Major Changes
+
+- eceaa8b8b: Node.js 14 support dropped.
+
+### Patch Changes
+
+- Updated dependencies [eceaa8b8b]
+  - @pnpm/types@9.0.0
+
+## 9.2.0
+
+### Minor Changes
+
+- 029143cff: Version selectors may have weights optionally.
+
+### Patch Changes
+
+- 029143cff: When resolving dependencies, prefer versions that are already used in the root of the project. This is important to minimize the number of packages that will be nested during hoisting [#6054](https://github.com/pnpm/pnpm/pull/6054).
+
+## 9.1.5
+
+### Patch Changes
+
+- Updated dependencies [b77651d14]
+  - @pnpm/types@8.10.0
+
 ## 9.1.4
 
 ### Patch Changes

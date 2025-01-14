@@ -29,18 +29,19 @@ export async function linkDirectDeps (
   opts: {
     dedupe: boolean
   }
-) {
+): Promise<number> {
   if (opts.dedupe && projects['.'] && Object.keys(projects).length > 1) {
     return linkDirectDepsAndDedupe(projects['.'], omit(['.'], projects))
   }
-  await Promise.all(Object.values(projects).map(linkDirectDepsOfProject))
+  const numberOfLinkedDeps = await Promise.all(Object.values(projects).map(linkDirectDepsOfProject))
+  return numberOfLinkedDeps.reduce((sum, count) => sum + count, 0)
 }
 
 async function linkDirectDepsAndDedupe (
   rootProject: ProjectToLink,
   projects: Record<string, ProjectToLink>
-) {
-  await linkDirectDepsOfProject(rootProject)
+): Promise<number> {
+  const linkedDeps = await linkDirectDepsOfProject(rootProject)
   const pkgsLinkedToRoot = await readLinkedDeps(rootProject.modulesDir)
   await Promise.all(
     Object.values(projects).map(async (project) => {
@@ -58,13 +59,14 @@ async function linkDirectDepsAndDedupe (
       }
     })
   )
+  return linkedDeps
 }
 
-function omitDepsFromRoot (deps: LinkedDirectDep[], pkgsLinkedToRoot: string[]) {
+function omitDepsFromRoot (deps: LinkedDirectDep[], pkgsLinkedToRoot: string[]): LinkedDirectDep[] {
   return deps.filter(({ dir }) => !pkgsLinkedToRoot.some(pathsEqual.bind(null, dir)))
 }
 
-function pathsEqual (path1: string, path2: string) {
+function pathsEqual (path1: string, path2: string): boolean {
   return path.relative(path1, path2) === ''
 }
 
@@ -81,7 +83,7 @@ async function deletePkgsPresentInRoot (
 ): Promise<boolean> {
   const pkgsLinkedToCurrentProject = await readLinkedDepsWithRealLocations(modulesDir)
   const pkgsToDelete = pkgsLinkedToCurrentProject
-    .filter(({ linkedFrom }) => pkgsLinkedToRoot.some(pathsEqual.bind(null, linkedFrom)))
+    .filter(({ linkedFrom, linkedTo }) => linkedFrom !== linkedTo && pkgsLinkedToRoot.some(pathsEqual.bind(null, linkedFrom)))
   await Promise.all(pkgsToDelete.map(({ linkedTo }) => fs.promises.unlink(linkedTo)))
   return pkgsToDelete.length === pkgsLinkedToCurrentProject.length
 }
@@ -97,7 +99,7 @@ async function readLinkedDepsWithRealLocations (modulesDir: string) {
   }))
 }
 
-async function resolveLinkTargetOrFile (filePath: string) {
+async function resolveLinkTargetOrFile (filePath: string): Promise<string> {
   try {
     return await resolveLinkTarget(filePath)
   } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -106,7 +108,8 @@ async function resolveLinkTargetOrFile (filePath: string) {
   }
 }
 
-async function linkDirectDepsOfProject (project: ProjectToLink) {
+async function linkDirectDepsOfProject (project: ProjectToLink): Promise<number> {
+  let linkedDeps = 0
   await Promise.all(project.dependencies.map(async (dep) => {
     if (dep.isExternalLink) {
       await symlinkDirectRootDependency(dep.dir, project.modulesDir, dep.alias, {
@@ -135,5 +138,7 @@ async function linkDirectDepsOfProject (project: ProjectToLink) {
       },
       prefix: project.dir,
     })
+    linkedDeps++
   }))
+  return linkedDeps
 }

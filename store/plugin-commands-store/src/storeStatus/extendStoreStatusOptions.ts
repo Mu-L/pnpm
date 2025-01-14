@@ -1,14 +1,15 @@
 import path from 'path'
 import { normalizeRegistries, DEFAULT_REGISTRIES } from '@pnpm/normalize-registries'
-import { Registries } from '@pnpm/types'
-import { ReporterFunction } from '../types'
+import { type Registries } from '@pnpm/types'
+import { type ReporterFunction } from '../types'
 
 export interface StrictStoreStatusOptions {
+  autoInstallPeers: boolean
+  excludeLinksFromLockfile: boolean
   lockfileDir: string
   dir: string
   storeDir: string
   force: boolean
-  forceSharedLockfile: boolean
   nodeLinker: 'isolated' | 'hoisted' | 'pnp'
   useLockfile: boolean
   registries: Registries
@@ -19,19 +20,20 @@ export interface StrictStoreStatusOptions {
   development: boolean
   optional: boolean
   binsDir: string
+  virtualStoreDirMaxLength: number
+  peersSuffixMaxLength: number
 }
 
 export type StoreStatusOptions = Partial<StrictStoreStatusOptions> &
-Pick<StrictStoreStatusOptions, 'storeDir'>
+Pick<StrictStoreStatusOptions, 'storeDir' | 'virtualStoreDirMaxLength'>
 
-const defaults = async (opts: StoreStatusOptions) => {
+const defaults = async (opts: StoreStatusOptions): Promise<StrictStoreStatusOptions> => {
   const dir = opts.dir ?? process.cwd()
   const lockfileDir = opts.lockfileDir ?? dir
   return {
     binsDir: path.join(dir, 'node_modules', '.bin'),
     dir,
     force: false,
-    forceSharedLockfile: false,
     lockfileDir,
     nodeLinker: 'isolated',
     registries: DEFAULT_REGISTRIES,
@@ -46,8 +48,8 @@ export async function extendStoreStatusOptions (
 ): Promise<StrictStoreStatusOptions> {
   if (opts) {
     for (const key in opts) {
-      if (opts[key] === undefined) {
-        delete opts[key]
+      if (opts[key as keyof StoreStatusOptions] === undefined) {
+        delete opts[key as keyof StoreStatusOptions]
       }
     }
   }

@@ -1,5 +1,363 @@
 # @pnpm/real-hoist
 
+## 1001.0.1
+
+### Patch Changes
+
+- @pnpm/lockfile.utils@1001.0.1
+- @pnpm/dependency-path@1000.0.1
+
+## 1001.0.0
+
+### Major Changes
+
+- a76da0c: Removed lockfile conversion from v6 to v9. If you need to convert lockfile v6 to v9, use pnpm CLI v9.
+
+### Patch Changes
+
+- Updated dependencies [a76da0c]
+  - @pnpm/lockfile.utils@1001.0.0
+  - @pnpm/error@1000.0.1
+
+## 3.0.15
+
+### Patch Changes
+
+- Updated dependencies [dcd2917]
+- Updated dependencies [d55b259]
+  - @pnpm/dependency-path@6.0.0
+  - @pnpm/error@6.0.3
+  - @pnpm/lockfile.utils@1.0.5
+
+## 3.0.14
+
+### Patch Changes
+
+- @pnpm/dependency-path@5.1.7
+- @pnpm/lockfile.utils@1.0.4
+
+## 3.0.13
+
+### Patch Changes
+
+- @pnpm/error@6.0.2
+
+## 3.0.12
+
+### Patch Changes
+
+- @pnpm/lockfile.utils@1.0.3
+- @pnpm/dependency-path@5.1.6
+
+## 3.0.11
+
+### Patch Changes
+
+- @pnpm/lockfile.utils@1.0.2
+- @pnpm/dependency-path@5.1.5
+
+## 3.0.10
+
+### Patch Changes
+
+- @pnpm/lockfile.utils@1.0.1
+- @pnpm/dependency-path@5.1.4
+
+## 3.0.9
+
+### Patch Changes
+
+- Updated dependencies [c5ef9b0]
+  - @pnpm/lockfile.utils@1.0.0
+
+## 3.0.8
+
+### Patch Changes
+
+- @pnpm/lockfile-utils@11.0.4
+- @pnpm/dependency-path@5.1.3
+
+## 3.0.7
+
+### Patch Changes
+
+- @pnpm/lockfile-utils@11.0.3
+- @pnpm/dependency-path@5.1.2
+
+## 3.0.6
+
+### Patch Changes
+
+- @pnpm/lockfile-utils@11.0.2
+- @pnpm/dependency-path@5.1.1
+
+## 3.0.5
+
+### Patch Changes
+
+- Updated dependencies [47341e5]
+  - @pnpm/dependency-path@5.1.0
+  - @pnpm/lockfile-utils@11.0.1
+
+## 3.0.4
+
+### Patch Changes
+
+- Updated dependencies
+  - @pnpm/lockfile-utils@11.0.0
+  - @pnpm/dependency-path@5.0.0
+
+## 3.0.3
+
+### Patch Changes
+
+- Updated dependencies [a7aef51]
+  - @pnpm/error@6.0.1
+
+## 3.0.2
+
+### Patch Changes
+
+- Updated dependencies [7a0536e]
+  - @pnpm/lockfile-utils@10.1.1
+
+## 3.0.1
+
+### Patch Changes
+
+- Updated dependencies [9719a42]
+  - @pnpm/dependency-path@4.0.0
+  - @pnpm/lockfile-utils@10.1.0
+
+## 3.0.0
+
+### Major Changes
+
+- 43cdd87: Node.js v16 support dropped. Use at least Node.js v18.12.
+
+### Patch Changes
+
+- Updated dependencies [3ded840]
+- Updated dependencies [cdd8365]
+- Updated dependencies [89b396b]
+- Updated dependencies [43cdd87]
+- Updated dependencies [d381a60]
+- Updated dependencies [98a1266]
+  - @pnpm/error@6.0.0
+  - @pnpm/dependency-path@3.0.0
+  - @pnpm/lockfile-utils@10.0.0
+
+## 2.0.19
+
+### Patch Changes
+
+- @pnpm/lockfile-utils@9.0.5
+
+## 2.0.18
+
+### Patch Changes
+
+- @pnpm/lockfile-utils@9.0.4
+- @pnpm/dependency-path@2.1.7
+
+## 2.0.17
+
+### Patch Changes
+
+- @pnpm/lockfile-utils@9.0.3
+- @pnpm/dependency-path@2.1.6
+
+## 2.0.16
+
+### Patch Changes
+
+- Updated dependencies [d5a176af7]
+  - @pnpm/lockfile-utils@9.0.2
+
+## 2.0.15
+
+### Patch Changes
+
+- b4194fe52: Fixed out-of-memory exception that was happening on dependencies with many peer dependencies, when `node-linker` was set to `hoisted` [#6227](https://github.com/pnpm/pnpm/issues/6227).
+- Updated dependencies [b4194fe52]
+  - @pnpm/lockfile-utils@9.0.1
+
+## 2.0.14
+
+### Patch Changes
+
+- Updated dependencies [4c2450208]
+  - @pnpm/lockfile-utils@9.0.0
+
+## 2.0.13
+
+### Patch Changes
+
+- @pnpm/lockfile-utils@8.0.7
+- @pnpm/dependency-path@2.1.5
+
+## 2.0.12
+
+### Patch Changes
+
+- @pnpm/lockfile-utils@8.0.6
+- @pnpm/dependency-path@2.1.4
+
+## 2.0.11
+
+### Patch Changes
+
+- Updated dependencies [f394cfccd]
+  - @pnpm/lockfile-utils@8.0.5
+
+## 2.0.10
+
+### Patch Changes
+
+- Updated dependencies [e9aa6f682]
+  - @pnpm/lockfile-utils@8.0.4
+
+## 2.0.9
+
+### Patch Changes
+
+- @pnpm/lockfile-utils@8.0.3
+- @pnpm/dependency-path@2.1.3
+
+## 2.0.8
+
+### Patch Changes
+
+- 59aba9e72: Peer dependencies of subdependencies should be installed, when `node-linker` is set to `hoisted` [#6680](https://github.com/pnpm/pnpm/pull/6680).
+
+## 2.0.7
+
+### Patch Changes
+
+- Updated dependencies [d9da627cd]
+  - @pnpm/lockfile-utils@8.0.2
+  - @pnpm/error@5.0.2
+
+## 2.0.6
+
+### Patch Changes
+
+- d55b41a8b: Dependencies have been updated.
+
+## 2.0.5
+
+### Patch Changes
+
+- @pnpm/lockfile-utils@8.0.1
+- @pnpm/dependency-path@2.1.2
+- @pnpm/error@5.0.1
+
+## 2.0.4
+
+### Patch Changes
+
+- Updated dependencies [d58cdb962]
+  - @pnpm/lockfile-utils@8.0.0
+
+## 2.0.3
+
+### Patch Changes
+
+- Updated dependencies [c0760128d]
+  - @pnpm/dependency-path@2.1.1
+  - @pnpm/lockfile-utils@7.0.1
+
+## 2.0.2
+
+### Patch Changes
+
+- e440d784f: Update yarn dependencies.
+- Updated dependencies [72ba638e3]
+  - @pnpm/lockfile-utils@7.0.0
+
+## 2.0.1
+
+### Patch Changes
+
+- Updated dependencies [5087636b6]
+- Updated dependencies [94f94eed6]
+  - @pnpm/dependency-path@2.1.0
+  - @pnpm/lockfile-utils@6.0.1
+
+## 2.0.0
+
+### Major Changes
+
+- eceaa8b8b: Node.js 14 support dropped.
+
+### Patch Changes
+
+- Updated dependencies [c92936158]
+- Updated dependencies [ca8f51e60]
+- Updated dependencies [eceaa8b8b]
+- Updated dependencies [0e26acb0f]
+  - @pnpm/lockfile-utils@6.0.0
+  - @pnpm/dependency-path@2.0.0
+  - @pnpm/error@5.0.0
+
+## 1.1.6
+
+### Patch Changes
+
+- @pnpm/lockfile-utils@5.0.7
+
+## 1.1.5
+
+### Patch Changes
+
+- Updated dependencies [d89d7a078]
+  - @pnpm/dependency-path@1.1.3
+  - @pnpm/lockfile-utils@5.0.6
+
+## 1.1.4
+
+### Patch Changes
+
+- Updated dependencies [9247f6781]
+  - @pnpm/dependency-path@1.1.2
+  - @pnpm/lockfile-utils@5.0.5
+
+## 1.1.3
+
+### Patch Changes
+
+- Updated dependencies [0f6e95872]
+  - @pnpm/dependency-path@1.1.1
+  - @pnpm/lockfile-utils@5.0.4
+
+## 1.1.2
+
+### Patch Changes
+
+- Updated dependencies [3ebce5db7]
+  - @pnpm/dependency-path@1.1.0
+  - @pnpm/error@4.0.1
+  - @pnpm/lockfile-utils@5.0.3
+
+## 1.1.1
+
+### Patch Changes
+
+- @pnpm/lockfile-utils@5.0.2
+- @pnpm/dependency-path@1.0.1
+
+## 1.1.0
+
+### Minor Changes
+
+- 450e0b1d1: A new option added for avoiding hoisting some dependencies to the root of `node_modules`: `externalDependencies`. This option is a set of dependency names that were added to `node_modules` by another tool. pnpm doesn't have information about these dependencies but they shouldn't be overwritten by hoisted dependencies.
+
+### Patch Changes
+
+- Updated dependencies [313702d76]
+  - @pnpm/dependency-path@1.0.0
+  - @pnpm/lockfile-utils@5.0.1
+
 ## 1.0.4
 
 ### Patch Changes

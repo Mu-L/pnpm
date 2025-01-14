@@ -1,4 +1,4 @@
-import { Config } from '@pnpm/config'
+import { type Config } from '@pnpm/config'
 import { updateCheckLogger } from '@pnpm/core-loggers'
 import { toOutput$ } from '@pnpm/default-reporter'
 import { createStreamParser } from '@pnpm/logger'
@@ -67,6 +67,37 @@ test('print update notification for Corepack if the latest version is greater th
       env: {
         COREPACK_ROOT: '/usr/bin/corepack',
       },
+    },
+    streamParser: createStreamParser(),
+  })
+
+  updateCheckLogger.debug({
+    currentVersion: '10.0.0',
+    latestVersion: '11.0.0',
+  })
+
+  expect.assertions(1)
+
+  output$.pipe(take(1)).subscribe({
+    complete: () => done(),
+    error: done,
+    next: output => {
+      expect(stripAnsi(output)).toMatchSnapshot()
+    },
+  })
+})
+
+test('print update notification that suggests to use the standalone scripts for the upgrade', (done) => {
+  const output$ = toOutput$({
+    context: {
+      argv: ['install'],
+      config: { recursive: true } as Config,
+      env: {
+        PNPM_HOME: '/home/user/.local/share/pnpm',
+      },
+      process: {
+        pkg: true,
+      } as any, // eslint-disable-line
     },
     streamParser: createStreamParser(),
   })

@@ -1,5 +1,312 @@
 # @pnpm/assert-store
 
+## 2.0.3
+
+### Patch Changes
+
+- @pnpm/store.cafs@1000.0.3
+
+## 2.0.2
+
+### Patch Changes
+
+- @pnpm/store.cafs@1000.0.2
+
+## 2.0.1
+
+### Patch Changes
+
+- @pnpm/store.cafs@1000.0.1
+
+## 2.0.0
+
+### Major Changes
+
+- d433cb9: Some registries allow identical content to be published under different package names or versions. To accommodate this, index files in the store are now stored using both the content hash and package identifier.
+
+  This approach ensures that we can:
+
+  1. Validate that the integrity in the lockfile corresponds to the correct package,
+     which might not be the case after a poorly resolved Git conflict.
+  2. Allow the same content to be referenced by different packages or different versions of the same package.
+
+  Related PR: [#8510](https://github.com/pnpm/pnpm/pull/8510)
+  Related issue: [#8204](https://github.com/pnpm/pnpm/issues/8204)
+
+### Patch Changes
+
+- Updated dependencies [d433cb9]
+- Updated dependencies [099e6af]
+  - @pnpm/store.cafs@5.0.0
+
+## 1.0.92
+
+### Patch Changes
+
+- Updated dependencies [a1f4df2]
+  - @pnpm/store.cafs@4.0.2
+
+## 1.0.91
+
+### Patch Changes
+
+- Updated dependencies [db7ff76]
+  - @pnpm/store.cafs@4.0.1
+
+## 1.0.90
+
+### Patch Changes
+
+- Updated dependencies [db420ab]
+  - @pnpm/store.cafs@4.0.0
+
+## 1.0.89
+
+### Patch Changes
+
+- @pnpm/store.cafs@3.0.8
+
+## 1.0.88
+
+### Patch Changes
+
+- @pnpm/store.cafs@3.0.7
+
+## 1.0.87
+
+### Patch Changes
+
+- @pnpm/store.cafs@3.0.6
+
+## 1.0.86
+
+### Patch Changes
+
+- Updated dependencies [afe520d]
+- Updated dependencies [afe520d]
+  - @pnpm/store.cafs@3.0.5
+
+## 1.0.85
+
+### Patch Changes
+
+- @pnpm/store.cafs@3.0.4
+
+## 1.0.84
+
+### Patch Changes
+
+- @pnpm/store.cafs@3.0.3
+
+## 1.0.83
+
+### Patch Changes
+
+- @pnpm/store.cafs@3.0.2
+
+## 1.0.82
+
+### Patch Changes
+
+- @pnpm/store.cafs@3.0.1
+
+## 1.0.81
+
+### Patch Changes
+
+- Updated dependencies [43cdd87]
+- Updated dependencies [6cdbf11]
+- Updated dependencies [36dcaa0]
+- Updated dependencies [730929e]
+  - @pnpm/store.cafs@3.0.0
+
+## 1.0.80
+
+### Patch Changes
+
+- @pnpm/store.cafs@2.0.12
+
+## 1.0.79
+
+### Patch Changes
+
+- Updated dependencies [33313d2fd]
+  - @pnpm/store.cafs@2.0.11
+
+## 1.0.78
+
+### Patch Changes
+
+- @pnpm/store.cafs@2.0.10
+
+## 1.0.77
+
+### Patch Changes
+
+- @pnpm/store.cafs@2.0.9
+
+## 1.0.76
+
+### Patch Changes
+
+- @pnpm/store.cafs@2.0.8
+
+## 1.0.75
+
+### Patch Changes
+
+- @pnpm/store.cafs@2.0.7
+
+## 1.0.74
+
+### Patch Changes
+
+- Updated dependencies [01bc58e2c]
+  - @pnpm/store.cafs@2.0.6
+
+## 1.0.73
+
+### Patch Changes
+
+- @pnpm/store.cafs@2.0.5
+
+## 1.0.72
+
+### Patch Changes
+
+- @pnpm/store.cafs@2.0.4
+
+## 1.0.71
+
+### Patch Changes
+
+- @pnpm/store.cafs@2.0.3
+
+## 1.0.70
+
+### Patch Changes
+
+- Updated dependencies [b3947185c]
+  - @pnpm/store.cafs@2.0.2
+
+## 1.0.69
+
+### Patch Changes
+
+- Updated dependencies [b548f2f43]
+  - @pnpm/store.cafs@2.0.1
+
+## 1.0.68
+
+### Patch Changes
+
+- Updated dependencies [0fd9e6a6c]
+- Updated dependencies [083bbf590]
+  - @pnpm/store.cafs@2.0.0
+
+## 1.0.67
+
+### Patch Changes
+
+- Updated dependencies [73f2b6826]
+  - @pnpm/store.cafs@1.0.2
+
+## 1.0.66
+
+### Patch Changes
+
+- Updated dependencies [fe1c5f48d]
+  - @pnpm/store.cafs@1.0.1
+
+## 1.0.65
+
+### Patch Changes
+
+- Updated dependencies [4bbf482d1]
+  - @pnpm/store.cafs@1.0.0
+
+## 1.0.64
+
+### Patch Changes
+
+- Updated dependencies [250f7e9fe]
+- Updated dependencies [e958707b2]
+  - @pnpm/cafs@7.0.5
+
+## 1.0.63
+
+### Patch Changes
+
+- Updated dependencies [b81cefdcd]
+  - @pnpm/cafs@7.0.4
+
+## 1.0.62
+
+### Patch Changes
+
+- Updated dependencies [e57e2d340]
+  - @pnpm/cafs@7.0.3
+
+## 1.0.61
+
+### Patch Changes
+
+- Updated dependencies [d55b41a8b]
+- Updated dependencies [614d5bd72]
+  - @pnpm/cafs@7.0.2
+
+## 1.0.60
+
+### Patch Changes
+
+- @pnpm/cafs@7.0.1
+
+## 1.0.59
+
+### Patch Changes
+
+- Updated dependencies [eceaa8b8b]
+  - @pnpm/cafs@7.0.0
+
+## 1.0.58
+
+### Patch Changes
+
+- @pnpm/cafs@6.0.2
+
+## 1.0.57
+
+### Patch Changes
+
+- @pnpm/cafs@6.0.1
+
+## 1.0.56
+
+### Patch Changes
+
+- Updated dependencies [98d6603f3]
+- Updated dependencies [98d6603f3]
+  - @pnpm/cafs@6.0.0
+
+## 1.0.55
+
+### Patch Changes
+
+- Updated dependencies [1e6de89b6]
+  - @pnpm/cafs@5.0.6
+
+## 1.0.54
+
+### Patch Changes
+
+- @pnpm/cafs@5.0.5
+
+## 1.0.53
+
+### Patch Changes
+
+- @pnpm/cafs@5.0.4
+
 ## 1.0.52
 
 ### Patch Changes

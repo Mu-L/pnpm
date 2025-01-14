@@ -1,5 +1,270 @@
 # @pnpm/exportable-manifest
 
+## 1000.0.4
+
+### Patch Changes
+
+- Updated dependencies [e050221]
+  - @pnpm/read-project-manifest@1000.0.3
+
+## 1000.0.3
+
+### Patch Changes
+
+- Updated dependencies [9591a18]
+  - @pnpm/types@1000.1.0
+  - @pnpm/read-project-manifest@1000.0.2
+
+## 1000.0.2
+
+### Patch Changes
+
+- 738d9e4: Fixed `publish`/`pack` error with workspace dependencies with relative paths [#8904](https://github.com/pnpm/pnpm/pull/8904). It was broken in `v9.4.0` ([398472c](https://github.com/pnpm/pnpm/commit/398472c)).
+
+## 1000.0.1
+
+### Patch Changes
+
+- @pnpm/error@1000.0.1
+- @pnpm/catalogs.resolver@1000.0.1
+- @pnpm/read-project-manifest@1000.0.1
+
+## 7.0.7
+
+### Patch Changes
+
+- @pnpm/error@6.0.3
+- @pnpm/catalogs.resolver@0.1.2
+- @pnpm/read-project-manifest@6.0.10
+
+## 7.0.6
+
+### Patch Changes
+
+- @pnpm/error@6.0.2
+- @pnpm/catalogs.resolver@0.1.1
+- @pnpm/read-project-manifest@6.0.9
+
+## 7.0.5
+
+### Patch Changes
+
+- Updated dependencies [d500d9f]
+  - @pnpm/types@12.2.0
+  - @pnpm/read-project-manifest@6.0.8
+
+## 7.0.4
+
+### Patch Changes
+
+- Updated dependencies [7ee59a1]
+  - @pnpm/types@12.1.0
+  - @pnpm/read-project-manifest@6.0.7
+
+## 7.0.3
+
+### Patch Changes
+
+- ecbe2ea: Replace semver in "peerDependency" with workspace protocol [#8355](https://github.com/pnpm/pnpm/issues/8355).
+
+## 7.0.2
+
+### Patch Changes
+
+- Updated dependencies [cb006df]
+  - @pnpm/types@12.0.0
+  - @pnpm/read-project-manifest@6.0.6
+
+## 7.0.1
+
+### Patch Changes
+
+- Updated dependencies [0ef168b]
+  - @pnpm/types@11.1.0
+  - @pnpm/read-project-manifest@6.0.5
+
+## 7.0.0
+
+### Major Changes
+
+- 9c63679: Creating an exportable manifest now requires a `Catalog` object to be passed to `createExportableManifest` in order to replace `catalog:` protocol specifiers.
+
+### Patch Changes
+
+- Updated dependencies [dd00eeb]
+- Updated dependencies
+  - @pnpm/types@11.0.0
+  - @pnpm/read-project-manifest@6.0.4
+
+## 6.1.0
+
+### Minor Changes
+
+- 398472c: Handle workspace protocol with any semver range specifier, when used in peer dependencies [#7578](https://github.com/pnpm/pnpm/issues/7578).
+
+### Patch Changes
+
+- Updated dependencies [13e55b2]
+  - @pnpm/types@10.1.1
+  - @pnpm/read-project-manifest@6.0.3
+
+## 6.0.2
+
+### Patch Changes
+
+- Updated dependencies [45f4262]
+  - @pnpm/types@10.1.0
+  - @pnpm/read-project-manifest@6.0.2
+
+## 6.0.1
+
+### Patch Changes
+
+- Updated dependencies [a7aef51]
+  - @pnpm/error@6.0.1
+  - @pnpm/read-project-manifest@6.0.1
+
+## 6.0.0
+
+### Major Changes
+
+- 43cdd87: Node.js v16 support dropped. Use at least Node.js v18.12.
+- 3477ee5: pnpm will now check the `package.json` file for a `packageManager` field. If this field is present and specifies a different package manager or a different version of pnpm than the one you're currently using, pnpm will not proceed. This ensures that you're always using the correct package manager and version that the project requires.
+
+  To disable this behaviour, set the `package-manager-strict` setting to `false` or the `COREPACK_ENABLE_STRICT` env variable to `0`.
+
+### Patch Changes
+
+- Updated dependencies [7733f3a]
+- Updated dependencies [3ded840]
+- Updated dependencies [43cdd87]
+- Updated dependencies [730929e]
+  - @pnpm/types@10.0.0
+  - @pnpm/error@6.0.0
+  - @pnpm/read-project-manifest@6.0.0
+
+## 5.0.11
+
+### Patch Changes
+
+- Updated dependencies [4d34684f1]
+  - @pnpm/types@9.4.2
+  - @pnpm/read-project-manifest@5.0.10
+
+## 5.0.10
+
+### Patch Changes
+
+- Updated dependencies
+  - @pnpm/types@9.4.1
+  - @pnpm/read-project-manifest@5.0.9
+
+## 5.0.9
+
+### Patch Changes
+
+- Updated dependencies [43ce9e4a6]
+  - @pnpm/types@9.4.0
+  - @pnpm/read-project-manifest@5.0.8
+
+## 5.0.8
+
+### Patch Changes
+
+- Updated dependencies [d774a3196]
+  - @pnpm/types@9.3.0
+  - @pnpm/read-project-manifest@5.0.7
+
+## 5.0.7
+
+### Patch Changes
+
+- @pnpm/read-project-manifest@5.0.6
+
+## 5.0.6
+
+### Patch Changes
+
+- e9aa6f682: Apply fixes from @typescript-eslint v6 for nullish coalescing and optional chains. No behavior changes are expected with this change.
+  - @pnpm/read-project-manifest@5.0.5
+
+## 5.0.5
+
+### Patch Changes
+
+- Updated dependencies [aa2ae8fe2]
+  - @pnpm/types@9.2.0
+  - @pnpm/read-project-manifest@5.0.4
+
+## 5.0.4
+
+### Patch Changes
+
+- Updated dependencies [b4892acc5]
+  - @pnpm/read-project-manifest@5.0.3
+
+## 5.0.3
+
+### Patch Changes
+
+- @pnpm/error@5.0.2
+- @pnpm/read-project-manifest@5.0.2
+
+## 5.0.2
+
+### Patch Changes
+
+- 4b97f1f07: Don't use await in loops.
+
+## 5.0.1
+
+### Patch Changes
+
+- Updated dependencies [a9e0b7cbf]
+  - @pnpm/types@9.1.0
+  - @pnpm/read-project-manifest@5.0.1
+  - @pnpm/error@5.0.1
+
+## 5.0.0
+
+### Major Changes
+
+- eceaa8b8b: Node.js 14 support dropped.
+
+### Patch Changes
+
+- Updated dependencies [eceaa8b8b]
+  - @pnpm/read-project-manifest@5.0.0
+  - @pnpm/error@5.0.0
+  - @pnpm/types@9.0.0
+
+## 4.0.8
+
+### Patch Changes
+
+- @pnpm/read-project-manifest@4.1.4
+
+## 4.0.7
+
+### Patch Changes
+
+- b71c6ed74: Fix version number replacing for namespaced workspace packages. `workspace:@foo/bar@*` should be replaced with `npm:@foo/bar@<version>` on publish [#6052](https://github.com/pnpm/pnpm/pull/6052).
+
+## 4.0.6
+
+### Patch Changes
+
+- @pnpm/error@4.0.1
+- @pnpm/read-project-manifest@4.1.3
+
+## 4.0.5
+
+### Patch Changes
+
+- Updated dependencies [b77651d14]
+  - @pnpm/types@8.10.0
+  - @pnpm/read-project-manifest@4.1.2
+
 ## 4.0.4
 
 ### Patch Changes

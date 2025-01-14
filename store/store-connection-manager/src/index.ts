@@ -1,14 +1,15 @@
+// cspell:ignore noent
 import { promises as fs } from 'fs'
 import path from 'path'
 import { packageManager } from '@pnpm/cli-meta'
-import { Config } from '@pnpm/config'
+import { type Config } from '@pnpm/config'
 import { PnpmError } from '@pnpm/error'
 import { logger } from '@pnpm/logger'
-import { StoreController } from '@pnpm/package-store'
+import { type StoreController } from '@pnpm/package-store'
 import { connectStoreController } from '@pnpm/server'
 import { getStorePath } from '@pnpm/store-path'
 import delay from 'delay'
-import { createNewStoreController, CreateNewStoreControllerOptions } from './createNewStoreController'
+import { createNewStoreController, type CreateNewStoreControllerOptions } from './createNewStoreController'
 import { runServerInBackground } from './runServerInBackground'
 import { serverConnectionInfoDir } from './serverConnectionInfoDir'
 
@@ -26,7 +27,7 @@ export type CreateStoreControllerOptions = Omit<CreateNewStoreControllerOptions,
 export async function createOrConnectStoreControllerCached (
   storeControllerCache: Map<string, Promise<{ ctrl: StoreController, dir: string }>>,
   opts: CreateStoreControllerOptions
-) {
+): Promise<{ ctrl: StoreController, dir: string }> {
   const storeDir = await getStorePath({
     pkgRoot: opts.dir,
     storePath: opts.storeDir,
@@ -102,6 +103,7 @@ export async function tryLoadServerJson (
   }> {
   let beforeFirstAttempt = true
   const startHRTime = process.hrtime()
+  /* eslint-disable no-await-in-loop */
   while (true) {
     if (!beforeFirstAttempt) {
       const elapsedHRTime = process.hrtime(startHRTime)
@@ -150,4 +152,5 @@ export async function tryLoadServerJson (
     }
     return serverJson
   }
+  /* eslint-enable no-await-in-loop */
 }

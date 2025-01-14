@@ -7,19 +7,22 @@ permissions:
 
 jobs:
   build:
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.platform }}-${{ matrix.node[0] }}
+      cancel-in-progress: true
+
     strategy:
       fail-fast: false
       matrix:
         node:
-          - '14.6'
-          - '16'
-          - '18'
-          - '19'
+          - [18, 12, 1]
+          - [20, 18, 1]
+          - [22, 12, 0]
         platform:
           - ubuntu-latest
           - windows-latest
 
-    name: '${{matrix.platform}} / Node.js ${{ matrix.node }}'
+    name: ${{matrix.platform}} / Node.js ${{ matrix.node[0] }}
     runs-on: ${{matrix.platform}}
 
     steps:
@@ -29,52 +32,43 @@ jobs:
         git config --global user.name "xyz"
         git config --global user.email "x@y.z"
     - name: Checkout Commit
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+      with:
+        lfs: true
     - name: Install pnpm
-      uses: pnpm/action-setup@v2.2.4
+      uses: pnpm/action-setup@v4.0.0
       with:
-        version: next-7
+        standalone: true
     - name: Setup Node
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node }}
-        cache: 'pnpm'
-    - name: Install npm@7
-      run: npm add --global npm@7
+      run: pnpm env use -g ${{ join(matrix.node, '.') }}
+      timeout-minutes: 1
+    - name: Install npm@8
+      run: pnpm add --global npm@8
+      timeout-minutes: 1
     - name: pnpm install
       run: pnpm install
-    - name: Audit
-      run: pnpm audit
-    - name: Cache TypeScript and Jest
-      uses: actions/cache@v3
-      with:
-        path: |
-          packages/*/lib
-          packages/*/tsconfig.tsbuildinfo
-          privatePackages/*/lib
-          privatePackages/*/tsconfig.tsbuildinfo
-          .jest-cache
-          .verdaccio-cache
-        key: ts-jest-${{ matrix.platform }}-${{ matrix.node }}-${{ github.run_id }}
-        restore-keys: ts-jest-${{ matrix.platform }}-${{ matrix.node }}-
+      timeout-minutes: 1
+    # - name: Cache TypeScript and Jest
+      # uses: actions/cache@v3
+      # with:
+        # path: |
+          # packages/*/lib
+          # packages/*/tsconfig.tsbuildinfo
+          # privatePackages/*/lib
+          # privatePackages/*/tsconfig.tsbuildinfo
+          # .jest-cache
+          # .verdaccio-cache
+        # key: ts-jest-${{ matrix.platform }}-${{ matrix.node }}-${{ github.run_id }}
+        # restore-keys: ts-jest-${{ matrix.platform }}-${{ matrix.node }}-
     - name: run tests (main)
-      if: github.ref == 'refs/heads/main'
+      timeout-minutes: 60
+      if: github.ref_name == 'main'
       run: pnpm run test-main
+      env:
+        PNPM_WORKERS: 3
     - name: run tests (branch)
-      if: github.ref != 'refs/heads/main'
+      timeout-minutes: 60
+      if: github.ref_name != 'main'
       run: pnpm run test-branch
-
-  # https://github.com/marketplace/actions/alls-green#why
-  check:  # This job does nothing and is only used for the branch protection
-    if: always()
-
-    needs:
-    - build
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Decide whether the needed jobs succeeded or failed
-      uses: re-actors/alls-green@release/v1
-      with:
-        jobs: ${{ toJSON(needs) }}
+      env:
+        PNPM_WORKERS: 3

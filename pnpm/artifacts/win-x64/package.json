@@ -1,6 +1,6 @@
 {
   "name": "@pnpm/win-x64",
-  "version": "7.18.0",
+  "version": "10.0.0",
   "license": "MIT",
   "publishConfig": {
     "bin": {
@@ -20,7 +20,7 @@
     "url": "https://github.com/pnpm/pnpm/issues"
   },
   "keywords": [
-    "pnpm7"
+    "pnpm10"
   ],
   "devDependencies": {
     "@pnpm/win-x64": "workspace:*"

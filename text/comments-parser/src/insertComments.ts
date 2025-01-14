@@ -1,12 +1,12 @@
-import { CommentSpecifier } from './CommentSpecifier'
+import { type CommentSpecifier } from './CommentSpecifier'
 
-export function insertComments (json: string, comments: CommentSpecifier[]) {
+export function insertComments (json: string, comments: CommentSpecifier[]): string {
   // We need to reintroduce the comments. So create an index of
   // the lines of the manifest so we can try to match them up.
   // We eliminate whitespace and quotes in the index entries,
   // because pnpm may have changed them.
   const jsonLines = json.split('\n')
-  const index = {}
+  const index: Record<string, number> = {}
   const canonicalizer = /[\s'"]/g
   for (let i = 0; i < jsonLines.length; ++i) {
     const key = jsonLines[i].replace(canonicalizer, '')

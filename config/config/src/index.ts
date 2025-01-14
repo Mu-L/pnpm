@@ -1,148 +1,83 @@
 import path from 'path'
 import fs from 'fs'
+import os from 'os'
+import { getCatalogsFromWorkspaceManifest } from '@pnpm/catalogs.config'
 import { LAYOUT_VERSION } from '@pnpm/constants'
 import { PnpmError } from '@pnpm/error'
 import loadNpmConf from '@pnpm/npm-conf'
-import npmTypes from '@pnpm/npm-conf/lib/types'
-import { requireHooks } from '@pnpm/pnpmfile'
+import type npmTypes from '@pnpm/npm-conf/lib/types'
 import { safeReadProjectManifestOnly } from '@pnpm/read-project-manifest'
 import { getCurrentBranch } from '@pnpm/git-utils'
 import { createMatcher } from '@pnpm/matcher'
+import betterPathResolve from 'better-path-resolve'
 import camelcase from 'camelcase'
 import isWindows from 'is-windows'
 import normalizeRegistryUrl from 'normalize-registry-url'
-import fromPairs from 'ramda/src/fromPairs'
 import realpathMissing from 'realpath-missing'
 import pathAbsolute from 'path-absolute'
 import which from 'which'
+import { inheritAuthConfig } from './auth'
 import { checkGlobalBinDir } from './checkGlobalBinDir'
-import { getScopeRegistries } from './getScopeRegistries'
+import { getNetworkConfigs } from './getNetworkConfigs'
 import { getCacheDir, getConfigDir, getDataDir, getStateDir } from './dirs'
 import {
-  Config,
-  ConfigWithDeprecatedSettings,
-  UniversalOptions,
+  type Config,
+  type ConfigWithDeprecatedSettings,
+  type UniversalOptions,
+  type VerifyDepsBeforeRun,
+  type WantedPackageManager,
 } from './Config'
 import { getWorkspaceConcurrency } from './concurrency'
+import { readWorkspaceManifest } from '@pnpm/workspace.read-manifest'
 
+import { types } from './types'
+export { types }
+
+export { getOptionsFromRootManifest, type OptionsFromRootManifest } from './getOptionsFromRootManifest'
 export * from './readLocalConfig'
 
-export { Config, UniversalOptions }
+export type { Config, UniversalOptions, WantedPackageManager, VerifyDepsBeforeRun }
+
+type CamelToKebabCase<S extends string> = S extends `${infer T}${infer U}`
+  ? `${T extends Capitalize<T> ? '-' : ''}${Lowercase<T>}${CamelToKebabCase<U>}`
+  : S
+
+type KebabCaseConfig = {
+  [K in keyof ConfigWithDeprecatedSettings as CamelToKebabCase<K>]: ConfigWithDeprecatedSettings[K];
+} | typeof npmTypes.types
 
 const npmDefaults = loadNpmConf.defaults
 
-export const types = Object.assign({
-  'auto-install-peers': Boolean,
-  bail: Boolean,
-  'cache-dir': String,
-  'child-concurrency': Number,
-  'merge-git-branch-lockfiles': Boolean,
-  'merge-git-branch-lockfiles-branch-pattern': Array,
-  color: ['always', 'auto', 'never'],
-  'config-dir': String,
-  dev: [null, true],
-  dir: String,
-  'enable-modules-dir': Boolean,
-  'enable-pre-post-scripts': Boolean,
-  'fetch-timeout': Number,
-  'fetching-concurrency': Number,
-  filter: [String, Array],
-  'filter-prod': [String, Array],
-  'frozen-lockfile': Boolean,
-  'git-checks': Boolean,
-  'git-shallow-hosts': Array,
-  'global-bin-dir': String,
-  'global-dir': String,
-  'global-path': String,
-  'global-pnpmfile': String,
-  'git-branch-lockfile': Boolean,
-  hoist: Boolean,
-  'hoist-pattern': Array,
-  'ignore-compatibility-db': Boolean,
-  'ignore-dep-scripts': Boolean,
-  'ignore-pnpmfile': Boolean,
-  'ignore-workspace': Boolean,
-  'ignore-workspace-root-check': Boolean,
-  'include-workspace-root': Boolean,
-  'legacy-dir-filtering': Boolean,
-  'link-workspace-packages': [Boolean, 'deep'],
-  lockfile: Boolean,
-  'lockfile-dir': String,
-  'lockfile-directory': String, // TODO: deprecate
-  'lockfile-include-tarball-url': Boolean,
-  'lockfile-only': Boolean,
-  loglevel: ['silent', 'error', 'warn', 'info', 'debug'],
-  maxsockets: Number,
-  'modules-cache-max-age': Number,
-  'modules-dir': String,
-  'network-concurrency': Number,
-  'node-linker': ['pnp', 'isolated', 'hoisted'],
-  noproxy: String,
-  'npm-path': String,
-  offline: Boolean,
-  'only-built-dependencies': [String],
-  'package-import-method': ['auto', 'hardlink', 'clone', 'copy'],
-  pnpmfile: String,
-  'prefer-frozen-lockfile': Boolean,
-  'prefer-offline': Boolean,
-  'prefer-symlinked-executables': Boolean,
-  'prefer-workspace-packages': Boolean,
-  production: [null, true],
-  'public-hoist-pattern': Array,
-  'publish-branch': String,
-  'recursive-install': Boolean,
-  reporter: String,
-  'resolution-mode': ['highest', 'time-based'],
-  'aggregate-output': Boolean,
-  'save-peer': Boolean,
-  'save-workspace-protocol': Boolean,
-  'script-shell': String,
-  'shamefully-flatten': Boolean,
-  'shamefully-hoist': Boolean,
-  'shared-workspace-lockfile': Boolean,
-  'shell-emulator': Boolean,
-  'side-effects-cache': Boolean,
-  'side-effects-cache-readonly': Boolean,
-  symlink: Boolean,
-  sort: Boolean,
-  'state-dir': String,
-  'store-dir': String,
-  stream: Boolean,
-  'strict-peer-dependencies': Boolean,
-  'use-beta-cli': Boolean,
-  'use-inline-specifiers-lockfile-format': Boolean,
-  'use-node-version': String,
-  'use-running-store-server': Boolean,
-  'use-store-server': Boolean,
-  'use-stderr': Boolean,
-  'verify-store-integrity': Boolean,
-  'virtual-store-dir': String,
-  'workspace-concurrency': Number,
-  'workspace-packages': [String, Array],
-  'workspace-root': Boolean,
-  'test-pattern': [String, Array],
-  'changed-files-ignore-pattern': [String, Array],
-  'embed-readme': Boolean,
-  'update-notifier': Boolean,
-  'registry-supports-time-field': Boolean,
-}, npmTypes.types)
+export type CliOptions = Record<string, unknown> & { dir?: string, json?: boolean }
 
-export type CliOptions = Record<string, unknown> & { dir?: string }
-
-export async function getConfig (
-  opts: {
-    globalDirShouldAllowWrite?: boolean
-    cliOptions: CliOptions
-    packageManager: {
-      name: string
-      version: string
-    }
-    rcOptionsTypes?: Record<string, unknown>
-    workspaceDir?: string | undefined
-    checkUnknownSetting?: boolean
-    env?: Record<string, string | undefined>
+export async function getConfig (opts: {
+  globalDirShouldAllowWrite?: boolean
+  cliOptions: CliOptions
+  packageManager: {
+    name: string
+    version: string
   }
-): Promise<{ config: Config, warnings: string[] }> {
+  rcOptionsTypes?: Record<string, unknown>
+  workspaceDir?: string | undefined
+  checkUnknownSetting?: boolean
+  env?: Record<string, string | undefined>
+  ignoreNonAuthSettingsFromLocal?: boolean
+}): Promise<{ config: Config, warnings: string[] }> {
+  if (opts.ignoreNonAuthSettingsFromLocal) {
+    const { ignoreNonAuthSettingsFromLocal: _, ...authOpts } = opts
+    const globalCfgOpts: typeof authOpts = {
+      ...authOpts,
+      cliOptions: {
+        ...authOpts.cliOptions,
+        dir: os.homedir(),
+      },
+    }
+    const [final, authSrc] = await Promise.all([getConfig(globalCfgOpts), getConfig(authOpts)])
+    inheritAuthConfig(final.config, authSrc.config)
+    final.warnings.push(...authSrc.warnings)
+    return final
+  }
+
   const env = opts.env ?? process.env
   const packageManager = opts.packageManager ?? { name: 'pnpm', version: 'undefined' }
   const cliOptions = opts.cliOptions ?? {}
@@ -170,23 +105,33 @@ export async function getConfig (
     if (node.toUpperCase() !== process.execPath.toUpperCase()) {
       process.execPath = node
     }
-  } catch (err) { } // eslint-disable-line:no-empty
+  } catch { } // eslint-disable-line:no-empty
 
   if (cliOptions.dir) {
     cliOptions.dir = await realpathMissing(cliOptions.dir)
     cliOptions['prefix'] = cliOptions.dir // the npm config system still expects `prefix`
   }
   const rcOptionsTypes = { ...types, ...opts.rcOptionsTypes }
-  const { config: npmConfig, warnings, failedToLoadBuiltInConfig } = loadNpmConf(cliOptions, rcOptionsTypes, {
-    'auto-install-peers': false,
+  const defaultOptions: Partial<KebabCaseConfig> | typeof npmTypes.types = {
+    'auto-install-peers': true,
     bail: true,
     color: 'auto',
+    'deploy-all-files': false,
+    'dedupe-peer-dependents': true,
+    'dedupe-direct-deps': false,
+    'dedupe-injected-deps': true,
+    'disallow-workspace-cycles': false,
     'enable-modules-dir': true,
+    'enable-pre-post-scripts': true,
+    'exclude-links-from-lockfile': false,
+    'extend-node-path': true,
+    'fail-if-no-match': false,
     'fetch-retries': 2,
     'fetch-retry-factor': 10,
     'fetch-retry-maxtimeout': 60000,
     'fetch-retry-mintimeout': 10000,
     'fetch-timeout': 60000,
+    'force-legacy-deploy': false,
     'git-shallow-hosts': [
       // Follow https://github.com/npm/git/blob/1e1dbd26bd5b87ca055defecc3679777cb480e2a/lib/clone.js#L13-L19
       'github.com',
@@ -199,44 +144,62 @@ export async function getConfig (
     'git-branch-lockfile': false,
     hoist: true,
     'hoist-pattern': ['*'],
+    'hoist-workspace-packages': true,
+    'ignore-workspace-cycles': false,
     'ignore-workspace-root-check': false,
-    'link-workspace-packages': true,
+    'inject-workspace-packages': false,
+    'link-workspace-packages': false,
     'lockfile-include-tarball-url': false,
+    'manage-package-manager-versions': true,
     'modules-cache-max-age': 7 * 24 * 60, // 7 days
+    'dlx-cache-max-age': 24 * 60, // 1 day
     'node-linker': 'isolated',
     'package-lock': npmDefaults['package-lock'],
     pending: false,
+    'package-manager-strict': process.env.COREPACK_ENABLE_STRICT !== '0',
+    'package-manager-strict-version': false,
     'prefer-workspace-packages': false,
-    'public-hoist-pattern': [
-      '*eslint*',
-      '*prettier*',
-    ],
+    'public-hoist-pattern': [],
     'recursive-install': true,
     registry: npmDefaults.registry,
     'resolution-mode': 'highest',
+    'resolve-peers-from-workspace-root': true,
     'save-peer': false,
-    'save-workspace-protocol': true,
+    'save-workspace-protocol': 'rolling',
     'scripts-prepend-node-path': false,
     'side-effects-cache': true,
     symlink: true,
     'shared-workspace-lockfile': true,
     'shell-emulator': false,
+    'strict-store-pkg-content-check': true,
     reverse: false,
     sort: true,
     'strict-peer-dependencies': false,
     'unsafe-perm': npmDefaults['unsafe-perm'],
     'use-beta-cli': false,
-    'use-inline-specifiers-lockfile-format': false,
     userconfig: npmDefaults.userconfig,
+    'verify-deps-before-run': false,
     'verify-store-integrity': true,
     'virtual-store-dir': 'node_modules/.pnpm',
     'workspace-concurrency': 4,
     'workspace-prefix': opts.workspaceDir,
     'embed-readme': false,
     'registry-supports-time-field': false,
-  })
+    'virtual-store-dir-max-length': isWindows() ? 60 : 120,
+    'peers-suffix-max-length': 1000,
+  }
 
-  npmConfig.addFile(path.resolve(path.join(__dirname, 'pnpmrc')), 'pnpm-builtin')
+  const { config: npmConfig, warnings, failedToLoadBuiltInConfig } = loadNpmConf(cliOptions, rcOptionsTypes, defaultOptions)
+
+  const configDir = getConfigDir(process)
+  {
+    const warn = npmConfig.addFile(path.join(configDir as string, 'rc'), 'pnpm-global')
+    if (warn) warnings.push(warn)
+  }
+  {
+    const warn = npmConfig.addFile(path.resolve(path.join(__dirname, 'pnpmrc')), 'pnpm-builtin')
+    if (warn) warnings.push(warn)
+  }
 
   delete cliOptions.prefix
 
@@ -244,15 +207,19 @@ export async function getConfig (
 
   const rcOptions = Object.keys(rcOptionsTypes)
 
-  const pnpmConfig: ConfigWithDeprecatedSettings = fromPairs([
-    ...rcOptions.map((configKey) => [camelcase(configKey), npmConfig.get(configKey)]) as any, // eslint-disable-line
-    ...Object.entries(cliOptions).filter(([name, value]) => typeof value !== 'undefined').map(([name, value]) => [camelcase(name), value]),
+  const pnpmConfig: ConfigWithDeprecatedSettings = Object.fromEntries([
+    ...rcOptions.map((configKey) => [camelcase(configKey, { locale: 'en-US' }), npmConfig.get(configKey)]) as any, // eslint-disable-line
+    ...Object.entries(cliOptions).filter(([name, value]) => typeof value !== 'undefined').map(([name, value]) => [camelcase(name, { locale: 'en-US' }), value]),
   ]) as unknown as ConfigWithDeprecatedSettings
-  const cwd = (cliOptions.dir && path.resolve(cliOptions.dir)) ?? npmConfig.localPrefix
+  // Resolving the current working directory to its actual location is crucial.
+  // This prevents potential inconsistencies in the future, especially when processing or mapping subdirectories.
+  const cwd = fs.realpathSync(betterPathResolve(cliOptions.dir ?? npmConfig.localPrefix))
 
   pnpmConfig.maxSockets = npmConfig.maxsockets
+  // @ts-expect-error
   delete pnpmConfig['maxsockets']
 
+  pnpmConfig.configDir = configDir
   pnpmConfig.workspaceDir = opts.workspaceDir
   pnpmConfig.workspaceRoot = cliOptions['workspace-root'] as boolean // This is needed to prevent pnpm reading workspaceRoot from env variables
   pnpmConfig.rawLocalConfig = Object.assign.apply(Object, [
@@ -269,49 +236,47 @@ export async function getConfig (
     cliOptions,
     { 'user-agent': pnpmConfig.userAgent },
   ] as any) // eslint-disable-line @typescript-eslint/no-explicit-any
+  const networkConfigs = getNetworkConfigs(pnpmConfig.rawConfig)
   pnpmConfig.registries = {
     default: normalizeRegistryUrl(pnpmConfig.rawConfig.registry),
-    ...getScopeRegistries(pnpmConfig.rawConfig),
+    ...networkConfigs.registries,
   }
+  pnpmConfig.sslConfigs = networkConfigs.sslConfigs
   pnpmConfig.useLockfile = (() => {
-    if (typeof pnpmConfig['lockfile'] === 'boolean') return pnpmConfig['lockfile']
-    if (typeof pnpmConfig['packageLock'] === 'boolean') return pnpmConfig['packageLock']
+    if (typeof pnpmConfig.lockfile === 'boolean') return pnpmConfig.lockfile
+    if (typeof pnpmConfig.packageLock === 'boolean') return pnpmConfig.packageLock
     return false
   })()
   pnpmConfig.useGitBranchLockfile = (() => {
-    if (typeof pnpmConfig['gitBranchLockfile'] === 'boolean') return pnpmConfig['gitBranchLockfile']
+    if (typeof pnpmConfig.gitBranchLockfile === 'boolean') return pnpmConfig.gitBranchLockfile
     return false
   })()
   pnpmConfig.mergeGitBranchLockfiles = await (async () => {
-    if (typeof pnpmConfig['mergeGitBranchLockfiles'] === 'boolean') return pnpmConfig['mergeGitBranchLockfiles']
-    if (pnpmConfig['mergeGitBranchLockfilesBranchPattern'] != null && pnpmConfig['mergeGitBranchLockfilesBranchPattern'].length > 0) {
+    if (typeof pnpmConfig.mergeGitBranchLockfiles === 'boolean') return pnpmConfig.mergeGitBranchLockfiles
+    if (pnpmConfig.mergeGitBranchLockfilesBranchPattern != null && pnpmConfig.mergeGitBranchLockfilesBranchPattern.length > 0) {
       const branch = await getCurrentBranch()
       if (branch) {
-        const branchMatcher = createMatcher(pnpmConfig['mergeGitBranchLockfilesBranchPattern'])
+        const branchMatcher = createMatcher(pnpmConfig.mergeGitBranchLockfilesBranchPattern)
         return branchMatcher(branch)
       }
     }
     return undefined
   })()
-  pnpmConfig.pnpmHomeDir = process.env.PNPM_HOME ?? getDataDir(process)
+  pnpmConfig.pnpmHomeDir = getDataDir(process)
+  let globalDirRoot
+  if (pnpmConfig.globalDir) {
+    globalDirRoot = pnpmConfig.globalDir
+  } else {
+    globalDirRoot = path.join(pnpmConfig.pnpmHomeDir, 'global')
+  }
+  pnpmConfig.globalPkgDir = path.join(globalDirRoot, LAYOUT_VERSION.toString())
 
   if (cliOptions['global']) {
-    let globalDirRoot
-    if (pnpmConfig['globalDir']) {
-      globalDirRoot = pnpmConfig['globalDir']
-    } else {
-      globalDirRoot = path.join(pnpmConfig.pnpmHomeDir, 'global')
-    }
-    pnpmConfig.dir = path.join(globalDirRoot, LAYOUT_VERSION.toString())
-
+    pnpmConfig.dir = pnpmConfig.globalPkgDir
     pnpmConfig.bin = npmConfig.get('global-bin-dir') ?? env.PNPM_HOME
     if (pnpmConfig.bin) {
       fs.mkdirSync(pnpmConfig.bin, { recursive: true })
       await checkGlobalBinDir(pnpmConfig.bin, { env, shouldAllowWrite: opts.globalDirShouldAllowWrite })
-    } else {
-      throw new PnpmError('NO_GLOBAL_BIN_DIR', 'Unable to find the global bin directory', {
-        hint: 'Run "pnpm setup" to create it automatically, or set the global-bin-dir setting, or the PNPM_HOME env variable. The global bin directory should be in the PATH.',
-      })
     }
     pnpmConfig.save = true
     pnpmConfig.allowNew = true
@@ -370,15 +335,6 @@ export async function getConfig (
 
   pnpmConfig.packageManager = packageManager
 
-  if (env.NODE_ENV) {
-    if (cliOptions.production) {
-      pnpmConfig.only = 'production'
-    }
-    if (cliOptions.dev) {
-      pnpmConfig.only = 'dev'
-    }
-  }
-
   if (pnpmConfig.only === 'prod' || pnpmConfig.only === 'production' || !pnpmConfig.only && pnpmConfig.production) {
     pnpmConfig.production = true
     pnpmConfig.dev = false
@@ -405,6 +361,9 @@ export async function getConfig (
     pnpmConfig.extraBinPaths = []
   }
 
+  pnpmConfig.extraEnv = {
+    npm_config_verify_deps_before_run: 'false',
+  }
   if (pnpmConfig.preferSymlinkedExecutables && !isWindows()) {
     const cwd = pnpmConfig.lockfileDir ?? pnpmConfig.dir
 
@@ -414,12 +373,10 @@ export async function getConfig (
         ? path.join(pnpmConfig.modulesDir, '.pnpm')
         : 'node_modules/.pnpm'
 
-    pnpmConfig.extraEnv = {
-      NODE_PATH: pathAbsolute(path.join(virtualStoreDir, 'node_modules'), cwd),
-    }
+    pnpmConfig.extraEnv['NODE_PATH'] = pathAbsolute(path.join(virtualStoreDir, 'node_modules'), cwd)
   }
 
-  if (pnpmConfig['shamefullyFlatten']) {
+  if (pnpmConfig.shamefullyFlatten) {
     warnings.push('The "shamefully-flatten" setting has been renamed to "shamefully-hoist". Also, in most cases you won\'t need "shamefully-hoist". Since v4, a semistrict node_modules structure is on by default (via hoist-pattern=[*]).')
     pnpmConfig.shamefullyHoist = true
   }
@@ -429,10 +386,8 @@ export async function getConfig (
   if (!pnpmConfig.stateDir) {
     pnpmConfig.stateDir = getStateDir(process)
   }
-  if (!pnpmConfig.configDir) {
-    pnpmConfig.configDir = getConfigDir(process)
-  }
-  if (pnpmConfig['hoist'] === false) {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare
+  if (pnpmConfig.hoist === false) {
     delete pnpmConfig.hoistPattern
   }
   switch (pnpmConfig.shamefullyHoist) {
@@ -445,7 +400,6 @@ export async function getConfig (
   default:
     if (
       (pnpmConfig.publicHoistPattern == null) ||
-        // @ts-expect-error
         (pnpmConfig.publicHoistPattern === '') ||
         (
           Array.isArray(pnpmConfig.publicHoistPattern) &&
@@ -481,6 +435,7 @@ export async function getConfig (
     pnpmConfig.httpProxy = pnpmConfig.httpsProxy ?? getProcessEnv('http_proxy') ?? getProcessEnv('proxy')
   }
   if (!pnpmConfig.noProxy) {
+    // @ts-expect-error
     pnpmConfig.noProxy = pnpmConfig['noproxy'] ?? getProcessEnv('no_proxy')
   }
   switch (pnpmConfig.nodeLinker) {
@@ -506,7 +461,7 @@ export async function getConfig (
     }).filter(key => key.trim() !== '')
     const unknownKeys = []
     for (const key of settingKeys) {
-      if (!rcOptions.includes(key) && !key.startsWith('//') && !(key.startsWith('@') && key.endsWith(':registry'))) {
+      if (!rcOptions.includes(key) && !key.startsWith('//') && !(key[0] === '@' && key.endsWith(':registry'))) {
         unknownKeys.push(key)
       }
     }
@@ -517,12 +472,22 @@ export async function getConfig (
 
   pnpmConfig.workspaceConcurrency = getWorkspaceConcurrency(pnpmConfig.workspaceConcurrency)
 
-  if (!pnpmConfig.ignorePnpmfile) {
-    pnpmConfig.hooks = requireHooks(pnpmConfig.lockfileDir ?? pnpmConfig.dir, pnpmConfig)
+  pnpmConfig.rootProjectManifestDir = pnpmConfig.lockfileDir ?? pnpmConfig.workspaceDir ?? pnpmConfig.dir
+  pnpmConfig.rootProjectManifest = await safeReadProjectManifestOnly(pnpmConfig.rootProjectManifestDir) ?? undefined
+  if (pnpmConfig.rootProjectManifest != null) {
+    if (pnpmConfig.rootProjectManifest.workspaces?.length && !pnpmConfig.workspaceDir) {
+      warnings.push('The "workspaces" field in package.json is not supported by pnpm. Create a "pnpm-workspace.yaml" file instead.')
+    }
+    if (pnpmConfig.rootProjectManifest.packageManager) {
+      pnpmConfig.wantedPackageManager = parsePackageManager(pnpmConfig.rootProjectManifest.packageManager)
+    }
   }
-  pnpmConfig.rootProjectManifest = await safeReadProjectManifestOnly(pnpmConfig.lockfileDir ?? pnpmConfig.workspaceDir ?? pnpmConfig.dir) ?? undefined
-  if (pnpmConfig.rootProjectManifest?.['workspaces']?.length && !pnpmConfig.workspaceDir) {
-    warnings.push('The "workspaces" field in package.json is not supported by pnpm. Create a "pnpm-workspace.yaml" file instead.')
+
+  if (pnpmConfig.workspaceDir != null) {
+    const workspaceManifest = await readWorkspaceManifest(pnpmConfig.workspaceDir)
+
+    pnpmConfig.workspacePackagePatterns = cliOptions['workspace-packages'] as string[] ?? workspaceManifest?.packages
+    pnpmConfig.catalogs = getCatalogsFromWorkspaceManifest(workspaceManifest)
   }
 
   pnpmConfig.failedToLoadBuiltInConfig = failedToLoadBuiltInConfig
@@ -530,8 +495,21 @@ export async function getConfig (
   return { config: pnpmConfig, warnings }
 }
 
-function getProcessEnv (env: string) {
+function getProcessEnv (env: string): string | undefined {
   return process.env[env] ??
     process.env[env.toUpperCase()] ??
     process.env[env.toLowerCase()]
+}
+
+function parsePackageManager (packageManager: string): { name: string, version: string | undefined } {
+  if (!packageManager.includes('@')) return { name: packageManager, version: undefined }
+  const [name, pmReference] = packageManager.split('@')
+  // pmReference is semantic versioning, not URL
+  if (pmReference.includes(':')) return { name, version: undefined }
+  // Remove the integrity hash. Ex: "pnpm@9.5.0+sha512.140036830124618d624a2187b50d04289d5a087f326c9edfc0ccd733d76c4f52c3a313d4fc148794a2a9d81553016004e6742e8cf850670268a7387fc220c903"
+  const [version] = pmReference.split('+')
+  return {
+    name,
+    version,
+  }
 }

@@ -1,22 +1,22 @@
-import { promises as fs, Stats } from 'fs'
+import { promises as fs, type Stats } from 'fs'
 import path from 'path'
 import { PnpmError } from '@pnpm/error'
-import { ProjectManifest } from '@pnpm/types'
-import { extractComments, CommentSpecifier } from '@pnpm/text.comments-parser'
+import { type ProjectManifest } from '@pnpm/types'
+import { extractComments, type CommentSpecifier } from '@pnpm/text.comments-parser'
 import { writeProjectManifest } from '@pnpm/write-project-manifest'
 import readYamlFile from 'read-yaml-file'
 import detectIndent from '@gwhitney/detect-indent'
 import equal from 'fast-deep-equal'
 import isWindows from 'is-windows'
-import sortKeys from 'sort-keys'
+import cloneDeep from 'lodash.clonedeep'
 import {
   readJson5File,
   readJsonFile,
 } from './readFile'
 
-type WriteProjectManifest = (manifest: ProjectManifest, force?: boolean) => Promise<void>
+export type WriteProjectManifest = (manifest: ProjectManifest, force?: boolean) => Promise<void>
 
-export async function safeReadProjectManifestOnly (projectDir: string) {
+export async function safeReadProjectManifestOnly (projectDir: string): Promise<ProjectManifest | null> {
   try {
     return await readProjectManifestOnly(projectDir)
   } catch (err: any) { // eslint-disable-line
@@ -105,6 +105,7 @@ export async function tryReadProjectManifest (projectDir: string): Promise<{
     }
     if ((s != null) && !s.isDirectory()) {
       const err = new Error(`"${projectDir}" is not a directory`)
+      // @ts-expect-error
       err['code'] = 'ENOTDIR'
       throw err
     }
@@ -117,7 +118,13 @@ export async function tryReadProjectManifest (projectDir: string): Promise<{
   }
 }
 
-function detectFileFormattingAndComments (text: string) {
+interface FileFormattingAndComments {
+  comments?: CommentSpecifier[]
+  indent: string
+  insertFinalNewline: boolean
+}
+
+function detectFileFormattingAndComments (text: string): FileFormattingAndComments {
   const { comments, text: newText, hasFinalNewline } = extractComments(text)
   return {
     comments,
@@ -126,14 +133,24 @@ function detectFileFormattingAndComments (text: string) {
   }
 }
 
-function detectFileFormatting (text: string) {
+interface FileFormatting {
+  indent: string
+  insertFinalNewline: boolean
+}
+
+function detectFileFormatting (text: string): FileFormatting {
   return {
     indent: detectIndent(text).indent,
     insertFinalNewline: text.endsWith('\n'),
   }
 }
 
-export async function readExactProjectManifest (manifestPath: string) {
+interface ReadExactProjectManifestResult {
+  manifest: ProjectManifest
+  writeProjectManifest: WriteProjectManifest
+}
+
+export async function readExactProjectManifest (manifestPath: string): Promise<ReadExactProjectManifestResult> {
   const base = path.basename(manifestPath).toLowerCase()
   switch (base) {
   case 'package.json': {
@@ -169,7 +186,7 @@ export async function readExactProjectManifest (manifestPath: string) {
   throw new Error(`Not supported manifest name "${base}"`)
 }
 
-async function readPackageYaml (filePath: string) {
+async function readPackageYaml (filePath: string): Promise<ProjectManifest> {
   try {
     return await readYamlFile<ProjectManifest>(filePath)
   } catch (err: any) { // eslint-disable-line
@@ -188,7 +205,7 @@ function createManifestWriter (
     insertFinalNewline?: boolean
     manifestPath: string
   }
-): (WriteProjectManifest) {
+): WriteProjectManifest {
   let initialManifest = normalize(opts.initialManifest)
   return async (updatedManifest: ProjectManifest, force?: boolean) => {
     updatedManifest = normalize(updatedManifest)
@@ -212,15 +229,25 @@ const dependencyKeys = new Set([
   'peerDependencies',
 ])
 
-function normalize (manifest: ProjectManifest) {
-  manifest = JSON.parse(JSON.stringify(manifest))
-  const result = {}
-
-  for (const key of Object.keys(manifest)) {
-    if (!dependencyKeys.has(key)) {
-      result[key] = manifest[key]
-    } else if (Object.keys(manifest[key]).length !== 0) {
-      result[key] = sortKeys(manifest[key])
+function normalize (manifest: ProjectManifest): ProjectManifest {
+  const result: Record<string, unknown> = {}
+  for (const key in manifest) {
+    if (Object.prototype.hasOwnProperty.call(manifest, key)) {
+      const value = manifest[key as keyof ProjectManifest]
+      if (typeof value !== 'object' || !dependencyKeys.has(key)) {
+        result[key] = cloneDeep(value)
+      } else {
+        const keys = Object.keys(value)
+        if (keys.length !== 0) {
+          keys.sort()
+          const sortedValue: Record<string, unknown> = {}
+          for (const k of keys) {
+            // @ts-expect-error this is fine
+            sortedValue[k] = value[k]
+          }
+          result[key] = sortedValue
+        }
+      }
     }
   }
 

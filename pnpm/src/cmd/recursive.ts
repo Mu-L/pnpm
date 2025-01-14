@@ -3,12 +3,12 @@ import { FILTERING } from '@pnpm/common-cli-options-help'
 import { WANTED_LOCKFILE } from '@pnpm/constants'
 import renderHelp from 'render-help'
 
-export const rcOptionsTypes = () => ({})
-export const cliOptionsTypes = () => ({})
+export const rcOptionsTypes = (): Record<string, unknown> => ({})
+export const cliOptionsTypes = (): Record<string, unknown> => ({})
 
 export const commandNames = ['recursive', 'multi', 'm']
 
-export function help () {
+export function help (): string {
   return renderHelp({
     description: 'Concurrently performs some actions in all subdirectories with a `package.json` (excluding node_modules). \
 A `pnpm-workspace.yaml` file may be used to control what directories are searched for packages.',
@@ -77,7 +77,7 @@ and must recompile all your C++ addons with the new binary.',
 
         list: [
           {
-            description: 'Continues executing other tasks even if a task threw an error.',
+            description: 'Continues executing other tasks even if a task threw an error',
             name: '--no-bail',
           },
           {
@@ -102,6 +102,10 @@ Convenient to use in a multi-package repository.',
 A shared lockfile also means that all dependencies of all projects will be in a single node_modules.`,
             name: '--shared-workspace-lockfile',
           },
+          {
+            description: 'When executing commands recursively in a workspace, execute them on the root workspace project as well',
+            name: '--include-workspace-root',
+          },
         ],
       },
       FILTERING,
@@ -115,7 +119,7 @@ A shared lockfile also means that all dependencies of all projects will be in a 
   })
 }
 
-export function handler () {
+export function handler (): void {
   console.log(help())
   process.exit(1)
 }

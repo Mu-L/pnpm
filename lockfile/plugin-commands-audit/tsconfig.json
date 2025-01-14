@@ -2,7 +2,9 @@
   "extends": "@pnpm/tsconfig",
   "compilerOptions": {
     "outDir": "lib",
-    "rootDir": "src"
+    "rootDir": "src",
+    "suppressImplicitAnyIndexErrors": true,
+    "ignoreDeprecations": "5.0"
   },
   "include": [
     "src/**/*.ts",
@@ -31,13 +33,16 @@
       "path": "../../packages/types"
     },
     {
+      "path": "../../pkg-manager/plugin-commands-installation"
+    },
+    {
       "path": "../../pkg-manifest/read-project-manifest"
     },
     {
       "path": "../audit"
     },
     {
-      "path": "../lockfile-file"
+      "path": "../fs"
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "name": "@pnpm/fetcher-base",
-  "version": "13.1.4",
+  "version": "1000.0.2",
   "description": "Types for pnpm-compatible fetchers",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -10,19 +10,19 @@
   ],
   "scripts": {
     "start": "tsc --watch",
-    "lint": "eslint src/**/*.ts",
+    "lint": "eslint \"src/**/*.ts\"",
     "test": "pnpm run compile",
     "prepublishOnly": "pnpm run compile",
     "compile": "tsc --build && pnpm run lint --fix"
   },
   "repository": "https://github.com/pnpm/pnpm/blob/main/fetching/fetcher-base",
   "keywords": [
-    "pnpm7",
+    "pnpm10",
     "pnpm",
     "fetcher"
   ],
   "engines": {
-    "node": ">=14.6"
+    "node": ">=18.12"
   },
   "license": "MIT",
   "bugs": {
@@ -32,7 +32,7 @@
   "dependencies": {
     "@pnpm/resolver-base": "workspace:*",
     "@pnpm/types": "workspace:*",
-    "@types/ssri": "^7.1.1"
+    "@types/ssri": "catalog:"
   },
   "funding": "https://opencollective.com/pnpm",
   "devDependencies": {
@@ -41,5 +41,8 @@
   },
   "exports": {
     ".": "./lib/index.js"
+  },
+  "jest": {
+    "preset": "@pnpm/jest-config"
   }
 }

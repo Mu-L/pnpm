@@ -1,6 +1,6 @@
 {
-  "name": "pkgs-graph",
-  "version": "8.0.0",
+  "name": "@pnpm/workspace.pkgs-graph",
+  "version": "1000.0.3",
   "description": "Create a graph from an array of packages",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -9,7 +9,7 @@
     "!*.map"
   ],
   "scripts": {
-    "lint": "eslint src/**/*.ts test/**/*.ts",
+    "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
     "_test": "jest",
     "test": "pnpm run compile && pnpm run _test",
     "prepublishOnly": "pnpm run compile",
@@ -18,27 +18,32 @@
   "repository": "https://github.com/pnpm/pnpm/blob/main/workspace/pkgs-graph",
   "license": "MIT",
   "engines": {
-    "node": ">=14.6"
+    "node": ">=18.12"
   },
   "bugs": {
     "url": "https://github.com/pnpm/pnpm/issues"
   },
   "homepage": "https://github.com/pnpm/pnpm/blob/main/workspace/pkgs-graph#readme",
   "devDependencies": {
-    "@types/ramda": "0.28.20",
-    "better-path-resolve": "1.0.0",
-    "pkgs-graph": "workspace:*"
+    "@pnpm/workspace.pkgs-graph": "workspace:*",
+    "@types/ramda": "catalog:",
+    "better-path-resolve": "catalog:"
   },
   "dependencies": {
-    "@pnpm/npm-package-arg": "^1.0.0",
+    "@pnpm/npm-package-arg": "catalog:",
+    "@pnpm/npm-resolver": "workspace:*",
     "@pnpm/resolve-workspace-range": "workspace:*",
-    "ramda": "npm:@pnpm/ramda@0.28.1"
+    "@pnpm/types": "workspace:*",
+    "ramda": "catalog:"
   },
   "funding": "https://opencollective.com/pnpm",
   "keywords": [
-    "pnpm7"
+    "pnpm10"
   ],
   "exports": {
     ".": "./lib/index.js"
+  },
+  "jest": {
+    "preset": "@pnpm/jest-config"
   }
 }

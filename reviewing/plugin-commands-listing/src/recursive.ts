@@ -1,43 +1,45 @@
-import { Config } from '@pnpm/config'
+import assert from 'assert'
+import util from 'util'
+import { type Config } from '@pnpm/config'
 import { logger } from '@pnpm/logger'
-import { IncludedDependencies, Project } from '@pnpm/types'
+import { type IncludedDependencies, type Project } from '@pnpm/types'
 import { render } from './list'
 
 export async function listRecursive (
   pkgs: Project[],
   params: string[],
-  opts: Pick<Config, 'lockfileDir'> & {
+  opts: Pick<Config, 'lockfileDir' | 'virtualStoreDirMaxLength'> & {
     depth?: number
     include: IncludedDependencies
     long?: boolean
     parseable?: boolean
     lockfileDir?: string
   }
-) {
+): Promise<string> {
   const depth = opts.depth ?? 0
   if (opts.lockfileDir) {
-    return render(pkgs.map((pkg) => pkg.dir), params, {
+    return render(pkgs.map((pkg) => pkg.rootDir), params, {
       ...opts,
       alwaysPrintRootPackage: depth === -1,
       lockfileDir: opts.lockfileDir,
     })
   }
-  const outputs = []
-  for (const { dir } of pkgs) {
+  const outputs = (await Promise.all(pkgs.map(async ({ rootDir }) => {
     try {
-      const output = await render([dir], params, {
+      return await render([rootDir], params, {
         ...opts,
         alwaysPrintRootPackage: depth === -1,
-        lockfileDir: opts.lockfileDir ?? dir,
+        lockfileDir: opts.lockfileDir ?? rootDir,
       })
-      if (!output) continue
-      outputs.push(output)
-    } catch (err: any) { // eslint-disable-line
-      logger.info(err)
-      err['prefix'] = dir
-      throw err
+    } catch (err: unknown) {
+      assert(util.types.isNativeError(err))
+      const errWithPrefix = Object.assign(err, {
+        prefix: rootDir,
+      })
+      logger.info(errWithPrefix)
+      throw errWithPrefix
     }
-  }
+  }))).filter(Boolean)
   if (outputs.length === 0) return ''
 
   const joiner = typeof depth === 'number' && depth > -1 ? '\n\n' : '\n'

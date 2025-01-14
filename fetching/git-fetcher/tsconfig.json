@@ -13,6 +13,9 @@
       "path": "../../exec/prepare-package"
     },
     {
+      "path": "../../packages/logger"
+    },
+    {
       "path": "../../packages/types"
     },
     {
@@ -20,6 +23,9 @@
     },
     {
       "path": "../../store/create-cafs-store"
+    },
+    {
+      "path": "../../worker"
     },
     {
       "path": "../fetcher-base"

@@ -1,7 +1,7 @@
 {
   "name": "@pnpm/test-fixtures",
   "description": "Test fixtures",
-  "version": "0.0.27",
+  "version": "0.1.37",
   "author": {
     "name": "Zoltan Kochan",
     "email": "z@kochan.io",
@@ -10,7 +10,6 @@
   "bugs": {
     "url": "https://github.com/pnpm/pnpm/issues"
   },
-  "private": true,
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
@@ -27,16 +26,17 @@
   },
   "repository": "https://github.com/pnpm/pnpm/blob/master/privatePackages/test-fixtures",
   "scripts": {
-    "lint": "tslint -c ../../tslint.json --project .",
+    "lint": "eslint src/**/*.ts",
     "compile": "rimraf tsconfig.tsbuildinfo lib && tsc --build",
-    "test": "pnpm run compile"
+    "test": "pnpm run compile",
+    "prepublishOnly": "pnpm run compile"
   },
   "dependencies": {
-    "@pnpm/prepare": "workspace:*",
-    "fs-extra": "^11.0.0"
+    "@pnpm/prepare-temp-dir": "workspace:*",
+    "fs-extra": "catalog:"
   },
   "devDependencies": {
     "@pnpm/test-fixtures": "workspace:*",
-    "@types/fs-extra": "^9.0.13"
+    "@types/fs-extra": "catalog:"
   }
 }

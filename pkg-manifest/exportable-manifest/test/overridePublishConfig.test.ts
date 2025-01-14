@@ -1,4 +1,4 @@
-import { PackageManifest, PublishConfig } from '@pnpm/types'
+import { type PackageManifest, type PublishConfig } from '@pnpm/types'
 import { overridePublishConfig } from '../lib/overridePublishConfig'
 
 test('publish config to be overridden', async () => {
@@ -25,7 +25,7 @@ test('publish config to be overridden', async () => {
   }
   overridePublishConfig(publishManifest)
 
-  Object.keys(publishConfig).forEach((publishConfigKey) => {
-    expect(publishManifest[publishConfigKey]).toEqual(publishConfig[publishConfigKey])
-  })
+  for (const publishConfigKey in publishConfig) {
+    expect(publishManifest[publishConfigKey as keyof PackageManifest]).toEqual(publishConfig[publishConfigKey])
+  }
 })

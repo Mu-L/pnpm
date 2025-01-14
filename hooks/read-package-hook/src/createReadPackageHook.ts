@@ -1,38 +1,36 @@
 import { packageExtensions as compatPackageExtensions } from '@yarnpkg/extensions'
 import {
-  PackageExtension,
-  PackageManifest,
-  PeerDependencyRules,
-  ProjectManifest,
-  ReadPackageHook,
+  type PackageExtension,
+  type PackageManifest,
+  type ProjectManifest,
+  type ReadPackageHook,
 } from '@pnpm/types'
-import fromPairs from 'ramda/src/fromPairs'
 import isEmpty from 'ramda/src/isEmpty'
 import pipeWith from 'ramda/src/pipeWith'
+import { createOptionalDependenciesRemover } from './createOptionalDependenciesRemover'
 import { createPackageExtender } from './createPackageExtender'
-import { createVersionsOverrider } from './createVersionsOverrider'
-import { createPeerDependencyPatcher } from './createPeerDependencyPatcher'
+import { createVersionsOverrider, type VersionOverrideWithoutRawSelector } from './createVersionsOverrider'
 
 export function createReadPackageHook (
   {
     ignoreCompatibilityDb,
     lockfileDir,
     overrides,
+    ignoredOptionalDependencies,
     packageExtensions,
-    peerDependencyRules,
     readPackageHook,
   }: {
     ignoreCompatibilityDb?: boolean
     lockfileDir: string
-    overrides?: Record<string, string>
+    overrides?: VersionOverrideWithoutRawSelector[]
+    ignoredOptionalDependencies?: string[]
     packageExtensions?: Record<string, PackageExtension>
-    peerDependencyRules?: PeerDependencyRules
     readPackageHook?: ReadPackageHook[] | ReadPackageHook
   }
 ): ReadPackageHook | undefined {
   const hooks: ReadPackageHook[] = []
   if (!ignoreCompatibilityDb) {
-    hooks.push(createPackageExtender(fromPairs(compatPackageExtensions)))
+    hooks.push(createPackageExtender(Object.fromEntries(compatPackageExtensions)))
   }
   if (!isEmpty(packageExtensions ?? {})) {
     hooks.push(createPackageExtender(packageExtensions!))
@@ -45,15 +43,8 @@ export function createReadPackageHook (
   if (!isEmpty(overrides ?? {})) {
     hooks.push(createVersionsOverrider(overrides!, lockfileDir))
   }
-  if (
-    peerDependencyRules != null &&
-    (
-      !isEmpty(peerDependencyRules.ignoreMissing) ||
-      !isEmpty(peerDependencyRules.allowedVersions) ||
-      !isEmpty(peerDependencyRules.allowAny)
-    )
-  ) {
-    hooks.push(createPeerDependencyPatcher(peerDependencyRules))
+  if (ignoredOptionalDependencies && !isEmpty(ignoredOptionalDependencies)) {
+    hooks.push(createOptionalDependenciesRemover(ignoredOptionalDependencies))
   }
 
   if (hooks.length === 0) {
