@@ -1,6 +1,6 @@
 {
   "name": "@pnpm/resolver-base",
-  "version": "9.1.4",
+  "version": "1000.1.2",
   "description": "Types for pnpm-compatible resolvers",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -10,19 +10,19 @@
   ],
   "scripts": {
     "start": "tsc --watch",
-    "lint": "eslint src/**/*.ts",
+    "lint": "eslint \"src/**/*.ts\"",
     "test": "pnpm run compile",
     "prepublishOnly": "pnpm run compile",
     "compile": "tsc --build && pnpm run lint --fix"
   },
   "repository": "https://github.com/pnpm/pnpm/blob/main/resolving/resolver-base",
   "keywords": [
-    "pnpm7",
+    "pnpm10",
     "pnpm",
     "resolver"
   ],
   "engines": {
-    "node": ">=14.6"
+    "node": ">=18.12"
   },
   "license": "MIT",
   "homepage": "https://github.com/pnpm/pnpm/blob/main/resolving/resolver-base#readme",
@@ -38,5 +38,8 @@
   },
   "exports": {
     ".": "./lib/index.js"
+  },
+  "jest": {
+    "preset": "@pnpm/jest-config"
   }
 }

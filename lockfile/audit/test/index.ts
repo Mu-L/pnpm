@@ -1,7 +1,8 @@
 import { audit } from '@pnpm/audit'
 import { LOCKFILE_VERSION } from '@pnpm/constants'
-import { PnpmError } from '@pnpm/error'
+import { type PnpmError } from '@pnpm/error'
 import { fixtures } from '@pnpm/test-fixtures'
+import { type DepPath, type ProjectId } from '@pnpm/types'
 import nock from 'nock'
 import { lockfileToAuditTree } from '../lib/lockfileToAuditTree'
 
@@ -11,7 +12,7 @@ describe('audit', () => {
   test('lockfileToAuditTree()', async () => {
     expect(await lockfileToAuditTree({
       importers: {
-        '.': {
+        ['.' as ProjectId]: {
           dependencies: {
             foo: '1.0.0',
           },
@@ -22,12 +23,12 @@ describe('audit', () => {
       },
       lockfileVersion: LOCKFILE_VERSION,
       packages: {
-        '/bar/1.0.0': {
+        ['bar@1.0.0' as DepPath]: {
           resolution: {
             integrity: 'bar-integrity',
           },
         },
-        '/foo/1.0.0': {
+        ['foo@1.0.0' as DepPath]: {
           dependencies: {
             bar: '1.0.0',
           },
@@ -59,6 +60,7 @@ describe('audit', () => {
               version: '1.0.0',
             },
           },
+          dev: false,
           requires: {
             foo: '1.0.0',
           },
@@ -77,7 +79,7 @@ describe('audit', () => {
   test('lockfileToAuditTree() without specified version should use default version 0.0.0', async () => {
     expect(await lockfileToAuditTree({
       importers: {
-        '.': {
+        ['.' as ProjectId]: {
           dependencies: {
             foo: '1.0.0',
           },
@@ -88,12 +90,12 @@ describe('audit', () => {
       },
       lockfileVersion: LOCKFILE_VERSION,
       packages: {
-        '/bar/1.0.0': {
+        ['bar@1.0.0' as DepPath]: {
           resolution: {
             integrity: 'bar-integrity',
           },
         },
-        '/foo/1.0.0': {
+        ['foo@1.0.0' as DepPath]: {
           dependencies: {
             bar: '1.0.0',
           },
@@ -125,6 +127,7 @@ describe('audit', () => {
               version: '1.0.0',
             },
           },
+          dev: false,
           requires: {
             foo: '1.0.0',
           },
@@ -153,7 +156,7 @@ describe('audit', () => {
     try {
       await audit({
         importers: {},
-        lockfileVersion: 5,
+        lockfileVersion: LOCKFILE_VERSION,
       },
       getAuthHeader,
       {
@@ -162,6 +165,7 @@ describe('audit', () => {
         retry: {
           retries: 0,
         },
+        virtualStoreDirMaxLength: 120,
       })
     } catch (_err: any) { // eslint-disable-line
       err = _err

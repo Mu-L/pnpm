@@ -10,6 +10,9 @@
   ],
   "references": [
     {
+      "path": "../../__utils__/prepare"
+    },
+    {
       "path": "../../config/config"
     },
     {
@@ -17,6 +20,9 @@
     },
     {
       "path": "../../packages/error"
+    },
+    {
+      "path": "../../packages/logger"
     },
     {
       "path": "../../packages/types"

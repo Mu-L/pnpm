@@ -1,5 +1,77 @@
 # @pnpm/find-workspace-dir
 
+## 1000.0.2
+
+### Patch Changes
+
+- @pnpm/error@1000.0.2
+
+## 1000.0.1
+
+### Patch Changes
+
+- @pnpm/error@1000.0.1
+
+## 7.0.3
+
+### Patch Changes
+
+- @pnpm/error@6.0.3
+
+## 7.0.2
+
+### Patch Changes
+
+- @pnpm/error@6.0.2
+
+## 7.0.1
+
+### Patch Changes
+
+- Updated dependencies [a7aef51]
+  - @pnpm/error@6.0.1
+
+## 7.0.0
+
+### Major Changes
+
+- 43cdd87: Node.js v16 support dropped. Use at least Node.js v18.12.
+
+### Patch Changes
+
+- Updated dependencies [3ded840]
+- Updated dependencies [43cdd87]
+  - @pnpm/error@6.0.0
+
+## 6.0.2
+
+### Patch Changes
+
+- @pnpm/error@5.0.2
+
+## 6.0.1
+
+### Patch Changes
+
+- @pnpm/error@5.0.1
+
+## 6.0.0
+
+### Major Changes
+
+- eceaa8b8b: Node.js 14 support dropped.
+
+### Patch Changes
+
+- Updated dependencies [eceaa8b8b]
+  - @pnpm/error@5.0.0
+
+## 5.0.1
+
+### Patch Changes
+
+- @pnpm/error@4.0.1
+
 ## 5.0.0
 
 ### Major Changes

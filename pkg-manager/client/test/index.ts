@@ -5,14 +5,16 @@ test('createClient()', () => {
   const client = createClient({
     authConfig: { registry: 'https://registry.npmjs.org/' },
     cacheDir: '',
+    rawConfig: {},
   })
   expect(typeof client === 'object').toBeTruthy()
 })
 
 test('createResolver()', () => {
-  const resolver = createResolver({
+  const { resolve } = createResolver({
     authConfig: { registry: 'https://registry.npmjs.org/' },
     cacheDir: '',
+    rawConfig: {},
   })
-  expect(typeof resolver === 'function').toBeTruthy()
+  expect(typeof resolve === 'function').toBeTruthy()
 })

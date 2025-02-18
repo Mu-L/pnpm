@@ -43,7 +43,7 @@ test('getStateDir()', () => {
   expect(getStateDir({
     env: {},
     platform: 'darwin',
-  })).toBe(path.join(os.homedir(), '.pnpm-state'))
+  })).toBe(path.join(os.homedir(), '.local/state/pnpm'))
   expect(getStateDir({
     env: {
       LOCALAPPDATA: '/localappdata',
@@ -57,6 +57,12 @@ test('getStateDir()', () => {
 })
 
 test('getDataDir()', () => {
+  expect(getDataDir({
+    env: {
+      PNPM_HOME: '/home/foo/data',
+    },
+    platform: 'linux',
+  })).toBe('/home/foo/data')
   expect(getDataDir({
     env: {
       XDG_DATA_HOME: '/home/foo/data',

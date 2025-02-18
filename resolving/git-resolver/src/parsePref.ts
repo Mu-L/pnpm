@@ -1,5 +1,7 @@
-import url, { URL } from 'url'
-import { fetch } from '@pnpm/fetch'
+// cspell:ignore sshurl
+import urlLib, { URL } from 'url'
+import { fetchWithAgent } from '@pnpm/fetch'
+import { type AgentOptions } from '@pnpm/network.agent'
 
 import git from 'graceful-git'
 import HostedGit from 'hosted-git-info'
@@ -16,6 +18,7 @@ export interface HostedPackageSpec {
   normalizedPref: string
   gitCommittish: string | null
   gitRange?: string
+  path?: string
 }
 
 const gitProtocols = new Set([
@@ -29,63 +32,55 @@ const gitProtocols = new Set([
   'ssh',
 ])
 
-export async function parsePref (pref: string): Promise<HostedPackageSpec | null> {
+export async function parsePref (pref: string, opts: AgentOptions): Promise<HostedPackageSpec | null> {
   const hosted = HostedGit.fromUrl(pref)
   if (hosted != null) {
-    return fromHostedGit(hosted)
+    return fromHostedGit(hosted, opts)
   }
   const colonsPos = pref.indexOf(':')
   if (colonsPos === -1) return null
   const protocol = pref.slice(0, colonsPos)
   if (protocol && gitProtocols.has(protocol.toLocaleLowerCase())) {
-    const urlparse = new URL(escapeColon(pref))
-    if (!urlparse?.protocol) return null
-    const match = urlparse.protocol === 'git+ssh:' && matchGitScp(pref)
-    if (match) {
-      return {
-        ...match,
-        normalizedPref: pref,
-      }
-    }
+    const correctPref = correctUrl(pref)
+    const url = new URL(correctPref)
+    if (!url?.protocol) return null
 
-    const committish = (urlparse.hash?.length > 1) ? decodeURIComponent(urlparse.hash.slice(1)) : null
+    const hash = (url.hash?.length > 1) ? decodeURIComponent(url.hash.slice(1)) : null
     return {
-      fetchSpec: urlToFetchSpec(urlparse),
+      fetchSpec: urlToFetchSpec(url),
       normalizedPref: pref,
-      ...setGitCommittish(committish),
+      ...parseGitParams(hash),
     }
   }
   return null
 }
 
-function escapeColon (url: string) {
-  if (!url.includes('@')) return url
-  const [front, ...backs] = url.split('@')
-  const escapedBacks = backs.map(e => e.replace(/:([^/\d]|\d+[^:/\d])/, ':/$1'))
-  return [front, ...escapedBacks].join('@')
-}
-
-function urlToFetchSpec (urlparse: URL) {
-  urlparse.hash = ''
-  const fetchSpec = url.format(urlparse)
+function urlToFetchSpec (url: URL): string {
+  url.hash = ''
+  const fetchSpec = urlLib.format(url)
   if (fetchSpec.startsWith('git+')) {
     return fetchSpec.slice(4)
   }
   return fetchSpec
 }
 
-async function fromHostedGit (hosted: any): Promise<HostedPackageSpec> { // eslint-disable-line
+async function fromHostedGit (hosted: any, agentOptions: AgentOptions): Promise<HostedPackageSpec> { // eslint-disable-line
   let fetchSpec: string | null = null
   // try git/https url before fallback to ssh url
-  const gitUrl = hosted.https({ noCommittish: true }) ?? hosted.ssh({ noCommittish: true })
-  if (gitUrl && await accessRepository(gitUrl)) {
-    fetchSpec = gitUrl
+  const gitHttpsUrl = hosted.https({ noCommittish: true, noGitPlus: true })
+  if (gitHttpsUrl && await isRepoPublic(gitHttpsUrl, agentOptions) && await accessRepository(gitHttpsUrl)) {
+    fetchSpec = gitHttpsUrl
+  } else {
+    const gitSshUrl = hosted.ssh({ noCommittish: true })
+    if (gitSshUrl && await accessRepository(gitSshUrl)) {
+      fetchSpec = gitSshUrl
+    }
   }
 
   if (!fetchSpec) {
     const httpsUrl: string | null = hosted.https({ noGitPlus: true, noCommittish: true })
     if (httpsUrl) {
-      if (hosted.auth && await accessRepository(httpsUrl)) {
+      if ((hosted.auth || !await isRepoPublic(httpsUrl, agentOptions)) && await accessRepository(httpsUrl)) {
         return {
           fetchSpec: httpsUrl,
           hosted: {
@@ -94,21 +89,21 @@ async function fromHostedGit (hosted: any): Promise<HostedPackageSpec> { // esli
             tarball: undefined,
           },
           normalizedPref: `git+${httpsUrl}`,
-          ...setGitCommittish(hosted.committish),
+          ...parseGitParams(hosted.committish),
         }
       } else {
         try {
           // when git ls-remote private repo, it asks for login credentials.
           // use HTTP HEAD request to test whether this is a private repo, to avoid login prompt.
-          // this is very similar to yarn's behaviour.
+          // this is very similar to yarn classic's behavior.
           // npm instead tries git ls-remote directly which prompts user for login credentials.
 
           // HTTP HEAD on https://domain/user/repo, strip out ".git"
-          const response = await fetch(httpsUrl.slice(0, -4), { method: 'HEAD', follow: 0, retry: { retries: 0 } })
+          const response = await fetchWithAgent(httpsUrl.replace(/\.git$/, ''), { method: 'HEAD', follow: 0, retry: { retries: 0 }, agentOptions })
           if (response.ok) {
             fetchSpec = httpsUrl
           }
-        } catch (e) {
+        } catch {
           // ignore
         }
       }
@@ -128,41 +123,62 @@ async function fromHostedGit (hosted: any): Promise<HostedPackageSpec> { // esli
       tarball: hosted.tarball,
     },
     normalizedPref: hosted.shortcut(),
-    ...setGitCommittish(hosted.committish),
+    ...parseGitParams(hosted.committish),
   }
 }
 
-async function accessRepository (repository: string) {
+async function isRepoPublic (httpsUrl: string, agentOptions: AgentOptions): Promise<boolean> {
   try {
-    await git(['ls-remote', '--exit-code', repository, 'HEAD'], { retries: 0 })
-    return true
-  } catch (err: any) { // eslint-disable-line
+    const response = await fetchWithAgent(httpsUrl.replace(/\.git$/, ''), { method: 'HEAD', follow: 0, retry: { retries: 0 }, agentOptions })
+    return response.ok
+  } catch {
     return false
   }
 }
 
-function setGitCommittish (committish: string | null) {
-  if (committish !== null && committish.length >= 7 && committish.slice(0, 7) === 'semver:') {
-    return {
-      gitCommittish: null,
-      gitRange: committish.slice(7),
-    }
+async function accessRepository (repository: string): Promise<boolean> {
+  try {
+    await git(['ls-remote', '--exit-code', repository, 'HEAD'], { retries: 0 })
+    return true
+  } catch {
+    return false
   }
-  return { gitCommittish: committish }
 }
 
-function matchGitScp (spec: string) {
-  // git ssh specifiers are overloaded to also use scp-style git
-  // specifiers, so we have to parse those out and treat them special.
-  // They are NOT true URIs, so we can't hand them to `url.parse`.
-  //
-  // This regex looks for things that look like:
-  // git+ssh://git@my.custom.git.com:username/project.git#deadbeef
-  //
-  // ...and various combinations. The username in the beginning is *required*.
-  const matched = spec.match(/^git\+ssh:\/\/([^:]+:[^#]+(?:\.git)?)(?:#(.*))$/i)
-  return (matched != null) && (matched[1].match(/:[0-9]+\/?.*$/i) == null) && {
-    fetchSpec: matched[1],
-    gitCommittish: matched[2],
+type GitParsedParams = Pick<HostedPackageSpec, 'gitCommittish' | 'gitRange' | 'path'>
+
+function parseGitParams (committish: string | null): GitParsedParams {
+  const result: GitParsedParams = { gitCommittish: null }
+  if (!committish) {
+    return result
   }
+
+  const params = committish.split('&')
+  for (const param of params) {
+    if (param.length >= 7 && param.slice(0, 7) === 'semver:') {
+      result.gitRange = param.slice(7)
+    } else if (param.slice(0, 5) === 'path:') {
+      result.path = param.slice(5)
+    } else {
+      result.gitCommittish = param
+    }
+  }
+  return result
+}
+
+// handle SCP-like URLs
+// see https://github.com/yarnpkg/yarn/blob/5682d55/src/util/git.js#L103
+function correctUrl (gitUrl: string): string {
+  const parsed = urlLib.parse(gitUrl.replace(/^git\+/, '')) // eslint-disable-line n/no-deprecated-api
+
+  if (parsed.protocol === 'ssh:' &&
+    parsed.hostname &&
+    parsed.pathname &&
+    parsed.pathname.startsWith('/:') &&
+    parsed.port === null) {
+    parsed.pathname = parsed.pathname.replace(/^\/:/, '')
+    return urlLib.format(parsed)
+  }
+
+  return gitUrl
 }

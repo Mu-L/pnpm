@@ -1,6 +1,6 @@
 {
   "name": "@pnpm/exportable-manifest",
-  "version": "4.0.4",
+  "version": "1000.0.6",
   "description": "Creates an exportable manifest",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -9,10 +9,10 @@
     "!*.map"
   ],
   "engines": {
-    "node": ">=14.6"
+    "node": ">=18.12"
   },
   "scripts": {
-    "lint": "eslint src/**/*.ts test/**/*.ts",
+    "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
     "test": "pnpm run compile && pnpm run _test",
     "prepublishOnly": "pnpm run compile",
     "compile": "tsc --build && pnpm run lint --fix",
@@ -20,7 +20,7 @@
   },
   "repository": "https://github.com/pnpm/pnpm/blob/main/pkg-manifest/exportable-manifest",
   "keywords": [
-    "pnpm7",
+    "pnpm10",
     "pnpm"
   ],
   "license": "MIT",
@@ -29,18 +29,28 @@
   },
   "homepage": "https://github.com/pnpm/pnpm/blob/main/pkg-manifest/exportable-manifest#readme",
   "devDependencies": {
+    "@pnpm/catalogs.config": "workspace:*",
+    "@pnpm/catalogs.types": "workspace:*",
     "@pnpm/exportable-manifest": "workspace:*",
-    "@types/ramda": "0.28.20"
+    "@pnpm/prepare": "workspace:*",
+    "@types/cross-spawn": "catalog:",
+    "@types/ramda": "catalog:",
+    "cross-spawn": "catalog:",
+    "write-yaml-file": "catalog:"
   },
   "dependencies": {
+    "@pnpm/catalogs.resolver": "workspace:*",
     "@pnpm/error": "workspace:*",
     "@pnpm/read-project-manifest": "workspace:*",
     "@pnpm/types": "workspace:*",
-    "p-map-values": "^1.0.0",
-    "ramda": "npm:@pnpm/ramda@0.28.1"
+    "p-map-values": "catalog:",
+    "ramda": "catalog:"
   },
   "funding": "https://opencollective.com/pnpm",
   "exports": {
     ".": "./lib/index.js"
+  },
+  "jest": {
+    "preset": "@pnpm/jest-config"
   }
 }

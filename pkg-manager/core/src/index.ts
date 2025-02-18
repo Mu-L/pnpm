@@ -1,4 +1,4 @@
-export {
+export type {
   BadPeerDependencyIssue,
   MissingPeerDependencyIssue,
   MissingPeerIssuesByPeerName,
@@ -6,11 +6,13 @@ export {
   PeerDependencyIssues,
   PeerDependencyIssuesByProjects,
 } from '@pnpm/types'
-export { HoistingLimits } from '@pnpm/headless'
+export type { HoistingLimits } from '@pnpm/headless'
 export * from './api'
-export * from './install/hooks'
 
-export { ProjectOptions, UnexpectedStoreError, UnexpectedVirtualStoreDirError } from '@pnpm/get-context'
-export { InstallOptions } from './install/extendInstallOptions'
+export { type ProjectOptions } from '@pnpm/get-context'
+export { UnexpectedStoreError } from './install/checkCompatibility/UnexpectedStoreError'
+export { UnexpectedVirtualStoreDirError } from './install/checkCompatibility/UnexpectedVirtualStoreDirError'
+export type { InstallOptions } from './install/extendInstallOptions'
 
-export { WorkspacePackages } from '@pnpm/resolver-base'
+export type { WorkspacePackages } from '@pnpm/resolver-base'
+export type { UpdateMatchingFunction } from '@pnpm/resolve-dependencies'

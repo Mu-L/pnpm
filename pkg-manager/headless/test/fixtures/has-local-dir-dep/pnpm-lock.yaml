@@ -1,7 +1,13 @@
-lockfileVersion: 5.4
+lockfileVersion: '9.0'
 
-specifiers:
-  example: link:example
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
 
-dependencies:
-  example: link:example
+importers:
+
+  .:
+    dependencies:
+      example:
+        specifier: link:example
+        version: link:example

@@ -1,5 +1,5 @@
-import { RegistryPackageSpec } from './parsePref'
+import { type RegistryPackageSpec } from './parsePref'
 
-export function toRaw (spec: RegistryPackageSpec) {
+export function toRaw (spec: RegistryPackageSpec): string {
   return `${spec.name}@${spec.fetchSpec}`
 }

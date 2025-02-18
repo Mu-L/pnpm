@@ -4,15 +4,22 @@ import { PnpmError } from '@pnpm/error'
 import gfs from '@pnpm/graceful-fs'
 import { readProjectManifestOnly } from '@pnpm/read-project-manifest'
 import {
-  DirectoryResolution,
-  ResolveResult,
-  TarballResolution,
+  type DirectoryResolution,
+  type ResolveResult,
+  type TarballResolution,
 } from '@pnpm/resolver-base'
-import { DependencyManifest } from '@pnpm/types'
+import { type DependencyManifest } from '@pnpm/types'
 import ssri from 'ssri'
-import { parsePref, WantedLocalDependency } from './parsePref'
+import { logger } from '@pnpm/logger'
+import { parsePref, type WantedLocalDependency } from './parsePref'
 
-export { WantedLocalDependency }
+export type { WantedLocalDependency }
+
+export interface ResolveFromLocalResult extends ResolveResult {
+  normalizedPref: string
+  resolution: TarballResolution | DirectoryResolution
+  manifest?: DependencyManifest
+}
 
 /**
  * Resolves a package hosted on the local filesystem
@@ -23,19 +30,7 @@ export async function resolveFromLocal (
     lockfileDir?: string
     projectDir: string
   }
-): Promise<
-  (
-    ResolveResult &
-    Required<Pick<ResolveResult, 'normalizedPref'>> &
-    (
-      {
-        resolution: TarballResolution
-      } | ({
-        resolution: DirectoryResolution
-      } & Required<Pick<ResolveResult, 'manifest'>>)
-    )
-  ) | null
-  > {
+): Promise<ResolveFromLocalResult | null> {
   const spec = parsePref(wantedDependency, opts.projectDir, opts.lockfileDir ?? opts.projectDir)
   if (spec == null) return null
   if (spec.type === 'file') {
@@ -59,6 +54,10 @@ export async function resolveFromLocal (
         throw new PnpmError('LINKED_PKG_DIR_NOT_FOUND',
           `Could not install from "${spec.fetchSpec}" as it does not exist.`)
       }
+      logger.warn({
+        message: `Installing a dependency from a non-existent directory: ${spec.fetchSpec}`,
+        prefix: opts.projectDir,
+      })
       localDependencyManifest = {
         name: path.basename(spec.fetchSpec),
         version: '0.0.0',
@@ -95,6 +94,6 @@ export async function resolveFromLocal (
   }
 }
 
-async function getFileIntegrity (filename: string) {
+async function getFileIntegrity (filename: string): Promise<string> {
   return (await ssri.fromStream(gfs.createReadStream(filename))).toString()
 }

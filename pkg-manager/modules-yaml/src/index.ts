@@ -1,7 +1,6 @@
 import path from 'path'
-import { DependenciesField, HoistedDependencies, Registries } from '@pnpm/types'
+import { type DepPath, type DependenciesField, type HoistedDependencies, type Registries } from '@pnpm/types'
 import readYamlFile from 'read-yaml-file'
-import fromPairs from 'ramda/src/fromPairs'
 import mapValues from 'ramda/src/map'
 import isWindows from 'is-windows'
 import writeYamlFile from 'write-yaml-file'
@@ -15,7 +14,7 @@ export type IncludedDependencies = {
 }
 
 export interface Modules {
-  hoistedAliases?: { [depPath: string]: string[] } // for backward compatibility
+  hoistedAliases?: { [depPath: DepPath]: string[] } // for backward compatibility
   hoistedDependencies: HoistedDependencies
   hoistPattern?: string[]
   included: IncludedDependencies
@@ -23,6 +22,7 @@ export interface Modules {
   nodeLinker?: 'hoisted' | 'isolated' | 'pnp'
   packageManager: string
   pendingBuilds: string[]
+  ignoredBuilds?: string[]
   prunedAt: string
   registries?: Registries // nullable for backward compatibility
   shamefullyHoist?: boolean // for backward compatibility
@@ -30,7 +30,9 @@ export interface Modules {
   skipped: string[]
   storeDir: string
   virtualStoreDir: string
+  virtualStoreDirMaxLength: number
   injectedDeps?: Record<string, string[]>
+  hoistedLocations?: Record<string, string[]>
 }
 
 export async function readModulesManifest (modulesDir: string): Promise<Modules | null> {
@@ -38,6 +40,7 @@ export async function readModulesManifest (modulesDir: string): Promise<Modules 
   let modules!: Modules
   try {
     modules = await readYamlFile<Modules>(modulesYamlPath)
+    if (!modules) return modules
   } catch (err: any) { // eslint-disable-line
     if ((err as NodeJS.ErrnoException).code !== 'ENOENT') {
       throw err
@@ -56,7 +59,7 @@ export async function readModulesManifest (modulesDir: string): Promise<Modules 
     }
     if ((modules.hoistedAliases != null) && !modules.hoistedDependencies) {
       modules.hoistedDependencies = mapValues(
-        (aliases) => fromPairs(aliases.map((alias) => [alias, 'public'])),
+        (aliases) => Object.fromEntries(aliases.map((alias) => [alias, 'public'])),
         modules.hoistedAliases
       )
     }
@@ -68,9 +71,9 @@ export async function readModulesManifest (modulesDir: string): Promise<Modules 
     if ((modules.hoistedAliases != null) && !modules.hoistedDependencies) {
       modules.hoistedDependencies = {}
       for (const depPath of Object.keys(modules.hoistedAliases)) {
-        modules.hoistedDependencies[depPath] = {}
-        for (const alias of modules.hoistedAliases[depPath]) {
-          modules.hoistedDependencies[depPath][alias] = 'private'
+        modules.hoistedDependencies[depPath as DepPath] = {}
+        for (const alias of modules.hoistedAliases[depPath as DepPath]) {
+          modules.hoistedDependencies[depPath as DepPath][alias] = 'private'
         }
       }
     }
@@ -78,6 +81,9 @@ export async function readModulesManifest (modulesDir: string): Promise<Modules 
   }
   if (!modules.prunedAt) {
     modules.prunedAt = new Date().toUTCString()
+  }
+  if (!modules.virtualStoreDirMaxLength) {
+    modules.virtualStoreDirMaxLength = 120
   }
   return modules
 }
@@ -91,8 +97,11 @@ const YAML_OPTS = {
 
 export async function writeModulesManifest (
   modulesDir: string,
-  modules: Modules & { registries: Registries }
-) {
+  modules: Modules & { registries: Registries },
+  opts?: {
+    makeModulesDir?: boolean
+  }
+): Promise<void> {
   const modulesYamlPath = path.join(modulesDir, MODULES_FILENAME)
   const saveModules = { ...modules }
   if (saveModules.skipped) saveModules.skipped.sort()
@@ -114,5 +123,12 @@ export async function writeModulesManifest (
   if (!isWindows()) {
     saveModules.virtualStoreDir = path.relative(modulesDir, saveModules.virtualStoreDir)
   }
-  return writeYamlFile(modulesYamlPath, saveModules, YAML_OPTS)
+  try {
+    await writeYamlFile(modulesYamlPath, saveModules, {
+      ...YAML_OPTS,
+      makeDir: opts?.makeModulesDir ?? false,
+    })
+  } catch (err: any) { // eslint-disable-line
+    if ((err as NodeJS.ErrnoException).code !== 'ENOENT') throw err
+  }
 }

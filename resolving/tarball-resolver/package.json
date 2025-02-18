@@ -1,6 +1,6 @@
 {
   "name": "@pnpm/tarball-resolver",
-  "version": "7.0.2",
+  "version": "1001.0.2",
   "description": "Resolver for tarball dependencies",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -9,10 +9,10 @@
     "!*.map"
   ],
   "engines": {
-    "node": ">=14.6"
+    "node": ">=18.12"
   },
   "scripts": {
-    "lint": "eslint src/**/*.ts test/**/*.ts",
+    "lint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
     "fix": "tslint -c tslint.json src/**/*.ts test/**/*.ts --fix",
     "_test": "jest",
     "test": "pnpm run compile && pnpm run _test",
@@ -26,16 +26,21 @@
   },
   "homepage": "https://github.com/pnpm/pnpm/blob/main/resolving/tarball-resolver#readme",
   "dependencies": {
+    "@pnpm/fetching-types": "workspace:*",
     "@pnpm/resolver-base": "workspace:*"
   },
   "funding": "https://opencollective.com/pnpm",
   "keywords": [
-    "pnpm7"
+    "pnpm10"
   ],
   "devDependencies": {
+    "@pnpm/fetch": "workspace:*",
     "@pnpm/tarball-resolver": "workspace:*"
   },
   "exports": {
     ".": "./lib/index.js"
+  },
+  "jest": {
+    "preset": "@pnpm/jest-config"
   }
 }

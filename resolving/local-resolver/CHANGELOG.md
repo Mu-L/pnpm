@@ -1,5 +1,321 @@
 # @pnpm/local-resolver
 
+## 1000.0.5
+
+### Patch Changes
+
+- Updated dependencies [1e229d7]
+  - @pnpm/read-project-manifest@1000.0.5
+
+## 1000.0.4
+
+### Patch Changes
+
+- Updated dependencies [b562deb]
+  - @pnpm/types@1000.1.1
+  - @pnpm/error@1000.0.2
+  - @pnpm/read-project-manifest@1000.0.4
+  - @pnpm/resolver-base@1000.1.2
+
+## 1000.0.3
+
+### Patch Changes
+
+- Updated dependencies [e050221]
+  - @pnpm/read-project-manifest@1000.0.3
+
+## 1000.0.2
+
+### Patch Changes
+
+- Updated dependencies [9591a18]
+  - @pnpm/types@1000.1.0
+  - @pnpm/read-project-manifest@1000.0.2
+  - @pnpm/resolver-base@1000.1.1
+
+## 1000.0.1
+
+### Patch Changes
+
+- Updated dependencies [6483b64]
+  - @pnpm/resolver-base@1000.1.0
+  - @pnpm/error@1000.0.1
+  - @pnpm/read-project-manifest@1000.0.1
+
+## 12.0.10
+
+### Patch Changes
+
+- @pnpm/error@6.0.3
+- @pnpm/read-project-manifest@6.0.10
+
+## 12.0.9
+
+### Patch Changes
+
+- @pnpm/error@6.0.2
+- @pnpm/read-project-manifest@6.0.9
+
+## 12.0.8
+
+### Patch Changes
+
+- Updated dependencies [d500d9f]
+  - @pnpm/types@12.2.0
+  - @pnpm/read-project-manifest@6.0.8
+  - @pnpm/resolver-base@13.0.4
+
+## 12.0.7
+
+### Patch Changes
+
+- Updated dependencies [7ee59a1]
+  - @pnpm/types@12.1.0
+  - @pnpm/read-project-manifest@6.0.7
+  - @pnpm/resolver-base@13.0.3
+
+## 12.0.6
+
+### Patch Changes
+
+- Updated dependencies [cb006df]
+  - @pnpm/types@12.0.0
+  - @pnpm/read-project-manifest@6.0.6
+  - @pnpm/resolver-base@13.0.2
+
+## 12.0.5
+
+### Patch Changes
+
+- Updated dependencies [0ef168b]
+  - @pnpm/types@11.1.0
+  - @pnpm/read-project-manifest@6.0.5
+  - @pnpm/resolver-base@13.0.1
+
+## 12.0.4
+
+### Patch Changes
+
+- Updated dependencies [dd00eeb]
+- Updated dependencies
+  - @pnpm/resolver-base@13.0.0
+  - @pnpm/types@11.0.0
+  - @pnpm/read-project-manifest@6.0.4
+
+## 12.0.3
+
+### Patch Changes
+
+- Updated dependencies [13e55b2]
+  - @pnpm/types@10.1.1
+  - @pnpm/read-project-manifest@6.0.3
+  - @pnpm/resolver-base@12.0.2
+
+## 12.0.2
+
+### Patch Changes
+
+- Updated dependencies [45f4262]
+  - @pnpm/types@10.1.0
+  - @pnpm/read-project-manifest@6.0.2
+  - @pnpm/resolver-base@12.0.1
+
+## 12.0.1
+
+### Patch Changes
+
+- Updated dependencies [a7aef51]
+  - @pnpm/error@6.0.1
+  - @pnpm/read-project-manifest@6.0.1
+
+## 12.0.0
+
+### Major Changes
+
+- 43cdd87: Node.js v16 support dropped. Use at least Node.js v18.12.
+
+### Patch Changes
+
+- Updated dependencies [7733f3a]
+- Updated dependencies [3ded840]
+- Updated dependencies [43cdd87]
+- Updated dependencies [b13d2dc]
+- Updated dependencies [730929e]
+  - @pnpm/types@10.0.0
+  - @pnpm/error@6.0.0
+  - @pnpm/read-project-manifest@6.0.0
+  - @pnpm/resolver-base@12.0.0
+  - @pnpm/graceful-fs@4.0.0
+
+## 11.0.4
+
+### Patch Changes
+
+- Updated dependencies [31054a63e]
+  - @pnpm/resolver-base@11.1.0
+
+## 11.0.3
+
+### Patch Changes
+
+- Updated dependencies [4d34684f1]
+  - @pnpm/types@9.4.2
+  - @pnpm/read-project-manifest@5.0.10
+  - @pnpm/resolver-base@11.0.2
+
+## 11.0.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @pnpm/types@9.4.1
+  - @pnpm/read-project-manifest@5.0.9
+  - @pnpm/resolver-base@11.0.1
+
+## 11.0.1
+
+### Patch Changes
+
+- Updated dependencies [4c2450208]
+  - @pnpm/resolver-base@11.0.0
+
+## 11.0.0
+
+### Major Changes
+
+- 5b7ed47d8: `@pnpm/logger` added as a peer dependency.
+
+### Patch Changes
+
+- 5b7ed47d8: Print a warning when installing a dependency from a non-existent directory [#7159](https://github.com/pnpm/pnpm/issues/7159)
+- Updated dependencies [43ce9e4a6]
+  - @pnpm/types@9.4.0
+  - @pnpm/read-project-manifest@5.0.8
+  - @pnpm/resolver-base@10.0.4
+
+## 10.0.9
+
+### Patch Changes
+
+- 01bc58e2c: Update ssri to v10.0.5.
+
+## 10.0.8
+
+### Patch Changes
+
+- Updated dependencies [d774a3196]
+  - @pnpm/types@9.3.0
+  - @pnpm/read-project-manifest@5.0.7
+  - @pnpm/resolver-base@10.0.3
+
+## 10.0.7
+
+### Patch Changes
+
+- Updated dependencies [9caa33d53]
+  - @pnpm/graceful-fs@3.2.0
+  - @pnpm/read-project-manifest@5.0.6
+
+## 10.0.6
+
+### Patch Changes
+
+- Updated dependencies [083bbf590]
+  - @pnpm/graceful-fs@3.1.0
+  - @pnpm/read-project-manifest@5.0.5
+
+## 10.0.5
+
+### Patch Changes
+
+- Updated dependencies [aa2ae8fe2]
+  - @pnpm/types@9.2.0
+  - @pnpm/read-project-manifest@5.0.4
+  - @pnpm/resolver-base@10.0.2
+
+## 10.0.4
+
+### Patch Changes
+
+- Updated dependencies [b4892acc5]
+  - @pnpm/read-project-manifest@5.0.3
+
+## 10.0.3
+
+### Patch Changes
+
+- @pnpm/error@5.0.2
+- @pnpm/read-project-manifest@5.0.2
+
+## 10.0.2
+
+### Patch Changes
+
+- d55b41a8b: Dependencies have been updated.
+
+## 10.0.1
+
+### Patch Changes
+
+- Updated dependencies [a9e0b7cbf]
+  - @pnpm/types@9.1.0
+  - @pnpm/read-project-manifest@5.0.1
+  - @pnpm/resolver-base@10.0.1
+  - @pnpm/error@5.0.1
+
+## 10.0.0
+
+### Major Changes
+
+- eceaa8b8b: Node.js 14 support dropped.
+
+### Patch Changes
+
+- Updated dependencies [eceaa8b8b]
+  - @pnpm/read-project-manifest@5.0.0
+  - @pnpm/resolver-base@10.0.0
+  - @pnpm/graceful-fs@3.0.0
+  - @pnpm/error@5.0.0
+  - @pnpm/types@9.0.0
+
+## 9.0.9
+
+### Patch Changes
+
+- Updated dependencies [955874422]
+  - @pnpm/graceful-fs@2.1.0
+  - @pnpm/read-project-manifest@4.1.4
+
+## 9.0.8
+
+### Patch Changes
+
+- Updated dependencies [029143cff]
+- Updated dependencies [029143cff]
+  - @pnpm/resolver-base@9.2.0
+
+## 9.0.7
+
+### Patch Changes
+
+- 1e6de89b6: Update ssri to v10.0.1.
+
+## 9.0.6
+
+### Patch Changes
+
+- @pnpm/error@4.0.1
+- @pnpm/read-project-manifest@4.1.3
+
+## 9.0.5
+
+### Patch Changes
+
+- Updated dependencies [b77651d14]
+  - @pnpm/types@8.10.0
+  - @pnpm/read-project-manifest@4.1.2
+  - @pnpm/resolver-base@9.1.5
+
 ## 9.0.4
 
 ### Patch Changes

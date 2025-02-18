@@ -4,9 +4,9 @@ import { prepareEmpty, preparePackages } from '@pnpm/prepare'
 import { install, mutateModules } from '@pnpm/core'
 import { testDefaults } from '../utils'
 import { LOCKFILE_VERSION, WANTED_LOCKFILE } from '@pnpm/constants'
-import { ProjectManifest } from '@pnpm/types'
+import { type ProjectRootDir, type ProjectManifest } from '@pnpm/types'
 import { getCurrentBranch } from '@pnpm/git-utils'
-import writeYamlFile from 'write-yaml-file'
+import { sync as writeYamlFile } from 'write-yaml-file'
 
 jest.mock('@pnpm/git-utils', () => ({ getCurrentBranch: jest.fn() }))
 
@@ -14,9 +14,9 @@ test('install with git-branch-lockfile = true', async () => {
   prepareEmpty()
 
   const branchName: string = 'main-branch'
-  getCurrentBranch['mockReturnValue'](branchName)
+  ;(getCurrentBranch as jest.Mock).mockReturnValue(branchName)
 
-  const opts = await testDefaults({
+  const opts = testDefaults({
     useGitBranchLockfile: true,
   })
 
@@ -34,7 +34,7 @@ test('install with git-branch-lockfile = true and no lockfile changes', async ()
   prepareEmpty()
 
   const branchName: string = 'main-branch'
-  getCurrentBranch['mockReturnValue'](branchName)
+  ;(getCurrentBranch as jest.Mock).mockReturnValue(branchName)
 
   const manifest: ProjectManifest = {
     dependencies: {
@@ -42,14 +42,14 @@ test('install with git-branch-lockfile = true and no lockfile changes', async ()
     },
   }
 
-  const opts1 = await testDefaults({
+  const opts1 = testDefaults({
     useGitBranchLockfile: false,
   })
   await install(manifest, opts1)
 
   expect(fs.existsSync(WANTED_LOCKFILE)).toBe(true)
 
-  const opts2 = await testDefaults({
+  const opts2 = testDefaults({
     useGitBranchLockfile: true,
   })
   await install(manifest, opts2)
@@ -86,25 +86,25 @@ test('install a workspace with git-branch-lockfile = true', async () => {
   ])
 
   const branchName: string = 'main-branch'
-  getCurrentBranch['mockReturnValue'](branchName)
+  ;(getCurrentBranch as jest.Mock).mockReturnValue(branchName)
 
-  const opts = await testDefaults({
+  const opts = testDefaults({
     useGitBranchLockfile: true,
     allProjects: [
       {
         buildIndex: 0,
         manifest: rootManifest,
-        rootDir: process.cwd(),
+        rootDir: process.cwd() as ProjectRootDir,
       },
       {
         buildIndex: 0,
         manifest: project1Manifest,
-        rootDir: path.resolve('project-1'),
+        rootDir: path.resolve('project-1') as ProjectRootDir,
       },
       {
         buildIndex: 0,
         manifest: project2Manifest,
-        rootDir: path.resolve('project-2'),
+        rootDir: path.resolve('project-2') as ProjectRootDir,
       },
     ],
   })
@@ -112,15 +112,15 @@ test('install a workspace with git-branch-lockfile = true', async () => {
   await mutateModules([
     {
       mutation: 'install',
-      rootDir: process.cwd(),
+      rootDir: process.cwd() as ProjectRootDir,
     },
     {
       mutation: 'install',
-      rootDir: path.resolve('project-1'),
+      rootDir: path.resolve('project-1') as ProjectRootDir,
     },
     {
       mutation: 'install',
-      rootDir: path.resolve('project-2'),
+      rootDir: path.resolve('project-2') as ProjectRootDir,
     },
   ], opts)
 
@@ -132,17 +132,17 @@ test('install with --merge-git-branch-lockfiles', async () => {
   prepareEmpty()
 
   const branchName: string = 'main-branch'
-  getCurrentBranch['mockReturnValue'](branchName)
+  ;(getCurrentBranch as jest.Mock).mockReturnValue(branchName)
 
   const otherLockfilePath: string = path.resolve('pnpm-lock.other.yaml')
-  await writeYamlFile(otherLockfilePath, {
+  writeYamlFile(otherLockfilePath, {
     whatever: 'whatever',
   })
 
   expect(fs.existsSync(otherLockfilePath)).toBe(true)
   expect(fs.existsSync(WANTED_LOCKFILE)).toBe(false)
 
-  const opts = await testDefaults({
+  const opts = testDefaults({
     useGitBranchLockfile: true,
     mergeGitBranchLockfiles: true,
   })
@@ -160,52 +160,69 @@ test('install with --merge-git-branch-lockfiles when merged lockfile is up to da
   const project = prepareEmpty()
 
   // @types/semver installed in the main branch
-  await writeYamlFile(WANTED_LOCKFILE, {
-    dependencies: {
-      '@types/semver': '5.3.31',
+  writeYamlFile(WANTED_LOCKFILE, {
+    importers: {
+      '.': {
+        dependencies: {
+          '@types/semver': {
+            specifier: '5.3.31',
+            version: '5.3.31',
+          },
+        },
+      },
     },
     lockfileVersion: LOCKFILE_VERSION,
     packages: {
-      '/@types/semver/5.3.31': {
+      '@types/semver@5.3.31': {
         resolution: {
           integrity: 'sha512-WBv5F9HrWTyG800cB9M3veCVkFahqXN7KA7c3VUCYZm/xhNzzIFiXiq+rZmj75j7GvWelN3YNrLX7FjtqBvhMw==',
         },
       },
     },
-    specifiers: {
-      '@types/semver': '5.3.31',
+    snapshots: {
+      '@types/semver@5.3.31': {},
     },
   }, { lineWidth: 1000 })
 
   const branchName: string = 'main-branch'
-  getCurrentBranch['mockReturnValue'](branchName)
+  ;(getCurrentBranch as jest.Mock).mockReturnValue(branchName)
 
   // is-positive installed in the other branch
   const otherLockfilePath: string = path.resolve('pnpm-lock.other.yaml')
   const otherLockfileContent = {
-    dependencies: {
-      '@types/semver': '5.3.31',
-      'is-positive': '3.1.0',
+    importers: {
+      '.': {
+        dependencies: {
+          '@types/semver': {
+            specifier: '5.3.31',
+            version: '5.3.31',
+          },
+          'is-positive': {
+            specifier: '^3.1.0',
+            version: '3.1.0',
+          },
+        },
+      },
     },
     lockfileVersion: LOCKFILE_VERSION,
     packages: {
-      '/@types/semver/5.3.31': {
+      '@types/semver@5.3.31': {
         resolution: {
           integrity: 'sha512-WBv5F9HrWTyG800cB9M3veCVkFahqXN7KA7c3VUCYZm/xhNzzIFiXiq+rZmj75j7GvWelN3YNrLX7FjtqBvhMw==',
         },
       },
-      '/is-positive/3.1.0': {
+      'is-positive@3.1.0': {
         resolution: {
           integrity: 'sha512-8ND1j3y9/HP94TOvGzr69/FgbkX2ruOldhLEsTWwcJVfo4oRjwemJmJxt7RJkKYH8tz7vYBP9JcKQY8CLuJ90Q==',
         },
       },
     },
-    specifiers: {
-      '@types/semver': '5.3.31',
-      'is-positive': '^3.1.0',
+    snapshots: {
+      '@types/semver@5.3.31': {},
+      'is-positive@3.1.0': {},
     },
   }
-  await writeYamlFile(otherLockfilePath, otherLockfileContent, { lineWidth: 1000 })
+  writeYamlFile(otherLockfilePath, otherLockfileContent, { lineWidth: 1000 })
 
   // the other branch merged to the main branch
   const projectManifest: ProjectManifest = {
@@ -214,7 +231,7 @@ test('install with --merge-git-branch-lockfiles when merged lockfile is up to da
       'is-positive': '^3.1.0',
     },
   }
-  const opts = await testDefaults({
+  const opts = testDefaults({
     useGitBranchLockfile: true,
     mergeGitBranchLockfiles: true,
     frozenLockfile: true,
@@ -224,6 +241,6 @@ test('install with --merge-git-branch-lockfiles when merged lockfile is up to da
   expect(fs.existsSync(otherLockfilePath)).toBe(false)
   expect(fs.existsSync(WANTED_LOCKFILE)).toBe(true)
 
-  const wantedLockfileAfterMergeOther = await project.readLockfile()
+  const wantedLockfileAfterMergeOther = project.readLockfile()
   expect(wantedLockfileAfterMergeOther).toEqual(otherLockfileContent)
 })

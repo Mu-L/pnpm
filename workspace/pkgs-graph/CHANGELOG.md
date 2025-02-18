@@ -1,88 +1,274 @@
-# pkgs-graph
+# @pnpm/workspace.pkgs-graph
 
-## 8.0.0
+## 1000.0.4
+
+### Patch Changes
+
+- Updated dependencies [b562deb]
+  - @pnpm/types@1000.1.1
+  - @pnpm/npm-resolver@1000.1.3
+
+## 1000.0.3
+
+### Patch Changes
+
+- Updated dependencies [9591a18]
+  - @pnpm/types@1000.1.0
+  - @pnpm/npm-resolver@1000.1.2
+
+## 1000.0.2
+
+### Patch Changes
+
+- @pnpm/npm-resolver@1000.1.1
+
+## 1000.0.1
+
+### Patch Changes
+
+- Updated dependencies [6483b64]
+  - @pnpm/npm-resolver@1000.1.0
+
+## 4.0.8
+
+### Patch Changes
+
+- Updated dependencies [501c152]
+  - @pnpm/npm-resolver@22.0.0
+
+## 4.0.7
+
+### Patch Changes
+
+- Updated dependencies [222d10a]
+  - @pnpm/npm-resolver@21.1.1
+
+## 4.0.6
+
+### Patch Changes
+
+- Updated dependencies [83681da]
+  - @pnpm/npm-resolver@21.1.0
+
+## 4.0.5
+
+### Patch Changes
+
+- Updated dependencies [d500d9f]
+  - @pnpm/types@12.2.0
+  - @pnpm/npm-resolver@21.0.5
+
+## 4.0.4
+
+### Patch Changes
+
+- Updated dependencies [7ee59a1]
+  - @pnpm/types@12.1.0
+  - @pnpm/npm-resolver@21.0.4
+
+## 4.0.3
+
+### Patch Changes
+
+- Updated dependencies [cb006df]
+  - @pnpm/types@12.0.0
+  - @pnpm/npm-resolver@21.0.3
+
+## 4.0.2
+
+### Patch Changes
+
+- Updated dependencies [0ef168b]
+  - @pnpm/types@11.1.0
+  - @pnpm/npm-resolver@21.0.2
+
+## 4.0.1
+
+### Patch Changes
+
+- Updated dependencies [afe520d]
+  - @pnpm/npm-resolver@21.0.1
+
+## 4.0.0
 
 ### Major Changes
 
-- f884689e0: Require `@pnpm/logger` v5.
+- dd00eeb: Renamed dir to rootDir in the Project object.
 
 ### Patch Changes
 
-- Updated dependencies [f884689e0]
-  - @pnpm/resolve-workspace-range@4.0.0
+- Updated dependencies [dd00eeb]
+- Updated dependencies
+  - @pnpm/npm-resolver@21.0.0
+  - @pnpm/types@11.0.0
 
-## 7.0.2
-
-### Patch Changes
-
-- 8103f92bd: Use a patched version of ramda to fix deprecation warnings on Node.js 16. Related issue: https://github.com/ramda/ramda/pull/3270
-
-## 7.0.1
+## 3.0.6
 
 ### Patch Changes
 
-- 5f643f23b: Update ramda to v0.28.
-- 42c1ea1c0: Update validate-npm-package-name to v4.
+- Updated dependencies [13e55b2]
+  - @pnpm/types@10.1.1
+  - @pnpm/npm-resolver@20.0.1
 
-## 7.0.0
+## 3.0.5
+
+### Patch Changes
+
+- Updated dependencies [0c08e1c]
+  - @pnpm/npm-resolver@20.0.0
+
+## 3.0.4
+
+### Patch Changes
+
+- Updated dependencies [45f4262]
+  - @pnpm/types@10.1.0
+  - @pnpm/npm-resolver@19.0.4
+
+## 3.0.3
+
+### Patch Changes
+
+- @pnpm/npm-resolver@19.0.3
+
+## 3.0.2
+
+### Patch Changes
+
+- Updated dependencies [43b6bb7]
+  - @pnpm/npm-resolver@19.0.2
+
+## 3.0.1
+
+### Patch Changes
+
+- Updated dependencies [cb0f459]
+  - @pnpm/npm-resolver@19.0.1
+
+## 3.0.0
 
 ### Major Changes
 
-- 542014839: Node.js 12 is not supported.
+- 43cdd87: Node.js v16 support dropped. Use at least Node.js v18.12.
 
 ### Patch Changes
 
-- Updated dependencies [542014839]
-  - @pnpm/resolve-workspace-range@3.0.0
+- ca2be03: When sorting packages in a workspace, take into account workspace dependencies specified as `peerDependencies` [#7813](https://github.com/pnpm/pnpm/issues/7813).
+- Updated dependencies [7733f3a]
+- Updated dependencies [cdd8365]
+- Updated dependencies [43cdd87]
+- Updated dependencies [d381a60]
+- Updated dependencies [730929e]
+  - @pnpm/types@10.0.0
+  - @pnpm/npm-resolver@19.0.0
+  - @pnpm/resolve-workspace-range@6.0.0
 
-## 6.1.3
-
-### Patch Changes
-
-- f82cc7f77: fix: when set workspace protocol the pkgs in workspace without version not ignore
-
-## 6.1.2
-
-### Patch Changes
-
-- a1a03d145: Import only the required functions from ramda.
-
-## 6.1.1
+## 2.0.14
 
 ### Patch Changes
 
-- 1084ca1a7: Include dependencies with workspace version aliases in graph
+- Updated dependencies [31054a63e]
+  - @pnpm/npm-resolver@18.1.0
 
-## 6.1.0
-
-### Minor Changes
-
-- dfdf669e6: Add new cli arg --filter-prod. --filter-prod acts the same as --filter, but it omits devDependencies when building dependencies
+## 2.0.13
 
 ### Patch Changes
 
-- Updated dependencies [85fb21a83]
-  - @pnpm/resolve-workspace-range@2.1.0
+- Updated dependencies [33313d2fd]
+  - @pnpm/npm-resolver@18.0.2
 
-## 6.0.0
+## 2.0.12
+
+### Patch Changes
+
+- @pnpm/npm-resolver@18.0.1
+
+## 2.0.11
+
+### Patch Changes
+
+- Updated dependencies [cd4fcfff0]
+  - @pnpm/npm-resolver@18.0.0
+
+## 2.0.10
+
+### Patch Changes
+
+- Updated dependencies [4c2450208]
+  - @pnpm/npm-resolver@17.0.0
+
+## 2.0.9
+
+### Patch Changes
+
+- @pnpm/npm-resolver@16.0.13
+
+## 2.0.8
+
+### Patch Changes
+
+- Updated dependencies [01bc58e2c]
+- Updated dependencies [ff55119a8]
+  - @pnpm/npm-resolver@16.0.12
+
+## 2.0.7
+
+### Patch Changes
+
+- @pnpm/npm-resolver@16.0.11
+
+## 2.0.6
+
+### Patch Changes
+
+- @pnpm/npm-resolver@16.0.10
+
+## 2.0.5
+
+### Patch Changes
+
+- 41c2b65cf: Respect workspace alias syntax in pkg graph [#6922](https://github.com/pnpm/pnpm/issues/6922)
+- Updated dependencies [41c2b65cf]
+  - @pnpm/npm-resolver@16.0.9
+
+## 2.0.4
+
+### Patch Changes
+
+- Updated dependencies [c0760128d]
+  - @pnpm/resolve-workspace-range@5.0.1
+
+## 2.0.3
+
+### Patch Changes
+
+- 9fd0e375e: Speed up createPkgGraph when directory specifiers are present
+
+## 2.0.2
+
+### Patch Changes
+
+- 35d98c7a8: Speed up createPkgGraph by using a table for manifest name lookup
+
+## 2.0.1
+
+### Patch Changes
+
+- 572068180: Optimize createPkgGraph by calling Object.values only once
+
+## 2.0.0
 
 ### Major Changes
 
-- 97b986fbc: Node.js 10 support is dropped. At least Node.js 12.17 is required for the package to work.
+- eceaa8b8b: Node.js 14 support dropped.
 
 ### Patch Changes
 
-- Updated dependencies [97b986fbc]
-  - @pnpm/resolve-workspace-range@2.0.0
+- Updated dependencies [eceaa8b8b]
+  - @pnpm/resolve-workspace-range@5.0.0
 
-## 5.2.0
+## 1.0.0
 
-### Minor Changes
+### Major Changes
 
-- e37a5a175: Support linkedWorkspacePackages=false.
-
-## 5.1.6
-
-### Patch Changes
-
-- @pnpm/resolve-workspace-range@1.0.2
+- 313702d76: Project renamed from `pkgs-graph` to `@pnpm/workspace.pkgs-graph`.

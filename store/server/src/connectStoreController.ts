@@ -1,13 +1,13 @@
 import { fetch } from '@pnpm/fetch'
 import {
-  FetchPackageToStoreOptions,
-  PackageFilesResponse,
-  PackageResponse,
-  RequestPackageOptions,
-  StoreController,
-  WantedDependency,
+  type PkgRequestFetchResult,
+  type FetchPackageToStoreOptions,
+  type PackageFilesResponse,
+  type PackageResponse,
+  type RequestPackageOptions,
+  type StoreController,
+  type WantedDependency,
 } from '@pnpm/store-controller-types'
-import { DependencyManifest } from '@pnpm/types'
 
 import pLimit from 'p-limit'
 import pShare from 'promise-share'
@@ -30,6 +30,7 @@ export async function connectStoreController (
     resolve({
       close: async () => { },
       fetchPackage: fetchPackage.bind(null, remotePrefix, limitedFetch),
+      getFilesIndexFilePath: () => ({ filesIndexFile: '', target: '' }), // NOT IMPLEMENTED
       importPackage: async (to: string, opts: {
         filesResponse: PackageFilesResponse
         force: boolean
@@ -52,6 +53,7 @@ export async function connectStoreController (
           opts,
         })
       },
+      clearResolutionCache: () => {},
     })
   })
 }
@@ -89,70 +91,44 @@ async function requestPackage (
   options: RequestPackageOptions
 ): Promise<PackageResponse> {
   const msgId = uuidv4()
-
-  return limitedFetch(`${remotePrefix}/requestPackage`, {
+  const packageResponseBody = await limitedFetch(`${remotePrefix}/requestPackage`, {
     msgId,
     options,
     wantedDependency,
   })
-    .then((packageResponseBody: object) => {
-    const fetchingBundledManifest = !packageResponseBody['fetchingBundledManifestInProgress'] // eslint-disable-line
-        ? undefined
-        : limitedFetch(`${remotePrefix}/rawManifestResponse`, {
-          msgId,
-        })
-    delete packageResponseBody['fetchingBundledManifestInProgress'] // eslint-disable-line
-
-      if (options.skipFetch) {
-        return {
-          body: packageResponseBody,
-          bundledManifest: fetchingBundledManifest && pShare(fetchingBundledManifest),
-        }
-      }
-
-      const fetchingFiles = limitedFetch(`${remotePrefix}/packageFilesResponse`, {
-        msgId,
-      })
-      return {
-        body: packageResponseBody,
-        bundledManifest: fetchingBundledManifest && pShare(fetchingBundledManifest),
-        files: pShare(fetchingFiles),
-        finishing: pShare(Promise.all([fetchingBundledManifest, fetchingFiles]).then(() => undefined)),
-      }
-    })
+  if (options.skipFetch === true) {
+    return { body: packageResponseBody }
+  }
+  const fetchingFiles = limitedFetch(`${remotePrefix}/packageFilesResponse`, {
+    msgId,
+  })
+  return {
+    body: packageResponseBody,
+    fetching: pShare(fetchingFiles),
+  }
 }
 
-function fetchPackage (
+async function fetchPackage (
   remotePrefix: string,
   limitedFetch: (url: string, body: object) => any, // eslint-disable-line
   options: FetchPackageToStoreOptions
-): {
-    bundledManifest?: () => Promise<DependencyManifest>
-    files: () => Promise<PackageFilesResponse>
+): Promise<{
+    fetching: () => Promise<PkgRequestFetchResult>
     filesIndexFile: string
-    finishing: () => Promise<void>
     inStoreLocation: string
-  } {
+  }> {
   const msgId = uuidv4()
 
-  return limitedFetch(`${remotePrefix}/fetchPackage`, {
+  const fetchResponseBody = await limitedFetch(`${remotePrefix}/fetchPackage`, {
     msgId,
     options,
+  }) as object & { filesIndexFile: string, inStoreLocation: string }
+  const fetching = limitedFetch(`${remotePrefix}/packageFilesResponse`, {
+    msgId,
   })
-    .then((fetchResponseBody: object & { filesIndexFile: string, inStoreLocation: string }) => {
-      const fetchingBundledManifest = options.fetchRawManifest
-        ? limitedFetch(`${remotePrefix}/rawManifestResponse`, { msgId })
-        : undefined
-
-      const fetchingFiles = limitedFetch(`${remotePrefix}/packageFilesResponse`, {
-        msgId,
-      })
-      return {
-        bundledManifest: fetchingBundledManifest && pShare(fetchingBundledManifest),
-        files: pShare(fetchingFiles),
-        filesIndexFile: fetchResponseBody.filesIndexFile,
-        finishing: pShare(Promise.all([fetchingBundledManifest, fetchingFiles]).then(() => undefined)),
-        inStoreLocation: fetchResponseBody.inStoreLocation,
-      }
-    })
+  return {
+    fetching: pShare(fetching),
+    filesIndexFile: fetchResponseBody.filesIndexFile,
+    inStoreLocation: fetchResponseBody.inStoreLocation,
+  }
 }

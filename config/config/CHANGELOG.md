@@ -1,5 +1,897 @@
 # @pnpm/config
 
+## 1002.3.1
+
+### Patch Changes
+
+- fee898f: Setting `init-package-manager` should work.
+
+## 1002.3.0
+
+### Minor Changes
+
+- f6006f2: Added a new setting called `strict-dep-builds`. When enabled, the installation will exit with a non-zero exit code if any dependencies have unreviewed build scripts (aka postinstall scripts) [#9071](https://github.com/pnpm/pnpm/pull/9071).
+
+## 1002.2.1
+
+### Patch Changes
+
+- Updated dependencies [1e229d7]
+  - @pnpm/read-project-manifest@1000.0.5
+
+## 1002.2.0
+
+### Minor Changes
+
+- f3ffaed: Added a new setting called `optimistic-repeat-install`. When enabled, a fast check will be performed before proceeding to installation. This way a repeat install or an install on a project with everything up-to-date becomes a lot faster. But some edge cases might arise, so we keep it disabled by default for now [#8977](https://github.com/pnpm/pnpm/pull/8977).
+
+### Patch Changes
+
+- c96eb2b: Fix infinite loop caused by lifecycle scripts using `pnpm` to execute other scripts during `pnpm install` with `verify-deps-before-run=install` [#8954](https://github.com/pnpm/pnpm/issues/8954).
+- Updated dependencies [9a44e6c]
+- Updated dependencies [b562deb]
+  - @pnpm/constants@1001.1.0
+  - @pnpm/types@1000.1.1
+  - @pnpm/error@1000.0.2
+  - @pnpm/workspace.read-manifest@1000.0.2
+  - @pnpm/pnpmfile@1001.0.4
+  - @pnpm/read-project-manifest@1000.0.4
+  - @pnpm/catalogs.config@1000.0.2
+
+## 1002.1.2
+
+### Patch Changes
+
+- Updated dependencies [e050221]
+  - @pnpm/read-project-manifest@1000.0.3
+  - @pnpm/pnpmfile@1001.0.3
+
+## 1002.1.1
+
+### Patch Changes
+
+- 1f5169f: Update `@pnpm/npm-conf` to v3.
+- Updated dependencies [9591a18]
+  - @pnpm/types@1000.1.0
+  - @pnpm/pnpmfile@1001.0.2
+  - @pnpm/read-project-manifest@1000.0.2
+
+## 1002.1.0
+
+### Minor Changes
+
+- f891288: `pnpm deploy` now tries creating a dedicated lockfile from a shared lockfile for deployment. It will fallback to deployment without a lockfile if there is no shared lockfile or `force-legacy-deploy` is set to `true`.
+
+### Patch Changes
+
+- f90a94b: Fix reading options from pnpm.onlyBuiltDependencies [#8920](https://github.com/pnpm/pnpm/issues/8920).
+
+## 1002.0.0
+
+### Major Changes
+
+- 878ea8c: By default don't run lifecycle scripts of dependencies during installation. In order to allow lifecycle scripts of specific dependencies, they should be listed in the `pnpm.onlyBuiltDependencies` field of `package.json` [#8897](https://github.com/pnpm/pnpm/pull/8897).
+
+### Patch Changes
+
+- @pnpm/pnpmfile@1001.0.1
+
+## 1001.0.0
+
+### Major Changes
+
+- ac5b9d8: All dependencies are installed even when the `NODE_ENV` environment variable is set to `production [#8827](https://github.com/pnpm/pnpm/issues/8827).
+
+### Minor Changes
+
+- 6483b64: A new setting, `inject-workspace-packages`, has been added to allow hard-linking all local workspace dependencies instead of symlinking them. Previously, this behavior was achievable via the [`dependenciesMeta[].injected`](https://pnpm.io/package_json#dependenciesmetainjected) setting, which remains supported [#8836](https://github.com/pnpm/pnpm/pull/8836).
+
+### Patch Changes
+
+- Updated dependencies [d2e83b0]
+- Updated dependencies [d47c426]
+- Updated dependencies [a76da0c]
+  - @pnpm/constants@1001.0.0
+  - @pnpm/pnpmfile@1001.0.0
+  - @pnpm/error@1000.0.1
+  - @pnpm/workspace.read-manifest@1000.0.1
+  - @pnpm/catalogs.config@1000.0.1
+  - @pnpm/read-project-manifest@1000.0.1
+
+## 22.0.0
+
+### Major Changes
+
+- 477e0c1: The `pnpm link` command adds overrides to the root `package.json`. In a workspace the override is added to the root of the workspace, so it links the dependency to all projects in a workspace.
+
+  To link a package globally, just run `pnpm link` from the package's directory. Previously, the command `pnpm link -g` was required to link a package globally.
+
+  Related PR: [#8653](https://github.com/pnpm/pnpm/pull/8653).
+
+- dfcf034: pnpm will now manage it's own versions according to the `packageManager` filed of `package.json`. To disable this, set `manage-package-manager-versions` to `false`.
+- 592e2ef: Do not hoist to the root of `node_modules` packages that contain the word `eslint` or `prettier` in their name. Changed the default value of the `public-hoist-pattern` setting [#8378](https://github.com/pnpm/pnpm/issues/8378).
+- e9985b6: The default value of `virtual-store-dir-max-length` on Windows reduced to 60 characters.
+
+### Minor Changes
+
+- 19d5b51: Add a feature to check dependencies before running scripts [#8585](https://github.com/pnpm/pnpm/issues/8585).
+
+### Patch Changes
+
+- 1dbc56a: Convert settings in local `.npmrc` files to their correct types. For instance, `child-concurrency` should be a number, not a string [#5075](https://github.com/pnpm/pnpm/issues/5075).
+- Updated dependencies [19d5b51]
+- Updated dependencies [8108680]
+- Updated dependencies [bcffd4d]
+- Updated dependencies [c4f5231]
+  - @pnpm/constants@10.0.0
+  - @pnpm/pnpmfile@7.0.0
+  - @pnpm/error@6.0.3
+  - @pnpm/workspace.read-manifest@2.2.2
+  - @pnpm/catalogs.config@0.1.2
+  - @pnpm/read-project-manifest@6.0.10
+
+## 21.8.5
+
+### Patch Changes
+
+- @pnpm/pnpmfile@6.0.13
+
+## 21.8.4
+
+### Patch Changes
+
+- Updated dependencies [83681da]
+  - @pnpm/constants@9.0.0
+  - @pnpm/error@6.0.2
+  - @pnpm/workspace.read-manifest@2.2.1
+  - @pnpm/catalogs.config@0.1.1
+  - @pnpm/pnpmfile@6.0.12
+  - @pnpm/read-project-manifest@6.0.9
+
+## 21.8.3
+
+### Patch Changes
+
+- Updated dependencies [d500d9f]
+  - @pnpm/types@12.2.0
+  - @pnpm/pnpmfile@6.0.11
+  - @pnpm/read-project-manifest@6.0.8
+
+## 21.8.2
+
+### Patch Changes
+
+- Updated dependencies [7ee59a1]
+  - @pnpm/types@12.1.0
+  - @pnpm/pnpmfile@6.0.10
+  - @pnpm/read-project-manifest@6.0.7
+
+## 21.8.1
+
+### Patch Changes
+
+- 251ab21: Fixed passing `public-hoist-pattern` and `hoist-pattern` via env variables [#8339](https://github.com/pnpm/pnpm/issues/8339).
+
+## 21.8.0
+
+### Minor Changes
+
+- 26b065c: Added pnpm version management to pnpm. If the `manage-package-manager-versions` setting is set to `true`, pnpm will switch to the version specified in the `packageManager` field of `package.json` [#8363](https://github.com/pnpm/pnpm/pull/8363). This is the same field used by Corepack. Example:
+
+  ```json
+  {
+    "packageManager": "pnpm@9.3.0"
+  }
+  ```
+
+## 21.7.0
+
+### Minor Changes
+
+- d20eed3: Substitute environment variables in config keys [#6679](https://github.com/pnpm/pnpm/issues/6679).
+
+### Patch Changes
+
+- Updated dependencies [cb006df]
+  - @pnpm/types@12.0.0
+  - @pnpm/pnpmfile@6.0.9
+  - @pnpm/read-project-manifest@6.0.6
+
+## 21.6.3
+
+### Patch Changes
+
+- @pnpm/pnpmfile@6.0.8
+
+## 21.6.2
+
+### Patch Changes
+
+- Updated dependencies [0ef168b]
+  - @pnpm/types@11.1.0
+  - @pnpm/pnpmfile@6.0.7
+  - @pnpm/read-project-manifest@6.0.5
+
+## 21.6.1
+
+### Patch Changes
+
+- afe520d: Update symlink-dir to v6.0.1.
+
+## 21.6.0
+
+### Minor Changes
+
+- 1b03682: Read authentication information from .npmrc in the current directory when running `dlx` [#7996](https://github.com/pnpm/pnpm/issues/7996).
+
+### Patch Changes
+
+- Updated dependencies [dd00eeb]
+- Updated dependencies
+- Updated dependencies [9c63679]
+  - @pnpm/types@11.0.0
+  - @pnpm/workspace.read-manifest@2.2.0
+  - @pnpm/pnpmfile@6.0.6
+  - @pnpm/read-project-manifest@6.0.4
+  - @pnpm/catalogs.config@0.1.0
+
+## 21.5.0
+
+### Minor Changes
+
+- 7c6c923: Some registries allow the exact same content to be published under different package names and/or versions. This breaks the validity checks of packages in the store. To avoid errors when verifying the names and versions of such packages in the store, you may now set the `strict-store-pkg-content-check` setting to `false` [#4724](https://github.com/pnpm/pnpm/issues/4724).
+- 04b8363: The `getConfig` function from `@pnpm/config` now reads the `pnpm-workspace.yaml` file and stores `workspacePackagePatterns` in the `Config` object. An internal refactor was made in pnpm to reuse this value instead of re-reading `pnpm-workspace.yaml` multiple times.
+
+### Patch Changes
+
+- 7d10394: Fix parsing of config variables in Turkish locale. Example: recursive-install parameter has problems on parsing.
+- d8eab39: Fix `package-manager-strict-version` missing in config [#8195](https://github.com/pnpm/pnpm/issues/8195).
+- Updated dependencies [13e55b2]
+- Updated dependencies [5d1ed94]
+  - @pnpm/types@10.1.1
+  - @pnpm/workspace.read-manifest@2.1.0
+  - @pnpm/pnpmfile@6.0.5
+  - @pnpm/read-project-manifest@6.0.3
+
+## 21.4.0
+
+### Minor Changes
+
+- 47341e5: **Semi-breaking.** Dependency key names in the lockfile are shortened if they are longer than 1000 characters. We don't expect this change to affect many users. Affected users most probably can't run install successfully at the moment. This change is required to fix some edge cases in which installation fails with an out-of-memory error or "Invalid string length (RangeError: Invalid string length)" error. The max allowed length of the dependency key can be controlled with the `peers-suffix-max-length` setting [#8177](https://github.com/pnpm/pnpm/pull/8177).
+
+### Patch Changes
+
+- @pnpm/pnpmfile@6.0.4
+
+## 21.3.0
+
+### Minor Changes
+
+- b7ca13f: If `package-manager-strict-version` is set to `true` pnpm will fail if its version will not exactly match the version in the `packageManager` field of `package.json`.
+
+## 21.2.3
+
+### Patch Changes
+
+- @pnpm/pnpmfile@6.0.3
+
+## 21.2.2
+
+### Patch Changes
+
+- Updated dependencies [45f4262]
+  - @pnpm/types@10.1.0
+  - @pnpm/pnpmfile@6.0.2
+  - @pnpm/read-project-manifest@6.0.2
+
+## 21.2.1
+
+### Patch Changes
+
+- Updated dependencies [a7aef51]
+  - @pnpm/error@6.0.1
+  - @pnpm/pnpmfile@6.0.1
+  - @pnpm/read-project-manifest@6.0.1
+
+## 21.2.0
+
+### Minor Changes
+
+- 9719a42: New setting called `virtual-store-dir-max-length` added to modify the maximum allowed length of the directories inside `node_modules/.pnpm`. The default length is set to 120 characters. This setting is particularly useful on Windows, where there is a limit to the maximum length of a file path [#7355](https://github.com/pnpm/pnpm/issues/7355).
+
+## 21.1.0
+
+### Minor Changes
+
+- e0f47f4: `pnpm config get` now prints a comma-separated list for an array value instead of nothing.
+
+## 21.0.0
+
+### Major Changes
+
+- 43cdd87: Node.js v16 support dropped. Use at least Node.js v18.12.
+- 2d9e3b8: Use the same directory for state files on macOS as on Linux (`~/.local/state/pnpm`).
+- cfa33f1: The [`dedupe-injected-deps`](https://pnpm.io/npmrc#dedupe-injected-deps) setting is `true` by default.
+- e748162: The default value of the `link-workspace-packages` setting changed from `true` to `false`. This means that by default, dependencies will be linked from workspace packages only when they are specified using the [workspace protocol](https://pnpm.io/workspaces#workspace-protocol-workspace).
+- 2b89155: `enable-pre-post-scripts` is set to `true` by default. This means that when you run a script like `start`, `prestart` and `poststart` will also run.
+- 60839fc: The default value of the [hoist-workspace-packages](https://pnpm.io/npmrc#hoist-workspace-packages) is `true`.
+
+### Minor Changes
+
+- 7733f3a: Added support for registry-scoped SSL configurations (cert, key, and ca). Three new settings supported: `<registryURL>:certfile`, `<registryURL>:keyfile`, and `<registryURL>:ca`. For instance:
+
+  ```
+  //registry.mycomp.com/:certfile=server-cert.pem
+  //registry.mycomp.com/:keyfile=server-key.pem
+  //registry.mycomp.com/:cafile=client-cert.pem
+  ```
+
+  Related issue: [#7427](https://github.com/pnpm/pnpm/issues/7427).
+  Related PR: [#7626](https://github.com/pnpm/pnpm/pull/7626).
+
+- 730929e: Add a field named `ignoredOptionalDependencies`. This is an array of strings. If an optional dependency has its name included in this array, it will be skipped.
+- 98566d9: Added cache for `pnpm dlx` [#5277](https://github.com/pnpm/pnpm/issues/5277).
+
+### Patch Changes
+
+- Updated dependencies [7733f3a]
+- Updated dependencies [3ded840]
+- Updated dependencies [c692f80]
+- Updated dependencies [43cdd87]
+- Updated dependencies [086b69c]
+- Updated dependencies [d381a60]
+- Updated dependencies [730929e]
+  - @pnpm/types@10.0.0
+  - @pnpm/error@6.0.0
+  - @pnpm/constants@8.0.0
+  - @pnpm/read-project-manifest@6.0.0
+  - @pnpm/git-utils@2.0.0
+  - @pnpm/matcher@6.0.0
+  - @pnpm/pnpmfile@6.0.0
+
+## 20.4.2
+
+### Patch Changes
+
+- @pnpm/pnpmfile@5.0.20
+
+## 20.4.1
+
+### Patch Changes
+
+- d9564e354: Resolve the current working directory to its real location before doing any operations [#6524](https://github.com/pnpm/pnpm/issues/6524).
+
+## 20.4.0
+
+### Minor Changes
+
+- c597f72ec: A new option added for hoisting packages from the workspace. When `hoist-workspace-packages` is set to `true`, packages from the workspace are symlinked to either `<workspace_root>/node_modules/.pnpm/node_modules` or to `<workspace_root>/node_modules` depending on other hoisting settings (`hoist-pattern` and `public-hoist-pattern`) [#7451](https://github.com/pnpm/pnpm/pull/7451).
+
+## 20.3.0
+
+### Minor Changes
+
+- 4e71066dd: Use `--fail-if-no-match` if you want the CLI fail if no packages were matched by the command [#7403](https://github.com/pnpm/pnpm/issues/7403).
+
+### Patch Changes
+
+- Updated dependencies [4d34684f1]
+  - @pnpm/types@9.4.2
+  - @pnpm/pnpmfile@5.0.19
+  - @pnpm/read-project-manifest@5.0.10
+
+## 20.2.0
+
+### Minor Changes
+
+- 672c559e4: A new setting added for symlinking [injected dependencies](https://pnpm.io/package_json#dependenciesmetainjected) from the workspace, if their dependencies use the same peer dependencies as the dependent package. The setting is called `dedupe-injected-deps` [#7416](https://github.com/pnpm/pnpm/pull/7416).
+
+### Patch Changes
+
+- Updated dependencies
+  - @pnpm/types@9.4.1
+  - @pnpm/pnpmfile@5.0.18
+  - @pnpm/read-project-manifest@5.0.9
+
+## 20.1.2
+
+### Patch Changes
+
+- @pnpm/pnpmfile@5.0.17
+
+## 20.1.1
+
+### Patch Changes
+
+- @pnpm/pnpmfile@5.0.16
+
+## 20.1.0
+
+### Minor Changes
+
+- 43ce9e4a6: Support for multiple architectures when installing dependencies [#5965](https://github.com/pnpm/pnpm/issues/5965).
+
+  You can now specify architectures for which you'd like to install optional dependencies, even if they don't match the architecture of the system running the install. Use the `supportedArchitectures` field in `package.json` to define your preferences.
+
+  For example, the following configuration tells pnpm to install optional dependencies for Windows x64:
+
+  ```json
+  {
+    "pnpm": {
+      "supportedArchitectures": {
+        "os": ["win32"],
+        "cpu": ["x64"]
+      }
+    }
+  }
+  ```
+
+  Whereas this configuration will have pnpm install optional dependencies for Windows, macOS, and the architecture of the system currently running the install. It includes artifacts for both x64 and arm64 CPUs:
+
+  ```json
+  {
+    "pnpm": {
+      "supportedArchitectures": {
+        "os": ["win32", "darwin", "current"],
+        "cpu": ["x64", "arm64"]
+      }
+    }
+  }
+  ```
+
+  Additionally, `supportedArchitectures` also supports specifying the `libc` of the system.
+
+- d6592964f: `rootProjectManifestDir` is a required field.
+
+### Patch Changes
+
+- Updated dependencies [43ce9e4a6]
+  - @pnpm/types@9.4.0
+  - @pnpm/pnpmfile@5.0.15
+  - @pnpm/read-project-manifest@5.0.8
+
+## 20.0.0
+
+### Major Changes
+
+- ac5abd3ff: The paths in patchedDependencies passed to `@pnpm/core` are absolute.
+
+### Patch Changes
+
+- b60bb6cbe: Update which to v4.
+
+## 19.2.1
+
+### Patch Changes
+
+- b1dd0ee58: Instead of `pnpm.overrides` replacing `resolutions`, the two are now merged. This is intended to make it easier to migrate from Yarn by allowing one to keep using `resolutions` for Yarn, but adding additional changes just for pnpm using `pnpm.overrides`.
+
+## 19.2.0
+
+### Minor Changes
+
+- d774a3196: Add a new setting: rootProjectManifestDir.
+- 832e28826: Add `disallow-workspace-cycles` option to error instead of warn about cyclic dependencies
+
+### Patch Changes
+
+- Updated dependencies [d774a3196]
+  - @pnpm/types@9.3.0
+  - @pnpm/pnpmfile@5.0.14
+  - @pnpm/read-project-manifest@5.0.7
+
+## 19.1.0
+
+### Minor Changes
+
+- ee328fd25: Add `--hide-reporter-prefix' option for `run` command to hide project name as prefix for lifecycle log outputs of running scripts [#7061](https://github.com/pnpm/pnpm/issues/7061).
+
+## 19.0.3
+
+### Patch Changes
+
+- @pnpm/pnpmfile@5.0.13
+- @pnpm/read-project-manifest@5.0.6
+
+## 19.0.2
+
+### Patch Changes
+
+- @pnpm/pnpmfile@5.0.12
+
+## 19.0.1
+
+### Patch Changes
+
+- @pnpm/pnpmfile@5.0.11
+
+## 19.0.0
+
+### Major Changes
+
+- cb8bcc8df: The default value of the `resolution-mode` setting is changed to `highest`. This setting was changed to `lowest-direct` in v8.0.0 and some users were [not happy with the change](https://github.com/pnpm/pnpm/issues/6463). A [poll](https://x.com/pnpmjs/status/1693707270897517022) concluded that most of the users want the old behaviour (`resolution-mode` set to `highest` by default). This is a semi-breaking change but should not affect users that commit their lockfile [#6463](https://github.com/pnpm/pnpm/issues/6463).
+
+### Patch Changes
+
+- @pnpm/pnpmfile@5.0.10
+- @pnpm/read-project-manifest@5.0.5
+
+## 18.4.4
+
+### Patch Changes
+
+- Updated dependencies [aa2ae8fe2]
+  - @pnpm/types@9.2.0
+  - @pnpm/pnpmfile@5.0.9
+  - @pnpm/read-project-manifest@5.0.4
+
+## 18.4.3
+
+### Patch Changes
+
+- Updated dependencies [b4892acc5]
+  - @pnpm/read-project-manifest@5.0.3
+
+## 18.4.2
+
+### Patch Changes
+
+- e2d631217: Don't crash when the APPDATA env variable is not set on Windows [#6659](https://github.com/pnpm/pnpm/issues/6659).
+
+## 18.4.1
+
+### Patch Changes
+
+- Updated dependencies [302ebffc5]
+  - @pnpm/constants@7.1.1
+  - @pnpm/error@5.0.2
+  - @pnpm/pnpmfile@5.0.8
+  - @pnpm/read-project-manifest@5.0.2
+
+## 18.4.0
+
+### Minor Changes
+
+- 301b8e2da: A new setting, `exclude-links-from-lockfile`, is now supported. When enabled, specifiers of local linked dependencies won't be duplicated in the lockfile.
+
+  This setting was primarily added for use by [Bit CLI](https://github.com/teambit/bit), which links core aspects to `node_modules` from external directories. As such, the locations may vary across different machines, resulting in the generation of lockfiles with differing locations.
+
+### Patch Changes
+
+- Updated dependencies [a9e0b7cbf]
+- Updated dependencies [9c4ae87bd]
+  - @pnpm/types@9.1.0
+  - @pnpm/constants@7.1.0
+  - @pnpm/pnpmfile@5.0.7
+  - @pnpm/read-project-manifest@5.0.1
+  - @pnpm/error@5.0.1
+
+## 18.3.2
+
+### Patch Changes
+
+- 1de07a4af: Normalize current working directory on Windows [#6524](https://github.com/pnpm/pnpm/issues/6524).
+
+## 18.3.1
+
+### Patch Changes
+
+- 2809e89ab: Make sure `--otp` option is in the publish's cli options [6384](https://github.com/pnpm/pnpm/issues/6384).
+
+## 18.3.0
+
+### Minor Changes
+
+- 32f8e08c6: A custom compression level may be specified for the `pnpm pack` command using the `pack-gzip-level` setting [#6393](https://github.com/pnpm/pnpm/issues/6393).
+
+### Patch Changes
+
+- @pnpm/pnpmfile@5.0.6
+
+## 18.2.0
+
+### Minor Changes
+
+- fc8780ca9: Allow env variables to be specified with default values in `.npmrc`. This is a convention used by Yarn too.
+  Using `${NAME-fallback}` will return `fallback` if `NAME` isn't set. `${NAME:-fallback}` will return `fallback` if `NAME` isn't set, or is an empty string [#6018](https://github.com/pnpm/pnpm/issues/6018).
+
+### Patch Changes
+
+- @pnpm/pnpmfile@5.0.5
+
+## 18.1.1
+
+### Patch Changes
+
+- @pnpm/pnpmfile@5.0.4
+
+## 18.1.0
+
+### Minor Changes
+
+- e2cb4b63d: Add `ignore-workspace-cycles` to silence workspace cycle warning [#6308](https://github.com/pnpm/pnpm/pull/6308).
+- cd6ce11f0: A new settig has been added called `dedupe-direct-deps`, which is disabled by default. When set to `true`, dependencies that are already symlinked to the root `node_modules` directory of the workspace will not be symlinked to subproject `node_modules` directories. This feature was enabled by default in v8.0.0 but caused issues, so it's best to disable it by default [#6299](https://github.com/pnpm/pnpm/issues/6299).
+
+### Patch Changes
+
+- @pnpm/pnpmfile@5.0.3
+
+## 18.0.2
+
+### Patch Changes
+
+- @pnpm/pnpmfile@5.0.2
+
+## 18.0.1
+
+### Patch Changes
+
+- @pnpm/pnpmfile@5.0.1
+
+## 18.0.0
+
+### Major Changes
+
+- 47e45d717: `auto-install-peers` is `true` by default.
+- 47e45d717: `save-workspace-protocol` is `rolling` by default.
+- 158d8cf22: `useLockfileV6` field is deleted. Lockfile v5 cannot be written anymore, only transformed to the new format.
+- eceaa8b8b: Node.js 14 support dropped.
+- 8e35c21d1: Use lockfile v6 by default.
+- 47e45d717: `resolve-peers-from-workspace-root` is `true` by default.
+- 47e45d717: `publishConfig.linkDirectory` is `true` by default.
+- 113f0ae26: `resolution-mode` is `lowest-direct` by default.
+
+### Patch Changes
+
+- Updated dependencies [eceaa8b8b]
+  - @pnpm/read-project-manifest@5.0.0
+  - @pnpm/constants@7.0.0
+  - @pnpm/git-utils@1.0.0
+  - @pnpm/matcher@5.0.0
+  - @pnpm/pnpmfile@5.0.0
+  - @pnpm/error@5.0.0
+  - @pnpm/types@9.0.0
+
+## 17.0.2
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.40
+
+## 17.0.1
+
+### Patch Changes
+
+- b38d711f3: `extend-node-path` is `true` by default. It was set to `false` in v7.29.2 but it appears that it was a breaking change [#6213](https://github.com/pnpm/pnpm/issues/6213).
+  - @pnpm/pnpmfile@4.0.39
+
+## 17.0.0
+
+### Major Changes
+
+- e505b58e3: Don't extend NODE_PATH in command shims [#5176](https://github.com/pnpm/pnpm/issues/5176).
+
+### Patch Changes
+
+- @pnpm/read-project-manifest@4.1.4
+- @pnpm/pnpmfile@4.0.38
+
+## 16.7.2
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.37
+
+## 16.7.1
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.36
+
+## 16.7.0
+
+### Minor Changes
+
+- 5c31fa8be: A new setting is now supported: `dedupe-peer-dependents`.
+
+  When this setting is set to `true`, packages with peer dependencies will be deduplicated after peers resolution.
+
+  For instance, let's say we have a workspace with two projects and both of them have `webpack` in their dependencies. `webpack` has `esbuild` in its optional peer dependencies, and one of the projects has `esbuild` in its dependencies. In this case, pnpm will link two instances of `webpack` to the `node_modules/.pnpm` directory: one with `esbuild` and another one without it:
+
+  ```
+  node_modules
+    .pnpm
+      webpack@1.0.0_esbuild@1.0.0
+      webpack@1.0.0
+  project1
+    node_modules
+      webpack -> ../../node_modules/.pnpm/webpack@1.0.0/node_modules/webpack
+  project2
+    node_modules
+      webpack -> ../../node_modules/.pnpm/webpack@1.0.0_esbuild@1.0.0/node_modules/webpack
+      esbuild
+  ```
+
+  This makes sense because `webpack` is used in two projects, and one of the projects doesn't have `esbuild`, so the two projects cannot share the same instance of `webpack`. However, this is not what most developers expect, especially since in a hoisted `node_modules`, there would only be one instance of `webpack`. Therefore, you may now use the `dedupe-peer-dependents` setting to deduplicate `webpack` when it has no conflicting peer dependencies. In this case, if we set `dedupe-peer-dependents` to `true`, both projects will use the same `webpack` instance, which is the one that has `esbuild` resolved:
+
+  ```
+  node_modules
+    .pnpm
+      webpack@1.0.0_esbuild@1.0.0
+  project1
+    node_modules
+      webpack -> ../../node_modules/.pnpm/webpack@1.0.0_esbuild@1.0.0/node_modules/webpack
+  project2
+    node_modules
+      webpack -> ../../node_modules/.pnpm/webpack@1.0.0_esbuild@1.0.0/node_modules/webpack
+      esbuild
+  ```
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.35
+
+## 16.6.4
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.34
+
+## 16.6.3
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.33
+
+## 16.6.2
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.32
+
+## 16.6.1
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.31
+
+## 16.6.0
+
+### Minor Changes
+
+- 59ee53678: A new `resolution-mode` added: `lowest-direct`. With this resolution mode direct dependencies will be resolved to their lowest versions. So if there is `foo@^1.1.0` in the dependencies, then `1.1.0` will be installed, even if the latest version of `foo` is `1.2.0`.
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.30
+
+## 16.5.5
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.29
+
+## 16.5.4
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.28
+
+## 16.5.3
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.27
+
+## 16.5.2
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.26
+
+## 16.5.1
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.25
+
+## 16.5.0
+
+### Minor Changes
+
+- 28b47a156: When `extend-node-path` is set to `false`, the `NODE_PATH` environment variable is not set in the command shims [#5910](https://github.com/pnpm/pnpm/pull/5910)
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.24
+
+## 16.4.3
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.23
+
+## 16.4.2
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.22
+
+## 16.4.1
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.21
+
+## 16.4.0
+
+### Minor Changes
+
+- 3ebce5db7: Added support for `pnpm-lock.yaml` format v6. This new format will be the new lockfile format in pnpm v8. To use the new lockfile format, use the `use-lockfile-v6=true` setting in `.npmrc`. Or run `pnpm install --use-lockfile-v6` [#5810](https://github.com/pnpm/pnpm/pull/5810).
+
+### Patch Changes
+
+- Updated dependencies [3ebce5db7]
+  - @pnpm/constants@6.2.0
+  - @pnpm/pnpmfile@4.0.20
+  - @pnpm/error@4.0.1
+  - @pnpm/read-project-manifest@4.1.3
+
+## 16.3.0
+
+### Minor Changes
+
+- 1fad508b0: When the `resolve-peers-from-workspace-root` setting is set to `true`, pnpm will use dependencies installed in the root of the workspace to resolve peer dependencies in any of the workspace's projects [#5882](https://github.com/pnpm/pnpm/pull/5882).
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.19
+
+## 16.2.2
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.18
+
+## 16.2.1
+
+### Patch Changes
+
+- d71dbf230: Only the `pnpm add --global <pkg>` command should fail if there is no global pnpm bin directory in the system PATH [#5841](https://github.com/pnpm/pnpm/issues/5841).
+
+## 16.2.0
+
+### Minor Changes
+
+- 841f52e70: pnpm reads settings from its own global configuration file at `$XDG_CONFIG_HOME/pnpm/rc` [#5829](https://github.com/pnpm/pnpm/pull/5829).
+
+## 16.1.11
+
+### Patch Changes
+
+- Updated dependencies [b77651d14]
+  - @pnpm/types@8.10.0
+  - @pnpm/pnpmfile@4.0.17
+  - @pnpm/read-project-manifest@4.1.2
+
+## 16.1.10
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.16
+
+## 16.1.9
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.15
+
+## 16.1.8
+
+### Patch Changes
+
+- @pnpm/pnpmfile@4.0.14
+
 ## 16.1.7
 
 ### Patch Changes

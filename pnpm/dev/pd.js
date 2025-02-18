@@ -2,17 +2,21 @@
 const fs = require('fs')
 const esbuild = require('esbuild')
 const pathLib = require('path')
-const { findWorkspacePackagesNoCheck } = require('@pnpm/find-workspace-packages')
+const childProcess = require('child_process')
+const { createRequire } = require('module')
+const { findWorkspacePackagesNoCheck } = require('@pnpm/workspace.find-packages')
 const { findWorkspaceDir } = require('@pnpm/find-workspace-dir')
+const { readWorkspaceManifest } = require('@pnpm/workspace.read-manifest')
 
 const pnpmPackageJson = JSON.parse(fs.readFileSync(pathLib.join(__dirname, 'package.json'), 'utf8'))
 
 ;(async () => {
   const workspaceDir = await findWorkspaceDir(__dirname)
-  const pkgs = await findWorkspacePackagesNoCheck(workspaceDir)
+  const workspaceManifest = await readWorkspaceManifest(workspaceDir)
+  const pkgs = await findWorkspacePackagesNoCheck(workspaceDir, { patterns: workspaceManifest.packages })
   const localPackages = pkgs.map(pkg => pkg.manifest.name)
-  const dirByPackageName = pkgs.reduce((acc, pkg) => {
-    acc[pkg.manifest.name] = pkg.dir
+  const dirByPackageName = pkgs.reduce((acc, { manifest, rootDirRealPath }) => {
+    acc[manifest.name] = rootDirRealPath
     return acc
   })
 
@@ -21,35 +25,48 @@ const pnpmPackageJson = JSON.parse(fs.readFileSync(pathLib.join(__dirname, 'pack
   const spnpmImportsPlugin = {
     name: 'spnpmImports',
     setup: (build) => {
-      // This is an exception to the rule that all local packages start with `@pnpm`
-      build.onResolve({ filter: /^dependency-path$/ }, ({path, resolveDir}) => ({
-        path: pathLib.resolve(dirByPackageName['dependency-path'], 'src', 'index.ts')
-      }))
-
       // E.g. @pnpm/config -> /<some_dir>/pnpm/packages/config/src/index.ts
-      build.onResolve({ filter: /@pnpm\// }, ({path, resolveDir}) => {
-        const pathParts = path.split('/')
-        const packageName = pathParts[1]
-
+      build.onResolve({ filter: /@pnpm\// }, ({ path }) => {
         // Bail if the package isn't present locally
-        if (!localPackages.includes(packageName)) {
+        if (!localPackages.includes(path)) {
           return
         }
 
-        const newPath = pathLib.resolve(dirByPackageName[packageName], packageName, 'src', 'index.ts')
-
+        const newPath = pathLib.resolve(dirByPackageName[path], 'src', 'index.ts')
         return {
           path: newPath
+        }
+      })
+
+      build.onResolve({filter: /js-yaml/}, ({ path, resolveDir }) => {
+        if (path === 'js-yaml' && resolveDir.includes('lockfile/fs')) {
+          // Force esbuild to use the resolved js-yaml from within lockfile-file,
+          // since it seems to pick the wrong one otherwise.
+          const lockfileFileProject = pathLib.resolve(__dirname, '../../lockfile/fs/index.js')
+          const resolvedJsYaml = createRequire(lockfileFileProject).resolve('js-yaml')
+          return {
+            path: resolvedJsYaml
+          }
         }
       })
     }
   }
 
   await esbuild.build({
+    entryPoints: [pathLib.resolve(__dirname, '../../worker/src/worker.ts')],
+    bundle: true,
+    platform: 'node',
+    outfile: pathLib.resolve(__dirname, 'dist/worker.js'),
+    loader: {
+      '.node': 'copy',
+    },
+  })
+
+  await esbuild.build({
     bundle: true,
     platform: 'node',
     target: 'node14',
-    entryPoints: [pathLib.resolve(__dirname, '../lib/pnpm.js')],
+    entryPoints: [pathLib.resolve(__dirname, '../src/pnpm.ts')],
     outfile: pathLib.resolve(__dirname, 'dist/pnpm.cjs'),
     external: [
       'node-gyp',
@@ -62,8 +79,21 @@ const pnpmPackageJson = JSON.parse(fs.readFileSync(pathLib.join(__dirname, 'pack
     sourcemap: true, // nice for local debugging
     logLevel: 'warning', // keeps esbuild quiet unless there's a problem
     plugins: [spnpmImportsPlugin],
+    loader: {
+      '.node': 'binary',
+    }
   })
 
-  // Require the file just built by esbuild
-  require('./dist/pnpm.cjs')
+  const nodeBin = process.argv[0]
+
+  // Invoke the script just built by esbuild, with Node's sourcemaps enabled
+  const { status } = childProcess.spawnSync(nodeBin, ['--enable-source-maps', pathLib.resolve(__dirname, 'dist/pnpm.cjs'), ...process.argv.slice(2)], {
+    stdio: 'inherit',
+    env: {
+      ...process.env,
+      // During local development we don't want to switch to another version of pnpm
+      npm_config_manage_package_manager_versions: false,
+    },
+  })
+  process.exit(status)
 })()

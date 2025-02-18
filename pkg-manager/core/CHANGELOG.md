@@ -1,5 +1,2973 @@
 # @pnpm/core
 
+## 1003.0.2
+
+### Patch Changes
+
+- Updated dependencies [0205498]
+  - @pnpm/build-modules@1000.2.5
+  - @pnpm/lockfile.fs@1001.1.3
+  - @pnpm/calc-dep-state@1001.0.4
+  - @pnpm/headless@1001.2.2
+  - @pnpm/lockfile-to-pnp@1001.0.4
+  - @pnpm/get-context@1001.0.5
+  - @pnpm/lockfile.verification@1001.0.5
+
+## 1003.0.1
+
+### Patch Changes
+
+- Updated dependencies [a5b36b7]
+  - @pnpm/headless@1001.2.1
+  - @pnpm/build-modules@1000.2.4
+
+## 1003.0.0
+
+### Major Changes
+
+- f6006f2: Changed the API of all the functions. Now they always return an ignoredBuilds array.
+
+### Minor Changes
+
+- f6006f2: Added a new setting called `strict-dep-builds`. When enabled, the installation will exit with a non-zero exit code if any dependencies have unreviewed build scripts (aka postinstall scripts) [#9071](https://github.com/pnpm/pnpm/pull/9071).
+
+### Patch Changes
+
+- 3717340: Print the warning about blocked installation scripts at the end of the installation output and make it more prominent.
+- Updated dependencies [f6006f2]
+- Updated dependencies [3717340]
+  - @pnpm/headless@1001.2.0
+  - @pnpm/crypto.object-hasher@1000.0.1
+  - @pnpm/calc-dep-state@1001.0.3
+  - @pnpm/build-modules@1000.2.3
+
+## 1002.0.4
+
+### Patch Changes
+
+- 9843aed: Don't read a package from side-effects cache if it isn't allowed to be built [#9042](https://github.com/pnpm/pnpm/issues/9042).
+- Updated dependencies [9843aed]
+  - @pnpm/headless@1001.1.5
+  - @pnpm/build-modules@1000.2.2
+
+## 1002.0.3
+
+### Patch Changes
+
+- e8c2b17: Prevent `overrides` from adding invalid version ranges to `peerDependencies` by keeping the `peerDependencies` and overriding them with prod `dependencies` [#8978](https://github.com/pnpm/pnpm/issues/8978).
+- Updated dependencies [c0d1c01]
+- Updated dependencies [1e229d7]
+- Updated dependencies [e8c2b17]
+  - @pnpm/lifecycle@1001.0.5
+  - @pnpm/read-project-manifest@1000.0.5
+  - @pnpm/hooks.read-package-hook@1000.0.4
+  - @pnpm/resolve-dependencies@1004.0.2
+  - @pnpm/build-modules@1000.2.1
+  - @pnpm/headless@1001.1.4
+  - @pnpm/link-bins@1000.0.6
+  - @pnpm/hoist@1001.0.5
+  - @pnpm/package-requester@1001.0.1
+
+## 1002.0.2
+
+### Patch Changes
+
+- 2b49ee7: When running `pnpm install`, the `preprepare` and `postprepare` scripts of the project should be executed [#8989](https://github.com/pnpm/pnpm/pull/8989).
+- Updated dependencies [2b49ee7]
+- Updated dependencies [ea58bfd]
+- Updated dependencies [9a44e6c]
+- Updated dependencies [b562deb]
+- Updated dependencies [7a9473b]
+- Updated dependencies [040e67b]
+  - @pnpm/headless@1001.1.3
+  - @pnpm/resolve-dependencies@1004.0.1
+  - @pnpm/constants@1001.1.0
+  - @pnpm/types@1000.1.1
+  - @pnpm/build-modules@1000.2.0
+  - @pnpm/lockfile.filtering@1001.0.3
+  - @pnpm/lockfile.fs@1001.1.2
+  - @pnpm/lockfile.pruner@1001.0.2
+  - @pnpm/lockfile.verification@1001.0.4
+  - @pnpm/calc-dep-state@1001.0.2
+  - @pnpm/error@1000.0.2
+  - @pnpm/get-context@1001.0.4
+  - @pnpm/hoist@1001.0.4
+  - @pnpm/normalize-registries@1000.0.2
+  - @pnpm/lifecycle@1001.0.4
+  - @pnpm/symlink-dependency@1000.0.3
+  - @pnpm/hooks.read-package-hook@1000.0.3
+  - @pnpm/hooks.types@1001.0.2
+  - @pnpm/lockfile-to-pnp@1001.0.3
+  - @pnpm/lockfile.preferred-versions@1000.0.4
+  - @pnpm/lockfile.utils@1001.0.2
+  - @pnpm/lockfile.walker@1001.0.2
+  - @pnpm/core-loggers@1000.1.2
+  - @pnpm/dependency-path@1000.0.2
+  - @pnpm/link-bins@1000.0.5
+  - @pnpm/modules-cleaner@1001.0.4
+  - @pnpm/modules-yaml@1000.1.2
+  - @pnpm/package-requester@1001.0.1
+  - @pnpm/remove-bins@1000.0.4
+  - @pnpm/manifest-utils@1000.0.4
+  - @pnpm/read-project-manifest@1000.0.4
+  - @pnpm/resolver-base@1000.1.2
+  - @pnpm/store-controller-types@1001.0.1
+  - @pnpm/worker@1000.0.5
+  - @pnpm/parse-overrides@1000.0.2
+  - @pnpm/crypto.hash@1000.0.0
+  - @pnpm/lockfile.settings-checker@1001.0.2
+  - @pnpm/pkg-manager.direct-dep-linker@1000.0.3
+
+## 1002.0.1
+
+### Patch Changes
+
+- Updated dependencies [26fe994]
+- Updated dependencies [dde650b]
+- Updated dependencies [e050221]
+- Updated dependencies [dde650b]
+  - @pnpm/resolve-dependencies@1004.0.0
+  - @pnpm/read-project-manifest@1000.0.3
+  - @pnpm/package-requester@1001.0.0
+  - @pnpm/store-controller-types@1001.0.0
+  - @pnpm/headless@1001.1.2
+  - @pnpm/link-bins@1000.0.4
+  - @pnpm/build-modules@1000.1.2
+  - @pnpm/lifecycle@1001.0.3
+  - @pnpm/modules-cleaner@1001.0.3
+  - @pnpm/hoist@1001.0.3
+  - @pnpm/worker@1000.0.4
+  - @pnpm/crypto.hash@1000.0.0
+  - @pnpm/symlink-dependency@1000.0.2
+  - @pnpm/lockfile.settings-checker@1001.0.1
+  - @pnpm/lockfile.verification@1001.0.3
+
+## 1002.0.0
+
+### Major Changes
+
+- c7eefdd: The `updateToLatest` option is now part of projects/importers, instead of an option of the resolution/installation.
+
+### Patch Changes
+
+- Updated dependencies [9591a18]
+- Updated dependencies [c7eefdd]
+  - @pnpm/types@1000.1.0
+  - @pnpm/resolve-dependencies@1003.0.0
+  - @pnpm/normalize-registries@1000.0.1
+  - @pnpm/build-modules@1000.1.1
+  - @pnpm/lifecycle@1001.0.2
+  - @pnpm/symlink-dependency@1000.0.2
+  - @pnpm/hooks.read-package-hook@1000.0.2
+  - @pnpm/hooks.types@1001.0.1
+  - @pnpm/lockfile.filtering@1001.0.2
+  - @pnpm/lockfile.fs@1001.1.1
+  - @pnpm/lockfile-to-pnp@1001.0.2
+  - @pnpm/lockfile.preferred-versions@1000.0.3
+  - @pnpm/lockfile.pruner@1001.0.1
+  - @pnpm/lockfile.utils@1001.0.1
+  - @pnpm/lockfile.verification@1001.0.3
+  - @pnpm/lockfile.walker@1001.0.1
+  - @pnpm/calc-dep-state@1001.0.1
+  - @pnpm/core-loggers@1000.1.1
+  - @pnpm/dependency-path@1000.0.1
+  - @pnpm/get-context@1001.0.3
+  - @pnpm/headless@1001.1.1
+  - @pnpm/hoist@1001.0.2
+  - @pnpm/link-bins@1000.0.3
+  - @pnpm/modules-cleaner@1001.0.2
+  - @pnpm/modules-yaml@1000.1.1
+  - @pnpm/package-requester@1000.1.2
+  - @pnpm/remove-bins@1000.0.3
+  - @pnpm/manifest-utils@1000.0.3
+  - @pnpm/read-project-manifest@1000.0.2
+  - @pnpm/resolver-base@1000.1.1
+  - @pnpm/store-controller-types@1000.1.1
+  - @pnpm/worker@1000.0.3
+  - @pnpm/crypto.hash@1000.0.0
+  - @pnpm/lockfile.settings-checker@1001.0.1
+  - @pnpm/pkg-manager.direct-dep-linker@1000.0.2
+
+## 1001.1.0
+
+### Minor Changes
+
+- 4771813: Store the list of ignored builds in `node_modules/.modules.yaml`.
+
+### Patch Changes
+
+- Updated dependencies [516c4b3]
+- Updated dependencies [512465c]
+- Updated dependencies [7272992]
+- Updated dependencies [3bc9d5c]
+- Updated dependencies [516c4b3]
+- Updated dependencies [4771813]
+  - @pnpm/core-loggers@1000.1.0
+  - @pnpm/resolve-dependencies@1002.0.0
+  - @pnpm/worker@1000.0.2
+  - @pnpm/build-modules@1000.1.0
+  - @pnpm/modules-yaml@1000.1.0
+  - @pnpm/headless@1001.1.0
+  - @pnpm/lifecycle@1001.0.1
+  - @pnpm/symlink-dependency@1000.0.1
+  - @pnpm/pkg-manager.direct-dep-linker@1000.0.1
+  - @pnpm/get-context@1001.0.2
+  - @pnpm/hoist@1001.0.1
+  - @pnpm/modules-cleaner@1001.0.1
+  - @pnpm/package-requester@1000.1.1
+  - @pnpm/remove-bins@1000.0.2
+  - @pnpm/manifest-utils@1000.0.2
+  - @pnpm/lockfile.filtering@1001.0.1
+  - @pnpm/lockfile.verification@1001.0.2
+  - @pnpm/lockfile.preferred-versions@1000.0.2
+  - @pnpm/link-bins@1000.0.2
+  - @pnpm/crypto.hash@1000.0.0
+  - @pnpm/lockfile.settings-checker@1001.0.0
+
+## 1001.0.1
+
+### Patch Changes
+
+- Updated dependencies [3f0e4f0]
+  - @pnpm/lockfile.fs@1001.1.0
+  - @pnpm/lockfile-to-pnp@1001.0.1
+  - @pnpm/get-context@1001.0.1
+  - @pnpm/headless@1001.0.1
+  - @pnpm/lockfile.verification@1001.0.1
+
+## 1001.0.0
+
+### Major Changes
+
+- b0f3c71: Dependencies specified via a URL are now recorded in the lockfile using their final resolved URL. Thus, if the original URL redirects, the final redirect target will be saved in the lockfile [#8833](https://github.com/pnpm/pnpm/issues/8833).
+- a76da0c: Removed lockfile conversion from v6 to v9. If you need to convert lockfile v6 to v9, use pnpm CLI v9.
+
+### Minor Changes
+
+- c0895e8: `pnpm add` will now check if the added dependency is in the default workspace catalog. If the added dependency is present in the default catalog and the version requirement of the added dependency matches the default catalog's version, then the `pnpm add` will use the `catalog:` protocol. Note that if no version is specified in the `pnpm add` it will match the version described in the default catalog. If the added dependency does not match the default catalog's version it will use the default `pnpm add` behavior [#8640](https://github.com/pnpm/pnpm/issues/8640).
+- 6483b64: A new setting, `inject-workspace-packages`, has been added to allow hard-linking all local workspace dependencies instead of symlinking them. Previously, this behavior was achievable via the [`dependenciesMeta[].injected`](https://pnpm.io/package_json#dependenciesmetainjected) setting, which remains supported [#8836](https://github.com/pnpm/pnpm/pull/8836).
+
+### Patch Changes
+
+- Updated dependencies [d2e83b0]
+- Updated dependencies [6483b64]
+- Updated dependencies [3a6a417]
+- Updated dependencies [a76da0c]
+  - @pnpm/constants@1001.0.0
+  - @pnpm/resolve-dependencies@1001.0.0
+  - @pnpm/package-requester@1000.1.0
+  - @pnpm/store-controller-types@1000.1.0
+  - @pnpm/lockfile.settings-checker@1001.0.0
+  - @pnpm/resolver-base@1000.1.0
+  - @pnpm/lifecycle@1001.0.0
+  - @pnpm/modules-cleaner@1001.0.0
+  - @pnpm/lockfile-to-pnp@1001.0.0
+  - @pnpm/calc-dep-state@1001.0.0
+  - @pnpm/get-context@1001.0.0
+  - @pnpm/lockfile.verification@1001.0.0
+  - @pnpm/headless@1001.0.0
+  - @pnpm/lockfile.filtering@1001.0.0
+  - @pnpm/hoist@1001.0.0
+  - @pnpm/lockfile.pruner@1001.0.0
+  - @pnpm/lockfile.walker@1001.0.0
+  - @pnpm/lockfile.utils@1001.0.0
+  - @pnpm/hooks.types@1001.0.0
+  - @pnpm/lockfile.fs@1001.0.0
+  - @pnpm/error@1000.0.1
+  - @pnpm/build-modules@1000.0.1
+  - @pnpm/lockfile.preferred-versions@1000.0.1
+  - @pnpm/parse-overrides@1000.0.1
+  - @pnpm/hooks.read-package-hook@1000.0.1
+  - @pnpm/link-bins@1000.0.1
+  - @pnpm/manifest-utils@1000.0.1
+  - @pnpm/read-project-manifest@1000.0.1
+  - @pnpm/worker@1000.0.1
+  - @pnpm/crypto.hash@1000.0.0
+  - @pnpm/symlink-dependency@1000.0.0
+  - @pnpm/remove-bins@1000.0.1
+
+## 16.0.0
+
+### Major Changes
+
+- 477e0c1: The `pnpm link` command adds overrides to the root `package.json`. In a workspace the override is added to the root of the workspace, so it links the dependency to all projects in a workspace.
+
+  To link a package globally, just run `pnpm link` from the package's directory. Previously, the command `pnpm link -g` was required to link a package globally.
+
+  Related PR: [#8653](https://github.com/pnpm/pnpm/pull/8653).
+
+- 501c152: Changed the hash stored in the `packageExtensionsChecksum` field of `pnpm-lock.yaml` to SHA256.
+- d433cb9: Some registries allow identical content to be published under different package names or versions. To accommodate this, index files in the store are now stored using both the content hash and package identifier.
+
+  This approach ensures that we can:
+
+  1. Validate that the integrity in the lockfile corresponds to the correct package,
+     which might not be the case after a poorly resolved Git conflict.
+  2. Allow the same content to be referenced by different packages or different versions of the same package.
+
+  Related PR: [#8510](https://github.com/pnpm/pnpm/pull/8510)
+  Related issue: [#8204](https://github.com/pnpm/pnpm/issues/8204)
+
+- 099e6af: Changed the structure of the index files in the store to store side effects cache information more efficiently. In the new version, side effects do not list all the files of the package but just the differences [#8636](https://github.com/pnpm/pnpm/pull/8636).
+- d55b259: Escape the `#` character in directory names within the virtual store (`node_modules/.pnpm`) [#8557](https://github.com/pnpm/pnpm/pull/8557).
+
+### Patch Changes
+
+- 7cd0d20: Fix for headless install crashing when modules directory disabled (`enable-modules-dir` set to `false`) and patched dependencies are present [#8727](https://github.com/pnpm/pnpm/pull/8727).
+- 9ea8fa4: Don't validate (and possibly purge) modules directory in operations that do not mutate the structure (e.g. `mutateModules({ ... }, { ..., lockfileOnly: true })`) [#8657](https://github.com/pnpm/pnpm/pull/8657).
+- Updated dependencies [19d5b51]
+- Updated dependencies [8108680]
+- Updated dependencies [dcd2917]
+- Updated dependencies [dcd2917]
+- Updated dependencies [19d5b51]
+- Updated dependencies [5b91ec4]
+- Updated dependencies [9ea8fa4]
+- Updated dependencies [7fb4371]
+- Updated dependencies [9ea8fa4]
+- Updated dependencies [ee5dde3]
+- Updated dependencies [52d2965]
+- Updated dependencies [9ea8fa4]
+- Updated dependencies [d433cb9]
+- Updated dependencies [7cd0d20]
+- Updated dependencies [099e6af]
+- Updated dependencies [bd01a2a]
+- Updated dependencies [9ea8fa4]
+- Updated dependencies [501c152]
+- Updated dependencies [9ea8fa4]
+- Updated dependencies [d55b259]
+- Updated dependencies [c4f5231]
+  - @pnpm/constants@10.0.0
+  - @pnpm/dependency-path@6.0.0
+  - @pnpm/crypto.hash@1.0.0
+  - @pnpm/lockfile.verification@1.1.0
+  - @pnpm/resolve-dependencies@36.0.7
+  - @pnpm/get-context@13.0.0
+  - @pnpm/hooks.read-package-hook@6.0.0
+  - @pnpm/package-requester@26.0.0
+  - @pnpm/headless@24.0.0
+  - @pnpm/worker@2.0.0
+  - @pnpm/crypto.object-hasher@3.0.0
+  - @pnpm/lockfile.filtering@1.0.8
+  - @pnpm/lockfile.fs@1.0.6
+  - @pnpm/lockfile.pruner@0.0.7
+  - @pnpm/calc-dep-state@7.0.11
+  - @pnpm/error@6.0.3
+  - @pnpm/hoist@9.1.16
+  - @pnpm/lockfile-to-pnp@4.1.15
+  - @pnpm/lockfile.utils@1.0.5
+  - @pnpm/lockfile.walker@1.0.5
+  - @pnpm/modules-cleaner@15.1.17
+  - @pnpm/lockfile.settings-checker@1.0.2
+  - @pnpm/store-controller-types@18.1.6
+  - @pnpm/build-modules@14.0.6
+  - @pnpm/parse-overrides@5.1.2
+  - @pnpm/lifecycle@17.1.6
+  - @pnpm/link-bins@10.0.12
+  - @pnpm/manifest-utils@6.0.10
+  - @pnpm/read-project-manifest@6.0.10
+  - @pnpm/lockfile.preferred-versions@1.0.15
+  - @pnpm/symlink-dependency@8.0.8
+  - @pnpm/remove-bins@6.0.10
+
+## 15.3.8
+
+### Patch Changes
+
+- 222d10a: Use `crypto.hash`, when available, for improved performance [#8629](https://github.com/pnpm/pnpm/pull/8629).
+- Updated dependencies [f9a095c]
+- Updated dependencies [222d10a]
+- Updated dependencies [222d10a]
+  - @pnpm/get-context@12.0.7
+  - @pnpm/crypto.polyfill@1.0.0
+  - @pnpm/worker@1.0.13
+  - @pnpm/lockfile.verification@1.0.6
+  - @pnpm/crypto.base32-hash@3.0.1
+  - @pnpm/resolve-dependencies@36.0.6
+  - @pnpm/build-modules@14.0.5
+  - @pnpm/headless@23.2.8
+  - @pnpm/package-requester@25.2.10
+  - @pnpm/lockfile.settings-checker@1.0.1
+  - @pnpm/dependency-path@5.1.7
+  - @pnpm/lockfile.filtering@1.0.7
+  - @pnpm/lockfile.fs@1.0.5
+  - @pnpm/lockfile-to-pnp@4.1.14
+  - @pnpm/lockfile.pruner@0.0.6
+  - @pnpm/lockfile.utils@1.0.4
+  - @pnpm/lockfile.walker@1.0.4
+  - @pnpm/calc-dep-state@7.0.10
+  - @pnpm/hoist@9.1.15
+  - @pnpm/modules-cleaner@15.1.16
+  - @pnpm/lockfile.preferred-versions@1.0.14
+  - @pnpm/lifecycle@17.1.5
+  - @pnpm/symlink-dependency@8.0.8
+  - @pnpm/link-bins@10.0.11
+
+## 15.3.7
+
+### Patch Changes
+
+- a943fc9: When the lockfile is not up to date make it clear what `package.json` is out of sync.
+  - @pnpm/headless@23.2.7
+  - @pnpm/package-requester@25.2.9
+  - @pnpm/worker@1.0.12
+  - @pnpm/build-modules@14.0.4
+  - @pnpm/lifecycle@17.1.5
+  - @pnpm/symlink-dependency@8.0.8
+  - @pnpm/lockfile.settings-checker@1.0.0
+  - @pnpm/lockfile.verification@1.0.5
+  - @pnpm/crypto.base32-hash@3.0.0
+  - @pnpm/link-bins@10.0.11
+
+## 15.3.6
+
+### Patch Changes
+
+- Updated dependencies [4f4e073]
+- Updated dependencies [17b5088]
+- Updated dependencies [51f3ba1]
+  - @pnpm/resolve-dependencies@36.0.5
+  - @pnpm/lockfile.filtering@1.0.6
+  - @pnpm/lockfile.settings-checker@1.0.0
+  - @pnpm/headless@23.2.6
+  - @pnpm/modules-cleaner@15.1.15
+
+## 15.3.5
+
+### Patch Changes
+
+- Updated dependencies [83681da]
+- Updated dependencies [b7fb704]
+- Updated dependencies [d7b9ae5]
+  - @pnpm/constants@9.0.0
+  - @pnpm/hooks.read-package-hook@5.1.0
+  - @pnpm/resolve-dependencies@36.0.4
+  - @pnpm/lockfile.filtering@1.0.5
+  - @pnpm/lockfile.fs@1.0.4
+  - @pnpm/lockfile.pruner@0.0.5
+  - @pnpm/lockfile.verification@1.0.5
+  - @pnpm/calc-dep-state@7.0.9
+  - @pnpm/error@6.0.2
+  - @pnpm/get-context@12.0.6
+  - @pnpm/headless@23.2.5
+  - @pnpm/hoist@9.1.14
+  - @pnpm/modules-cleaner@15.1.14
+  - @pnpm/lockfile-to-pnp@4.1.13
+  - @pnpm/build-modules@14.0.3
+  - @pnpm/parse-overrides@5.1.1
+  - @pnpm/lifecycle@17.1.5
+  - @pnpm/link-bins@10.0.11
+  - @pnpm/package-requester@25.2.8
+  - @pnpm/manifest-utils@6.0.9
+  - @pnpm/read-project-manifest@6.0.9
+  - @pnpm/worker@1.0.11
+  - @pnpm/symlink-dependency@8.0.8
+  - @pnpm/crypto.base32-hash@3.0.0
+  - @pnpm/lockfile.preferred-versions@1.0.13
+  - @pnpm/remove-bins@6.0.9
+
+## 15.3.4
+
+### Patch Changes
+
+- e50baa8: Don't print a warning when linking packages globally [#4761](https://github.com/pnpm/pnpm/issues/4761).
+- ad1fd64: Do not save lockfile when `saveLockfile` is `false`.
+- Updated dependencies [ad1fd64]
+  - @pnpm/headless@23.2.4
+
+## 15.3.3
+
+### Patch Changes
+
+- Updated dependencies [d500d9f]
+  - @pnpm/types@12.2.0
+  - @pnpm/normalize-registries@6.0.7
+  - @pnpm/build-modules@14.0.2
+  - @pnpm/lifecycle@17.1.4
+  - @pnpm/symlink-dependency@8.0.8
+  - @pnpm/hooks.read-package-hook@5.0.3
+  - @pnpm/hooks.types@2.0.9
+  - @pnpm/lockfile.filtering@1.0.4
+  - @pnpm/lockfile.fs@1.0.3
+  - @pnpm/lockfile-to-pnp@4.1.12
+  - @pnpm/lockfile.preferred-versions@1.0.12
+  - @pnpm/lockfile.pruner@0.0.4
+  - @pnpm/lockfile.utils@1.0.3
+  - @pnpm/lockfile.verification@1.0.4
+  - @pnpm/lockfile.walker@1.0.3
+  - @pnpm/calc-dep-state@7.0.8
+  - @pnpm/core-loggers@10.0.7
+  - @pnpm/dependency-path@5.1.6
+  - @pnpm/get-context@12.0.5
+  - @pnpm/headless@23.2.3
+  - @pnpm/hoist@9.1.13
+  - @pnpm/link-bins@10.0.10
+  - @pnpm/modules-cleaner@15.1.13
+  - @pnpm/modules-yaml@13.1.7
+  - @pnpm/package-requester@25.2.7
+  - @pnpm/remove-bins@6.0.8
+  - @pnpm/resolve-dependencies@36.0.3
+  - @pnpm/manifest-utils@6.0.8
+  - @pnpm/read-project-manifest@6.0.8
+  - @pnpm/resolver-base@13.0.4
+  - @pnpm/store-controller-types@18.1.6
+  - @pnpm/worker@1.0.10
+  - @pnpm/crypto.base32-hash@3.0.0
+  - @pnpm/pkg-manager.direct-dep-linker@3.0.8
+
+## 15.3.2
+
+### Patch Changes
+
+- Updated dependencies [96aa4bc]
+  - @pnpm/resolve-dependencies@36.0.2
+
+## 15.3.1
+
+### Patch Changes
+
+- Updated dependencies [7ee59a1]
+  - @pnpm/types@12.1.0
+  - @pnpm/normalize-registries@6.0.6
+  - @pnpm/build-modules@14.0.1
+  - @pnpm/lifecycle@17.1.3
+  - @pnpm/symlink-dependency@8.0.7
+  - @pnpm/hooks.read-package-hook@5.0.2
+  - @pnpm/hooks.types@2.0.8
+  - @pnpm/lockfile.filtering@1.0.3
+  - @pnpm/lockfile.fs@1.0.2
+  - @pnpm/lockfile-to-pnp@4.1.11
+  - @pnpm/lockfile.preferred-versions@1.0.11
+  - @pnpm/lockfile.pruner@0.0.3
+  - @pnpm/lockfile.utils@1.0.2
+  - @pnpm/lockfile.verification@1.0.3
+  - @pnpm/lockfile.walker@1.0.2
+  - @pnpm/calc-dep-state@7.0.7
+  - @pnpm/core-loggers@10.0.6
+  - @pnpm/dependency-path@5.1.5
+  - @pnpm/get-context@12.0.4
+  - @pnpm/headless@23.2.2
+  - @pnpm/hoist@9.1.12
+  - @pnpm/link-bins@10.0.9
+  - @pnpm/modules-cleaner@15.1.12
+  - @pnpm/modules-yaml@13.1.6
+  - @pnpm/package-requester@25.2.6
+  - @pnpm/remove-bins@6.0.7
+  - @pnpm/resolve-dependencies@36.0.1
+  - @pnpm/manifest-utils@6.0.7
+  - @pnpm/read-project-manifest@6.0.7
+  - @pnpm/resolver-base@13.0.3
+  - @pnpm/store-controller-types@18.1.5
+  - @pnpm/worker@1.0.9
+  - @pnpm/crypto.base32-hash@3.0.0
+  - @pnpm/pkg-manager.direct-dep-linker@3.0.7
+
+## 15.3.0
+
+### Minor Changes
+
+- 2393a49: **Minor breaking change.** This change might result in resolving your peer dependencies slightly differently but we don't expect it to introduce issues.
+
+  We had to optimize how we resolve peer dependencies in order to fix some [infinite loops and out-of-memory errors during peer dependencies resolution](https://github.com/pnpm/pnpm/issues/8370).
+
+  When a peer dependency is a prod dependency somewhere in the dependency graph (with the same version), pnpm will resolve the peers of that peer dependency in the same way across the subgraph.
+
+  For example, we have `react-dom` in the peer deps of the `form` and `button` packages. `card` has `react-dom` and `react` as regular dependencies and `card` is a dependency of `form`.
+
+  These are the direct dependencies of our example project:
+
+  ```
+  form
+  react@16
+  react-dom@16
+  ```
+
+  These are the dependencies of card:
+
+  ```
+  button
+  react@17
+  react-dom@16
+  ```
+
+  When resolving peers, pnpm will not re-resolve `react-dom` for `card`, even though `card` shadows `react@16` from the root with `react@17`. So, all 3 packages (`form`, `card`, and `button`) will use `react-dom@16`, which in turn uses `react@16`. `form` will use `react@16`, while `card` and `button` will use `react@17`.
+
+  Before this optimization `react-dom@16` was duplicated for the `card`, so that `card` and `button` would use a `react-dom@16` instance that uses `react@17`.
+
+  Before the change:
+
+  ```
+  form
+  -> react-dom@16(react@16)
+  -> react@16
+  card
+  -> react-dom@16(react@17)
+  -> react@17
+  button
+  -> react-dom@16(react@17)
+  -> react@17
+  ```
+
+  After the change
+
+  ```
+  form
+  -> react-dom@16(react@16)
+  -> react@16
+  card
+  -> react-dom@16(react@16)
+  -> react@17
+  button
+  -> react-dom@16(react@16)
+  -> react@17
+  ```
+
+### Patch Changes
+
+- Updated dependencies [2393a49]
+  - @pnpm/resolve-dependencies@36.0.0
+
+## 15.2.4
+
+### Patch Changes
+
+- @pnpm/lockfile.filtering@1.0.2
+- @pnpm/headless@23.2.1
+- @pnpm/package-requester@25.2.5
+- @pnpm/modules-cleaner@15.1.11
+
+## 15.2.3
+
+### Patch Changes
+
+- 39f693b: Don't fail on skipped optional dependencies, when searching for dependencies that should be built.
+
+## 15.2.2
+
+### Patch Changes
+
+- 8e055d2: Don't fail on skipped optional dependencies, when searching for dependencies that should be built.
+
+## 15.2.1
+
+### Patch Changes
+
+- Updated dependencies [dc902fd]
+  - @pnpm/lockfile.verification@1.0.2
+
+## 15.2.0
+
+### Minor Changes
+
+- cb006df: Add ability to apply patch to all versions:
+  If the key of `pnpm.patchedDependencies` is a package name without a version (e.g. `pkg`), pnpm will attempt to apply the patch to all versions of
+  the package, failure will be skipped.
+  If it is a package name and an exact version (e.g. `pkg@x.y.z`), pnpm will attempt to apply the patch to that exact version only, failure will
+  cause pnpm to fail.
+
+  If there's only one version of `pkg` installed, `pnpm patch pkg` and subsequent `pnpm patch-commit $edit_dir` will create an entry named `pkg` in
+  `pnpm.patchedDependencies`. And pnpm will attempt to apply this patch to other versions of `pkg` in the future.
+
+  If there's multiple versions of `pkg` installed, `pnpm patch pkg` will ask which version to edit and whether to attempt to apply the patch to all.
+  If the user chooses to apply the patch to all, `pnpm patch-commit $edit_dir` would create a `pkg` entry in `pnpm.patchedDependencies`.
+  If the user chooses not to apply the patch to all, `pnpm patch-commit $edit_dir` would create a `pkg@x.y.z` entry in `pnpm.patchedDependencies` with
+  `x.y.z` being the version the user chose to edit.
+
+  If the user runs `pnpm patch pkg@x.y.z` with `x.y.z` being the exact version of `pkg` that has been installed, `pnpm patch-commit $edit_dir` will always
+  create a `pkg@x.y.z` entry in `pnpm.patchedDependencies`.
+
+- 09876c9: Add an option to return the list of dependencies that require a build.
+
+### Patch Changes
+
+- Updated dependencies [cb006df]
+  - @pnpm/build-modules@14.0.0
+  - @pnpm/headless@23.2.0
+  - @pnpm/resolve-dependencies@35.0.0
+  - @pnpm/types@12.0.0
+  - @pnpm/hooks.types@2.0.7
+  - @pnpm/lockfile.filtering@1.0.1
+  - @pnpm/lockfile.fs@1.0.1
+  - @pnpm/lockfile.pruner@0.0.2
+  - @pnpm/lockfile.utils@1.0.1
+  - @pnpm/lockfile.verification@1.0.1
+  - @pnpm/lockfile.walker@1.0.1
+  - @pnpm/calc-dep-state@7.0.6
+  - @pnpm/hoist@9.1.11
+  - @pnpm/modules-cleaner@15.1.10
+  - @pnpm/normalize-registries@6.0.5
+  - @pnpm/lifecycle@17.1.2
+  - @pnpm/symlink-dependency@8.0.6
+  - @pnpm/hooks.read-package-hook@5.0.1
+  - @pnpm/lockfile-to-pnp@4.1.10
+  - @pnpm/lockfile.preferred-versions@1.0.10
+  - @pnpm/core-loggers@10.0.5
+  - @pnpm/dependency-path@5.1.4
+  - @pnpm/get-context@12.0.3
+  - @pnpm/link-bins@10.0.8
+  - @pnpm/modules-yaml@13.1.5
+  - @pnpm/package-requester@25.2.4
+  - @pnpm/remove-bins@6.0.6
+  - @pnpm/manifest-utils@6.0.6
+  - @pnpm/read-project-manifest@6.0.6
+  - @pnpm/resolver-base@13.0.2
+  - @pnpm/store-controller-types@18.1.4
+  - @pnpm/worker@1.0.8
+  - @pnpm/crypto.base32-hash@3.0.0
+  - @pnpm/pkg-manager.direct-dep-linker@3.0.6
+
+## 15.1.1
+
+### Patch Changes
+
+- Updated dependencies [9899576]
+- Updated dependencies [8055a30]
+- Updated dependencies [c92f4bf]
+- Updated dependencies [c5ef9b0]
+- Updated dependencies [daa45df]
+- Updated dependencies [8055a30]
+- Updated dependencies [9682129]
+- Updated dependencies [2e3eae3]
+  - @pnpm/lifecycle@17.1.1
+  - @pnpm/lockfile.filtering@1.0.0
+  - @pnpm/lockfile.walker@1.0.0
+  - @pnpm/lockfile.utils@1.0.0
+  - @pnpm/lockfile.pruner@0.0.1
+  - @pnpm/lockfile.fs@1.0.0
+  - @pnpm/resolve-dependencies@34.0.3
+  - @pnpm/lockfile.verification@1.0.0
+  - @pnpm/build-modules@13.0.8
+  - @pnpm/headless@23.1.11
+  - @pnpm/modules-cleaner@15.1.9
+  - @pnpm/hoist@9.1.10
+  - @pnpm/lockfile-to-pnp@4.1.9
+  - @pnpm/lockfile.preferred-versions@1.0.9
+  - @pnpm/calc-dep-state@7.0.5
+  - @pnpm/get-context@12.0.2
+  - @pnpm/hooks.types@2.0.6
+  - @pnpm/symlink-dependency@8.0.5
+  - @pnpm/crypto.base32-hash@3.0.0
+  - @pnpm/package-requester@25.2.3
+  - @pnpm/link-bins@10.0.7
+
+## 15.1.0
+
+### Minor Changes
+
+- 0f0e441: Overrides now support catalogs [#8303](https://github.com/pnpm/pnpm/issues/8303).
+- 0ef168b: Support specifying node version (via `pnpm.executionEnv.nodeVersion` in `package.json`) for running lifecycle scripts per each package in a workspace [#6720](https://github.com/pnpm/pnpm/issues/6720).
+
+### Patch Changes
+
+- Updated dependencies [0f0e441]
+- Updated dependencies [0ef168b]
+  - @pnpm/hooks.read-package-hook@5.0.0
+  - @pnpm/parse-overrides@5.1.0
+  - @pnpm/lifecycle@17.1.0
+  - @pnpm/types@11.1.0
+  - @pnpm/build-modules@13.0.7
+  - @pnpm/headless@23.1.10
+  - @pnpm/normalize-registries@6.0.4
+  - @pnpm/symlink-dependency@8.0.5
+  - @pnpm/hooks.types@2.0.5
+  - @pnpm/filter-lockfile@9.0.9
+  - @pnpm/lockfile-file@9.1.3
+  - @pnpm/lockfile-to-pnp@4.1.8
+  - @pnpm/lockfile-utils@11.0.4
+  - @pnpm/lockfile-walker@9.0.4
+  - @pnpm/lockfile.preferred-versions@1.0.8
+  - @pnpm/prune-lockfile@6.1.4
+  - @pnpm/calc-dep-state@7.0.4
+  - @pnpm/core-loggers@10.0.4
+  - @pnpm/dependency-path@5.1.3
+  - @pnpm/get-context@12.0.1
+  - @pnpm/hoist@9.1.9
+  - @pnpm/link-bins@10.0.7
+  - @pnpm/modules-cleaner@15.1.8
+  - @pnpm/modules-yaml@13.1.4
+  - @pnpm/package-requester@25.2.3
+  - @pnpm/remove-bins@6.0.5
+  - @pnpm/resolve-dependencies@34.0.2
+  - @pnpm/manifest-utils@6.0.5
+  - @pnpm/read-package-json@9.0.5
+  - @pnpm/read-project-manifest@6.0.5
+  - @pnpm/resolver-base@13.0.1
+  - @pnpm/store-controller-types@18.1.3
+  - @pnpm/worker@1.0.7
+  - @pnpm/crypto.base32-hash@3.0.0
+  - @pnpm/pkg-manager.direct-dep-linker@3.0.5
+
+## 15.0.1
+
+### Patch Changes
+
+- afe520d: Update symlink-dir to v6.0.1.
+- Updated dependencies [afe520d]
+- Updated dependencies [afe520d]
+  - @pnpm/resolve-dependencies@34.0.1
+  - @pnpm/symlink-dependency@8.0.4
+  - @pnpm/hoist@9.1.8
+  - @pnpm/link-bins@10.0.6
+  - @pnpm/headless@23.1.9
+  - @pnpm/package-requester@25.2.2
+  - @pnpm/worker@1.0.6
+  - @pnpm/pkg-manager.direct-dep-linker@3.0.4
+  - @pnpm/build-modules@13.0.6
+  - @pnpm/lifecycle@17.0.8
+  - @pnpm/crypto.base32-hash@3.0.0
+
+## 15.0.0
+
+### Major Changes
+
+- dd00eeb: Renamed dir to rootDir in the Project object.
+
+### Patch Changes
+
+- Updated dependencies [9bf9f71]
+- Updated dependencies [dd00eeb]
+- Updated dependencies [fd884c1]
+- Updated dependencies
+  - @pnpm/resolve-dependencies@34.0.0
+  - @pnpm/get-context@12.0.0
+  - @pnpm/resolver-base@13.0.0
+  - @pnpm/types@11.0.0
+  - @pnpm/build-modules@13.0.5
+  - @pnpm/lockfile-utils@11.0.3
+  - @pnpm/lockfile.preferred-versions@1.0.7
+  - @pnpm/package-requester@25.2.1
+  - @pnpm/store-controller-types@18.1.2
+  - @pnpm/normalize-registries@6.0.3
+  - @pnpm/lifecycle@17.0.7
+  - @pnpm/symlink-dependency@8.0.3
+  - @pnpm/hooks.read-package-hook@4.0.5
+  - @pnpm/hooks.types@2.0.4
+  - @pnpm/filter-lockfile@9.0.8
+  - @pnpm/lockfile-file@9.1.2
+  - @pnpm/lockfile-to-pnp@4.1.7
+  - @pnpm/lockfile-walker@9.0.3
+  - @pnpm/prune-lockfile@6.1.3
+  - @pnpm/calc-dep-state@7.0.3
+  - @pnpm/core-loggers@10.0.3
+  - @pnpm/dependency-path@5.1.2
+  - @pnpm/headless@23.1.8
+  - @pnpm/hoist@9.1.7
+  - @pnpm/link-bins@10.0.5
+  - @pnpm/modules-cleaner@15.1.7
+  - @pnpm/modules-yaml@13.1.3
+  - @pnpm/remove-bins@6.0.4
+  - @pnpm/manifest-utils@6.0.4
+  - @pnpm/read-package-json@9.0.4
+  - @pnpm/read-project-manifest@6.0.4
+  - @pnpm/worker@1.0.5
+  - @pnpm/crypto.base32-hash@3.0.0
+  - @pnpm/pkg-manager.direct-dep-linker@3.0.3
+
+## 14.2.1
+
+### Patch Changes
+
+- 13e55b2: If install is performed on a subset of workspace projects, always create an up-to-date lockfile first. So, a partial install can be performed only on a fully resolved (non-partial) lockfile [#8165](https://github.com/pnpm/pnpm/issues/8165).
+- Updated dependencies [7c6c923]
+- Updated dependencies [13e55b2]
+  - @pnpm/package-requester@25.2.0
+  - @pnpm/get-context@11.2.1
+  - @pnpm/types@10.1.1
+  - @pnpm/headless@23.1.7
+  - @pnpm/normalize-registries@6.0.2
+  - @pnpm/build-modules@13.0.4
+  - @pnpm/lifecycle@17.0.6
+  - @pnpm/symlink-dependency@8.0.2
+  - @pnpm/hooks.read-package-hook@4.0.4
+  - @pnpm/hooks.types@2.0.3
+  - @pnpm/filter-lockfile@9.0.7
+  - @pnpm/lockfile-file@9.1.1
+  - @pnpm/lockfile-to-pnp@4.1.6
+  - @pnpm/lockfile-utils@11.0.2
+  - @pnpm/lockfile-walker@9.0.2
+  - @pnpm/lockfile.preferred-versions@1.0.6
+  - @pnpm/prune-lockfile@6.1.2
+  - @pnpm/calc-dep-state@7.0.2
+  - @pnpm/core-loggers@10.0.2
+  - @pnpm/dependency-path@5.1.1
+  - @pnpm/hoist@9.1.6
+  - @pnpm/link-bins@10.0.4
+  - @pnpm/modules-cleaner@15.1.6
+  - @pnpm/modules-yaml@13.1.2
+  - @pnpm/remove-bins@6.0.3
+  - @pnpm/resolve-dependencies@33.1.1
+  - @pnpm/manifest-utils@6.0.3
+  - @pnpm/read-package-json@9.0.3
+  - @pnpm/read-project-manifest@6.0.3
+  - @pnpm/resolver-base@12.0.2
+  - @pnpm/store-controller-types@18.1.1
+  - @pnpm/worker@1.0.4
+  - @pnpm/crypto.base32-hash@3.0.0
+  - @pnpm/pkg-manager.direct-dep-linker@3.0.2
+
+## 14.2.0
+
+### Minor Changes
+
+- 47341e5: **Semi-breaking.** Dependency key names in the lockfile are shortened if they are longer than 1000 characters. We don't expect this change to affect many users. Affected users most probably can't run install successfully at the moment. This change is required to fix some edge cases in which installation fails with an out-of-memory error or "Invalid string length (RangeError: Invalid string length)" error. The max allowed length of the dependency key can be controlled with the `peers-suffix-max-length` setting [#8177](https://github.com/pnpm/pnpm/pull/8177).
+
+### Patch Changes
+
+- Updated dependencies [47341e5]
+  - @pnpm/resolve-dependencies@33.1.0
+  - @pnpm/dependency-path@5.1.0
+  - @pnpm/get-context@11.2.0
+  - @pnpm/lockfile-file@9.1.0
+  - @pnpm/filter-lockfile@9.0.6
+  - @pnpm/lockfile-to-pnp@4.1.5
+  - @pnpm/lockfile-utils@11.0.1
+  - @pnpm/lockfile-walker@9.0.1
+  - @pnpm/prune-lockfile@6.1.1
+  - @pnpm/calc-dep-state@7.0.1
+  - @pnpm/headless@23.1.6
+  - @pnpm/hoist@9.1.5
+  - @pnpm/modules-cleaner@15.1.5
+  - @pnpm/package-requester@25.1.4
+  - @pnpm/hooks.types@2.0.2
+  - @pnpm/lockfile.preferred-versions@1.0.5
+  - @pnpm/build-modules@13.0.3
+  - @pnpm/symlink-dependency@8.0.1
+  - @pnpm/crypto.base32-hash@3.0.0
+  - @pnpm/lifecycle@17.0.5
+  - @pnpm/link-bins@10.0.3
+
+## 14.1.9
+
+### Patch Changes
+
+- Updated dependencies [b3a2f9c]
+- Updated dependencies [80aaa9f]
+  - @pnpm/lockfile-to-pnp@4.1.4
+  - @pnpm/link-bins@10.0.3
+  - @pnpm/headless@23.1.5
+  - @pnpm/build-modules@13.0.2
+  - @pnpm/lifecycle@17.0.5
+  - @pnpm/hoist@9.1.4
+  - @pnpm/package-requester@25.1.3
+
+## 14.1.8
+
+### Patch Changes
+
+- Updated dependencies [74c1057]
+  - @pnpm/resolve-dependencies@33.0.4
+
+## 14.1.7
+
+### Patch Changes
+
+- Updated dependencies [4b65113]
+  - @pnpm/resolve-dependencies@33.0.3
+
+## 14.1.6
+
+### Patch Changes
+
+- 27c33f0: Fix a bug in which a dependency that is both optional for one package but non-optional for another is omitted when `optional=false` [#8066](https://github.com/pnpm/pnpm/issues/8066).
+- Updated dependencies [81d90c9]
+- Updated dependencies [27c33f0]
+  - @pnpm/resolve-dependencies@33.0.2
+  - @pnpm/prune-lockfile@6.1.0
+
+## 14.1.5
+
+### Patch Changes
+
+- Updated dependencies [0c08e1c]
+  - @pnpm/store-controller-types@18.1.0
+  - @pnpm/resolve-dependencies@33.0.1
+  - @pnpm/build-modules@13.0.1
+  - @pnpm/lifecycle@17.0.4
+  - @pnpm/headless@23.1.4
+  - @pnpm/modules-cleaner@15.1.4
+  - @pnpm/package-requester@25.1.3
+  - @pnpm/worker@1.0.3
+  - @pnpm/symlink-dependency@8.0.1
+  - @pnpm/crypto.base32-hash@3.0.0
+  - @pnpm/link-bins@10.0.2
+
+## 14.1.4
+
+### Patch Changes
+
+- Updated dependencies [ef73c19]
+- Updated dependencies [471ee65]
+- Updated dependencies [45f4262]
+- Updated dependencies
+  - @pnpm/resolve-dependencies@33.0.0
+  - @pnpm/types@10.1.0
+  - @pnpm/build-modules@13.0.0
+  - @pnpm/lockfile-utils@11.0.0
+  - @pnpm/lockfile-walker@9.0.0
+  - @pnpm/calc-dep-state@7.0.0
+  - @pnpm/dependency-path@5.0.0
+  - @pnpm/normalize-registries@6.0.1
+  - @pnpm/lifecycle@17.0.3
+  - @pnpm/symlink-dependency@8.0.1
+  - @pnpm/hooks.read-package-hook@4.0.3
+  - @pnpm/hooks.types@2.0.1
+  - @pnpm/filter-lockfile@9.0.5
+  - @pnpm/lockfile-file@9.0.6
+  - @pnpm/lockfile-to-pnp@4.1.3
+  - @pnpm/lockfile.preferred-versions@1.0.4
+  - @pnpm/prune-lockfile@6.0.2
+  - @pnpm/core-loggers@10.0.1
+  - @pnpm/get-context@11.1.3
+  - @pnpm/headless@23.1.3
+  - @pnpm/hoist@9.1.3
+  - @pnpm/link-bins@10.0.2
+  - @pnpm/modules-cleaner@15.1.3
+  - @pnpm/modules-yaml@13.1.1
+  - @pnpm/package-requester@25.1.2
+  - @pnpm/remove-bins@6.0.2
+  - @pnpm/manifest-utils@6.0.2
+  - @pnpm/read-package-json@9.0.2
+  - @pnpm/read-project-manifest@6.0.2
+  - @pnpm/resolver-base@12.0.1
+  - @pnpm/store-controller-types@18.0.1
+  - @pnpm/worker@1.0.2
+  - @pnpm/crypto.base32-hash@3.0.0
+  - @pnpm/pkg-manager.direct-dep-linker@3.0.1
+
+## 14.1.3
+
+### Patch Changes
+
+- Updated dependencies [b1d7f8c]
+- Updated dependencies [b1d7f8c]
+- Updated dependencies [a7aef51]
+  - @pnpm/hooks.read-package-hook@4.0.2
+  - @pnpm/error@6.0.1
+  - @pnpm/lifecycle@17.0.2
+  - @pnpm/filter-lockfile@9.0.4
+  - @pnpm/lockfile-file@9.0.5
+  - @pnpm/get-context@11.1.2
+  - @pnpm/headless@23.1.2
+  - @pnpm/link-bins@10.0.1
+  - @pnpm/package-requester@25.1.1
+  - @pnpm/resolve-dependencies@32.1.3
+  - @pnpm/manifest-utils@6.0.1
+  - @pnpm/read-package-json@9.0.1
+  - @pnpm/read-project-manifest@6.0.1
+  - @pnpm/worker@1.0.1
+  - @pnpm/build-modules@12.0.4
+  - @pnpm/modules-cleaner@15.1.2
+  - @pnpm/lockfile-to-pnp@4.1.2
+  - @pnpm/hoist@9.1.2
+  - @pnpm/lockfile.preferred-versions@1.0.3
+  - @pnpm/remove-bins@6.0.1
+
+## 14.1.2
+
+### Patch Changes
+
+- Updated dependencies [2cb67d7]
+  - @pnpm/resolve-dependencies@32.1.2
+  - @pnpm/headless@23.1.1
+  - @pnpm/package-requester@25.1.0
+
+## 14.1.1
+
+### Patch Changes
+
+- Updated dependencies [db1d6ff]
+- Updated dependencies [7a0536e]
+- Updated dependencies [cb0f459]
+  - @pnpm/deps.graph-sequencer@2.0.1
+  - @pnpm/resolve-dependencies@32.1.1
+  - @pnpm/lockfile-utils@10.1.1
+  - @pnpm/build-modules@12.0.3
+  - @pnpm/filter-lockfile@9.0.3
+  - @pnpm/lockfile-file@9.0.4
+  - @pnpm/lockfile-to-pnp@4.1.1
+  - @pnpm/lockfile.preferred-versions@1.0.2
+  - @pnpm/headless@23.1.1
+  - @pnpm/hoist@9.1.1
+  - @pnpm/modules-cleaner@15.1.1
+  - @pnpm/get-context@11.1.1
+  - @pnpm/package-requester@25.1.0
+
+## 14.1.0
+
+### Minor Changes
+
+- 9719a42: New setting called `virtual-store-dir-max-length` added to modify the maximum allowed length of the directories inside `node_modules/.pnpm`. The default length is set to 120 characters. This setting is particularly useful on Windows, where there is a limit to the maximum length of a file path [#7355](https://github.com/pnpm/pnpm/issues/7355).
+
+### Patch Changes
+
+- Updated dependencies [1a6f7fb]
+- Updated dependencies [9719a42]
+  - @pnpm/resolve-dependencies@32.1.0
+  - @pnpm/dependency-path@4.0.0
+  - @pnpm/package-requester@25.1.0
+  - @pnpm/modules-cleaner@15.1.0
+  - @pnpm/lockfile-to-pnp@4.1.0
+  - @pnpm/modules-yaml@13.1.0
+  - @pnpm/lockfile-utils@10.1.0
+  - @pnpm/get-context@11.1.0
+  - @pnpm/headless@23.1.0
+  - @pnpm/hoist@9.1.0
+  - @pnpm/filter-lockfile@9.0.2
+  - @pnpm/lockfile-file@9.0.3
+  - @pnpm/lockfile-walker@8.0.1
+  - @pnpm/prune-lockfile@6.0.1
+  - @pnpm/calc-dep-state@6.0.1
+  - @pnpm/lockfile.preferred-versions@1.0.1
+  - @pnpm/build-modules@12.0.2
+  - @pnpm/symlink-dependency@8.0.0
+  - @pnpm/crypto.base32-hash@3.0.0
+  - @pnpm/lifecycle@17.0.1
+  - @pnpm/link-bins@10.0.0
+
+## 14.0.7
+
+### Patch Changes
+
+- 8209342: Don't upgrade the lockfile format on `pnpm install --frozen-lockfile` [#7991](https://github.com/pnpm/pnpm/issues/7991).
+- Updated dependencies [c969f37]
+  - @pnpm/lockfile-file@9.0.2
+  - @pnpm/lockfile-to-pnp@4.0.2
+  - @pnpm/get-context@11.0.2
+  - @pnpm/headless@23.0.4
+  - @pnpm/package-requester@25.0.1
+
+## 14.0.6
+
+### Patch Changes
+
+- 6b6ca69: The lockfile should be saved in the new format even if it is up-to-date.
+- Updated dependencies [2cbf7b7]
+- Updated dependencies [abaf12e]
+- Updated dependencies [e9530a8]
+- Updated dependencies [6b6ca69]
+- Updated dependencies [04310be]
+  - @pnpm/lockfile-file@9.0.1
+  - @pnpm/resolve-dependencies@32.0.4
+  - @pnpm/hooks.read-package-hook@4.0.1
+  - @pnpm/lockfile-to-pnp@4.0.1
+  - @pnpm/get-context@11.0.1
+  - @pnpm/headless@23.0.3
+
+## 14.0.5
+
+### Patch Changes
+
+- Updated dependencies [b7d2ed4]
+- Updated dependencies [eb19475]
+  - @pnpm/package-requester@25.0.1
+  - @pnpm/filter-lockfile@9.0.1
+  - @pnpm/headless@23.0.2
+  - @pnpm/resolve-dependencies@32.0.3
+  - @pnpm/modules-cleaner@15.0.1
+
+## 14.0.4
+
+### Patch Changes
+
+- Updated dependencies [bfadc0a]
+  - @pnpm/lifecycle@17.0.1
+  - @pnpm/build-modules@12.0.1
+  - @pnpm/headless@23.0.1
+  - @pnpm/package-requester@25.0.0
+
+## 14.0.3
+
+### Patch Changes
+
+- Updated dependencies [b3961cb]
+  - @pnpm/resolve-dependencies@32.0.2
+
+## 14.0.2
+
+### Patch Changes
+
+- 461d76a: `pnpm install --frozen-lockfile` should work with lockfiles generated by pnpm v8, if they don't need updates [#7934](https://github.com/pnpm/pnpm/issues/7934).
+
+## 14.0.1
+
+### Patch Changes
+
+- Updated dependencies [253d50c]
+  - @pnpm/resolve-dependencies@32.0.1
+
+## 14.0.0
+
+### Major Changes
+
+- aa33269: Peer dependency rules should only affect reporting, not data in the lockfile.
+- cdd8365: Package ID does not contain the registry domain.
+- 43cdd87: Node.js v16 support dropped. Use at least Node.js v18.12.
+
+### Minor Changes
+
+- 7733f3a: Added support for registry-scoped SSL configurations (cert, key, and ca). Three new settings supported: `<registryURL>:certfile`, `<registryURL>:keyfile`, and `<registryURL>:ca`. For instance:
+
+  ```
+  //registry.mycomp.com/:certfile=server-cert.pem
+  //registry.mycomp.com/:keyfile=server-key.pem
+  //registry.mycomp.com/:cafile=client-cert.pem
+  ```
+
+  Related issue: [#7427](https://github.com/pnpm/pnpm/issues/7427).
+  Related PR: [#7626](https://github.com/pnpm/pnpm/pull/7626).
+
+- 086b69c: The checksum of the `.pnpmfile.cjs` is saved into the lockfile. If the pnpmfile gets modified, the lockfile is reanalyzed to apply the changes [#7662](https://github.com/pnpm/pnpm/pull/7662).
+- 9f8948c: Add a new option autoInstallPeersFromHighestMatch that makes pnpm install the highest version satisfying one of the peer dependencies even if the peer dependency ranges don't overlap.
+- 730929e: Add a field named `ignoredOptionalDependencies`. This is an array of strings. If an optional dependency has its name included in this array, it will be skipped.
+
+### Patch Changes
+
+- 0fa26f4: Correctly detect the active Node.js version during headless installation [#7801](https://github.com/pnpm/pnpm/pull/7801).
+- e5fbac3: Don't print an unnecessary warning when adding new dependencies to a project that uses hoisted node_modules.
+- Updated dependencies [1b26210]
+- Updated dependencies [7733f3a]
+- Updated dependencies [977060f]
+- Updated dependencies [aa33269]
+- Updated dependencies [3ded840]
+- Updated dependencies [cdd8365]
+- Updated dependencies [c692f80]
+- Updated dependencies [89b396b]
+- Updated dependencies [43cdd87]
+- Updated dependencies [11d9ebd]
+- Updated dependencies [086b69c]
+- Updated dependencies [0963390]
+- Updated dependencies [9f8948c]
+- Updated dependencies [36dcaa0]
+- Updated dependencies [19c4b4f]
+- Updated dependencies [d381a60]
+- Updated dependencies [f5eadba]
+- Updated dependencies [98a1266]
+- Updated dependencies [7edb917]
+- Updated dependencies [82aac81]
+- Updated dependencies [f67ad31]
+- Updated dependencies [732430a]
+- Updated dependencies [b13d2dc]
+- Updated dependencies [730929e]
+- Updated dependencies [22c7acc]
+- Updated dependencies [8eddd21]
+- Updated dependencies [98a1266]
+  - @pnpm/build-modules@12.0.0
+  - @pnpm/resolve-dependencies@32.0.0
+  - @pnpm/types@10.0.0
+  - @pnpm/hooks.read-package-hook@4.0.0
+  - @pnpm/error@6.0.0
+  - @pnpm/worker@1.0.0
+  - @pnpm/package-requester@25.0.0
+  - @pnpm/modules-cleaner@15.0.0
+  - @pnpm/dependency-path@3.0.0
+  - @pnpm/lockfile-utils@10.0.0
+  - @pnpm/headless@23.0.0
+  - @pnpm/constants@8.0.0
+  - @pnpm/read-project-manifest@6.0.0
+  - @pnpm/parse-wanted-dependency@6.0.0
+  - @pnpm/which-version-is-pinned@6.0.0
+  - @pnpm/read-package-json@9.0.0
+  - @pnpm/pkg-manager.direct-dep-linker@3.0.0
+  - @pnpm/store-controller-types@18.0.0
+  - @pnpm/normalize-registries@6.0.0
+  - @pnpm/crypto.base32-hash@3.0.0
+  - @pnpm/manifest-utils@6.0.0
+  - @pnpm/filter-lockfile@9.0.0
+  - @pnpm/lockfile-to-pnp@4.0.0
+  - @pnpm/lockfile-walker@8.0.0
+  - @pnpm/modules-yaml@13.0.0
+  - @pnpm/prune-lockfile@6.0.0
+  - @pnpm/calc-dep-state@6.0.0
+  - @pnpm/get-context@11.0.0
+  - @pnpm/remove-bins@6.0.0
+  - @pnpm/resolver-base@12.0.0
+  - @pnpm/lockfile-file@9.0.0
+  - @pnpm/symlink-dependency@8.0.0
+  - @pnpm/core-loggers@10.0.0
+  - @pnpm/link-bins@10.0.0
+  - @pnpm/deps.graph-sequencer@2.0.0
+  - @pnpm/read-modules-dir@7.0.0
+  - @pnpm/hoist@9.0.0
+  - @pnpm/matcher@6.0.0
+  - @pnpm/lifecycle@17.0.0
+  - @pnpm/hooks.types@2.0.0
+  - @pnpm/lockfile.preferred-versions@1.0.0
+
+## 13.4.0
+
+### Minor Changes
+
+- 31054a63e: Running `pnpm update -r --latest` will no longer downgrade prerelease dependencies [#7436](https://github.com/pnpm/pnpm/issues/7436).
+
+### Patch Changes
+
+- Updated dependencies [31054a63e]
+- Updated dependencies [0c383327e]
+  - @pnpm/resolve-dependencies@31.4.0
+  - @pnpm/package-requester@24.1.8
+  - @pnpm/store-controller-types@17.2.0
+  - @pnpm/resolver-base@11.1.0
+  - @pnpm/calc-dep-state@5.0.0
+  - @pnpm/headless@22.4.4
+  - @pnpm/build-modules@11.2.12
+  - @pnpm/lifecycle@16.0.12
+  - @pnpm/modules-cleaner@14.0.24
+  - @pnpm/lockfile-utils@9.0.5
+  - @pnpm/worker@0.3.14
+  - @pnpm/filter-lockfile@8.1.6
+  - @pnpm/lockfile-to-pnp@3.0.17
+  - @pnpm/hoist@8.2.1
+  - @pnpm/symlink-dependency@7.1.4
+  - @pnpm/crypto.base32-hash@2.0.0
+  - @pnpm/link-bins@9.0.12
+
+## 13.3.3
+
+### Patch Changes
+
+- Updated dependencies [60bcc797f]
+  - @pnpm/get-context@10.0.11
+  - @pnpm/headless@22.4.3
+  - @pnpm/package-requester@24.1.7
+  - @pnpm/lifecycle@16.0.11
+  - @pnpm/build-modules@11.2.11
+
+## 13.3.2
+
+### Patch Changes
+
+- ff10acade: When `hoisted-workspace-packages` is `true` don't hoist the root package even if it has a name. Otherwise we would create a circular symlink.
+- Updated dependencies [d349bc3a2]
+- Updated dependencies [ff10acade]
+  - @pnpm/modules-yaml@12.1.7
+  - @pnpm/headless@22.4.2
+  - @pnpm/get-context@10.0.10
+  - @pnpm/package-requester@24.1.7
+  - @pnpm/symlink-dependency@7.1.4
+  - @pnpm/crypto.base32-hash@2.0.0
+  - @pnpm/lifecycle@16.0.10
+  - @pnpm/link-bins@9.0.12
+
+## 13.3.1
+
+### Patch Changes
+
+- @pnpm/package-requester@24.1.7
+- @pnpm/worker@0.3.13
+- @pnpm/headless@22.4.1
+- @pnpm/build-modules@11.2.10
+
+## 13.3.0
+
+### Minor Changes
+
+- c597f72ec: A new option added for hoisting packages from the workspace. When `hoist-workspace-packages` is set to `true`, packages from the workspace are symlinked to either `<workspace_root>/node_modules/.pnpm/node_modules` or to `<workspace_root>/node_modules` depending on other hoisting settings (`hoist-pattern` and `public-hoist-pattern`) [#7451](https://github.com/pnpm/pnpm/pull/7451).
+
+### Patch Changes
+
+- Updated dependencies [c597f72ec]
+  - @pnpm/headless@22.4.0
+  - @pnpm/hoist@8.2.0
+
+## 13.2.1
+
+### Patch Changes
+
+- Updated dependencies [33313d2fd]
+- Updated dependencies [4d34684f1]
+  - @pnpm/resolve-dependencies@31.3.1
+  - @pnpm/types@9.4.2
+  - @pnpm/headless@22.3.12
+  - @pnpm/package-requester@24.1.6
+  - @pnpm/worker@0.3.12
+  - @pnpm/hooks.types@1.0.6
+  - @pnpm/filter-lockfile@8.1.5
+  - @pnpm/lockfile-file@8.1.6
+  - @pnpm/lockfile-utils@9.0.4
+  - @pnpm/lockfile-walker@7.0.8
+  - @pnpm/prune-lockfile@5.0.9
+  - @pnpm/calc-dep-state@4.1.5
+  - @pnpm/hoist@8.1.5
+  - @pnpm/modules-cleaner@14.0.23
+  - @pnpm/normalize-registries@5.0.6
+  - @pnpm/build-modules@11.2.9
+  - @pnpm/lifecycle@16.0.10
+  - @pnpm/symlink-dependency@7.1.4
+  - @pnpm/hooks.read-package-hook@3.0.10
+  - @pnpm/lockfile-to-pnp@3.0.16
+  - @pnpm/core-loggers@9.0.6
+  - @pnpm/dependency-path@2.1.7
+  - @pnpm/get-context@10.0.9
+  - @pnpm/link-bins@9.0.12
+  - @pnpm/modules-yaml@12.1.6
+  - @pnpm/remove-bins@5.0.7
+  - @pnpm/manifest-utils@5.0.7
+  - @pnpm/read-package-json@8.0.7
+  - @pnpm/read-project-manifest@5.0.10
+  - @pnpm/resolver-base@11.0.2
+  - @pnpm/store-controller-types@17.1.4
+  - @pnpm/crypto.base32-hash@2.0.0
+  - @pnpm/pkg-manager.direct-dep-linker@2.1.9
+
+## 13.2.0
+
+### Minor Changes
+
+- 672c559e4: A new setting added for symlinking [injected dependencies](https://pnpm.io/package_json#dependenciesmetainjected) from the workspace, if their dependencies use the same peer dependencies as the dependent package. The setting is called `dedupe-injected-deps` [#7416](https://github.com/pnpm/pnpm/pull/7416).
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies [672c559e4]
+  - @pnpm/resolve-dependencies@31.3.0
+  - @pnpm/types@9.4.1
+  - @pnpm/hooks.types@1.0.5
+  - @pnpm/filter-lockfile@8.1.4
+  - @pnpm/lockfile-file@8.1.5
+  - @pnpm/lockfile-utils@9.0.3
+  - @pnpm/lockfile-walker@7.0.7
+  - @pnpm/prune-lockfile@5.0.8
+  - @pnpm/calc-dep-state@4.1.4
+  - @pnpm/hoist@8.1.4
+  - @pnpm/modules-cleaner@14.0.22
+  - @pnpm/normalize-registries@5.0.5
+  - @pnpm/build-modules@11.2.8
+  - @pnpm/lifecycle@16.0.9
+  - @pnpm/symlink-dependency@7.1.3
+  - @pnpm/hooks.read-package-hook@3.0.9
+  - @pnpm/lockfile-to-pnp@3.0.15
+  - @pnpm/core-loggers@9.0.5
+  - @pnpm/dependency-path@2.1.6
+  - @pnpm/get-context@10.0.8
+  - @pnpm/headless@22.3.11
+  - @pnpm/link-bins@9.0.11
+  - @pnpm/modules-yaml@12.1.5
+  - @pnpm/package-requester@24.1.5
+  - @pnpm/remove-bins@5.0.6
+  - @pnpm/manifest-utils@5.0.6
+  - @pnpm/read-package-json@8.0.6
+  - @pnpm/read-project-manifest@5.0.9
+  - @pnpm/resolver-base@11.0.1
+  - @pnpm/store-controller-types@17.1.3
+  - @pnpm/worker@0.3.11
+  - @pnpm/crypto.base32-hash@2.0.0
+  - @pnpm/pkg-manager.direct-dep-linker@2.1.8
+
+## 13.1.12
+
+### Patch Changes
+
+- Updated dependencies [d5a176af7]
+- Updated dependencies [e3b983295]
+- Updated dependencies [f3cd0a61d]
+  - @pnpm/resolve-dependencies@31.2.7
+  - @pnpm/lockfile-utils@9.0.2
+  - @pnpm/headless@22.3.10
+  - @pnpm/modules-cleaner@14.0.21
+  - @pnpm/filter-lockfile@8.1.3
+  - @pnpm/lockfile-to-pnp@3.0.14
+  - @pnpm/hoist@8.1.3
+  - @pnpm/package-requester@24.1.4
+  - @pnpm/worker@0.3.10
+  - @pnpm/build-modules@11.2.7
+
+## 13.1.11
+
+### Patch Changes
+
+- Updated dependencies [5462cb6d4]
+  - @pnpm/resolve-dependencies@31.2.6
+
+## 13.1.10
+
+### Patch Changes
+
+- 6558d1865: When `dedupe-direct-deps` is set to `true`, commands of dependencies should be deduplicated [#7359](https://github.com/pnpm/pnpm/pull/7359).
+- Updated dependencies [6558d1865]
+  - @pnpm/resolve-dependencies@31.2.5
+  - @pnpm/modules-cleaner@14.0.20
+  - @pnpm/headless@22.3.9
+  - @pnpm/package-requester@24.1.3
+
+## 13.1.9
+
+### Patch Changes
+
+- Updated dependencies [b1fd38cca]
+  - @pnpm/get-context@10.0.7
+  - @pnpm/resolve-dependencies@31.2.4
+  - @pnpm/headless@22.3.8
+  - @pnpm/package-requester@24.1.3
+
+## 13.1.8
+
+### Patch Changes
+
+- Updated dependencies [1e7bd4af3]
+- Updated dependencies [2143a9388]
+  - @pnpm/package-requester@24.1.3
+  - @pnpm/worker@0.3.9
+  - @pnpm/get-context@10.0.6
+  - @pnpm/headless@22.3.8
+  - @pnpm/build-modules@11.2.6
+
+## 13.1.7
+
+### Patch Changes
+
+- Updated dependencies [b4194fe52]
+  - @pnpm/lockfile-utils@9.0.1
+  - @pnpm/headless@22.3.7
+  - @pnpm/filter-lockfile@8.1.2
+  - @pnpm/lockfile-to-pnp@3.0.13
+  - @pnpm/hoist@8.1.2
+  - @pnpm/modules-cleaner@14.0.19
+  - @pnpm/resolve-dependencies@31.2.3
+
+## 13.1.6
+
+### Patch Changes
+
+- Updated dependencies [291607c5a]
+- Updated dependencies [4da7b463f]
+  - @pnpm/store-controller-types@17.1.2
+  - @pnpm/resolve-dependencies@31.2.2
+  - @pnpm/build-modules@11.2.5
+  - @pnpm/lifecycle@16.0.8
+  - @pnpm/headless@22.3.6
+  - @pnpm/modules-cleaner@14.0.18
+  - @pnpm/package-requester@24.1.2
+  - @pnpm/worker@0.3.8
+  - @pnpm/symlink-dependency@7.1.2
+  - @pnpm/crypto.base32-hash@2.0.0
+  - @pnpm/link-bins@9.0.10
+
+## 13.1.5
+
+### Patch Changes
+
+- Updated dependencies [b06f50183]
+  - @pnpm/build-modules@11.2.4
+  - @pnpm/headless@22.3.5
+
+## 13.1.4
+
+### Patch Changes
+
+- @pnpm/lifecycle@16.0.7
+- @pnpm/build-modules@11.2.3
+- @pnpm/headless@22.3.4
+- @pnpm/package-requester@24.1.1
+
+## 13.1.3
+
+### Patch Changes
+
+- cfc017ee3: Optional dependencies that do not have to be built will be reflinked (or hardlinked) to the store instead of copied [#7046](https://github.com/pnpm/pnpm/issues/7046).
+- 7ea45afbe: If a package's tarball cannot be fetched, print the dependency chain that leads to the failed package [#7265](https://github.com/pnpm/pnpm/pull/7265).
+- Updated dependencies [4c2450208]
+- Updated dependencies [cfc017ee3]
+- Updated dependencies [7ea45afbe]
+  - @pnpm/lockfile-utils@9.0.0
+  - @pnpm/resolver-base@11.0.0
+  - @pnpm/headless@22.3.3
+  - @pnpm/resolve-dependencies@31.2.1
+  - @pnpm/package-requester@24.1.1
+  - @pnpm/store-controller-types@17.1.1
+  - @pnpm/filter-lockfile@8.1.1
+  - @pnpm/lockfile-to-pnp@3.0.12
+  - @pnpm/hoist@8.1.1
+  - @pnpm/modules-cleaner@14.0.17
+  - @pnpm/worker@0.3.7
+  - @pnpm/build-modules@11.2.2
+  - @pnpm/lifecycle@16.0.6
+  - @pnpm/symlink-dependency@7.1.2
+  - @pnpm/crypto.base32-hash@2.0.0
+  - @pnpm/link-bins@9.0.10
+
+## 13.1.2
+
+### Patch Changes
+
+- @pnpm/lifecycle@16.0.5
+- @pnpm/build-modules@11.2.1
+- @pnpm/headless@22.3.2
+- @pnpm/package-requester@24.1.0
+
+## 13.1.1
+
+### Patch Changes
+
+- Updated dependencies [ee4d15fdd]
+  - @pnpm/hoist@8.1.0
+  - @pnpm/headless@22.3.1
+
+## 13.1.0
+
+### Minor Changes
+
+- 43ce9e4a6: Support for multiple architectures when installing dependencies [#5965](https://github.com/pnpm/pnpm/issues/5965).
+
+  You can now specify architectures for which you'd like to install optional dependencies, even if they don't match the architecture of the system running the install. Use the `supportedArchitectures` field in `package.json` to define your preferences.
+
+  For example, the following configuration tells pnpm to install optional dependencies for Windows x64:
+
+  ```json
+  {
+    "pnpm": {
+      "supportedArchitectures": {
+        "os": ["win32"],
+        "cpu": ["x64"]
+      }
+    }
+  }
+  ```
+
+  Whereas this configuration will have pnpm install optional dependencies for Windows, macOS, and the architecture of the system currently running the install. It includes artifacts for both x64 and arm64 CPUs:
+
+  ```json
+  {
+    "pnpm": {
+      "supportedArchitectures": {
+        "os": ["win32", "darwin", "current"],
+        "cpu": ["x64", "arm64"]
+      }
+    }
+  }
+  ```
+
+  Additionally, `supportedArchitectures` also supports specifying the `libc` of the system.
+
+### Patch Changes
+
+- Updated dependencies [43ce9e4a6]
+- Updated dependencies [6390033cd]
+- Updated dependencies [43ce9e4a6]
+  - @pnpm/resolve-dependencies@31.2.0
+  - @pnpm/package-requester@24.1.0
+  - @pnpm/store-controller-types@17.1.0
+  - @pnpm/filter-lockfile@8.1.0
+  - @pnpm/headless@22.3.0
+  - @pnpm/types@9.4.0
+  - @pnpm/build-modules@11.2.0
+  - @pnpm/worker@0.3.6
+  - @pnpm/lifecycle@16.0.4
+  - @pnpm/modules-cleaner@14.0.16
+  - @pnpm/normalize-registries@5.0.4
+  - @pnpm/symlink-dependency@7.1.2
+  - @pnpm/hooks.read-package-hook@3.0.8
+  - @pnpm/hooks.types@1.0.4
+  - @pnpm/lockfile-file@8.1.4
+  - @pnpm/lockfile-to-pnp@3.0.11
+  - @pnpm/lockfile-utils@8.0.7
+  - @pnpm/lockfile-walker@7.0.6
+  - @pnpm/prune-lockfile@5.0.7
+  - @pnpm/core-loggers@9.0.4
+  - @pnpm/dependency-path@2.1.5
+  - @pnpm/get-context@10.0.5
+  - @pnpm/hoist@8.0.15
+  - @pnpm/link-bins@9.0.10
+  - @pnpm/modules-yaml@12.1.4
+  - @pnpm/remove-bins@5.0.5
+  - @pnpm/manifest-utils@5.0.5
+  - @pnpm/read-package-json@8.0.5
+  - @pnpm/read-project-manifest@5.0.8
+  - @pnpm/resolver-base@10.0.4
+  - @pnpm/crypto.base32-hash@2.0.0
+  - @pnpm/pkg-manager.direct-dep-linker@2.1.7
+  - @pnpm/calc-dep-state@4.1.3
+
+## 13.0.2
+
+### Patch Changes
+
+- Updated dependencies [5c8c9196c]
+  - @pnpm/link-bins@9.0.9
+  - @pnpm/hoist@8.0.14
+  - @pnpm/build-modules@11.1.2
+  - @pnpm/lifecycle@16.0.3
+  - @pnpm/headless@22.2.5
+  - @pnpm/package-requester@24.0.6
+
+## 13.0.1
+
+### Patch Changes
+
+- 4246f41be: Add package @pnpm/deps.graph-sequencer for better topological sort [#7168](https://github.com/pnpm/pnpm/pull/7168).
+- Updated dependencies [4246f41be]
+- Updated dependencies [84f81c9ae]
+  - @pnpm/deps.graph-sequencer@1.0.0
+  - @pnpm/build-modules@11.1.1
+  - @pnpm/lifecycle@16.0.2
+  - @pnpm/headless@22.2.4
+  - @pnpm/package-requester@24.0.6
+  - @pnpm/worker@0.3.5
+
+## 13.0.0
+
+### Major Changes
+
+- ac5abd3ff: The paths in patchedDependencies passed to `@pnpm/core` are absolute.
+
+### Patch Changes
+
+- Updated dependencies [01bc58e2c]
+- Updated dependencies [08b65ff78]
+  - @pnpm/package-requester@24.0.5
+  - @pnpm/worker@0.3.4
+  - @pnpm/headless@22.2.3
+  - @pnpm/resolve-dependencies@31.1.21
+  - @pnpm/symlink-dependency@7.1.1
+  - @pnpm/crypto.base32-hash@2.0.0
+  - @pnpm/lifecycle@16.0.1
+  - @pnpm/link-bins@9.0.8
+
+## 12.2.2
+
+### Patch Changes
+
+- @pnpm/package-requester@24.0.4
+- @pnpm/worker@0.3.3
+- @pnpm/headless@22.2.2
+
+## 12.2.1
+
+### Patch Changes
+
+- @pnpm/package-requester@24.0.3
+- @pnpm/worker@0.3.2
+- @pnpm/headless@22.2.1
+
+## 12.2.0
+
+### Minor Changes
+
+- d774a3196: The list of packages that are allowed to run installation scripts now may be provided in a separate configuration file. The path to the file should be specified via the `pnpm.onlyBuiltDependenciesFile` field in `package.json`. For instance:
+
+  ```json
+  {
+    "dependencies": {
+      "@my-org/policy": "1.0.0"
+    }
+    "pnpm": {
+      "onlyBuiltDependenciesFile": "node_modules/@my-org/policy/allow-build.json"
+    }
+  }
+  ```
+
+  In the example above, the list is loaded from a dependency. The JSON file with the list should contain an array of package names. For instance:
+
+  ```json
+  ["esbuild", "@reflink/reflink"]
+  ```
+
+  With the above list, only `esbuild` and `@reflink/reflink` will be allowed to run scripts during installation.
+
+  Related issue: [#7137](https://github.com/pnpm/pnpm/issues/7137).
+
+- 832e28826: Add `disallow-workspace-cycles` option to error instead of warn about cyclic dependencies
+
+### Patch Changes
+
+- 12f45a83d: Use `neverBuiltDependencies` and `onlyBuiltDependencies` from the root `package.json` of the workspace, when `shared-workspace-lockfile` is set to `false` [#7141](https://github.com/pnpm/pnpm/pull/7141).
+- Updated dependencies [d774a3196]
+- Updated dependencies [d774a3196]
+  - @pnpm/headless@22.2.0
+  - @pnpm/types@9.3.0
+  - @pnpm/build-modules@11.1.0
+  - @pnpm/normalize-registries@5.0.3
+  - @pnpm/lifecycle@16.0.1
+  - @pnpm/symlink-dependency@7.1.1
+  - @pnpm/hooks.read-package-hook@3.0.7
+  - @pnpm/hooks.types@1.0.3
+  - @pnpm/filter-lockfile@8.0.10
+  - @pnpm/lockfile-file@8.1.3
+  - @pnpm/lockfile-to-pnp@3.0.10
+  - @pnpm/lockfile-utils@8.0.6
+  - @pnpm/lockfile-walker@7.0.5
+  - @pnpm/prune-lockfile@5.0.6
+  - @pnpm/core-loggers@9.0.3
+  - @pnpm/dependency-path@2.1.4
+  - @pnpm/get-context@10.0.4
+  - @pnpm/hoist@8.0.13
+  - @pnpm/link-bins@9.0.8
+  - @pnpm/modules-cleaner@14.0.15
+  - @pnpm/modules-yaml@12.1.3
+  - @pnpm/package-requester@24.0.2
+  - @pnpm/remove-bins@5.0.4
+  - @pnpm/resolve-dependencies@31.1.20
+  - @pnpm/manifest-utils@5.0.4
+  - @pnpm/read-package-json@8.0.4
+  - @pnpm/read-project-manifest@5.0.7
+  - @pnpm/resolver-base@10.0.3
+  - @pnpm/store-controller-types@17.0.1
+  - @pnpm/worker@0.3.1
+  - @pnpm/crypto.base32-hash@2.0.0
+  - @pnpm/pkg-manager.direct-dep-linker@2.1.6
+  - @pnpm/calc-dep-state@4.1.2
+
+## 12.1.3
+
+### Patch Changes
+
+- Updated dependencies [b0afd7833]
+  - @pnpm/resolve-dependencies@31.1.19
+
+## 12.1.2
+
+### Patch Changes
+
+- 1f32d3eb8: When the `node-linker` is set to `hoisted`, the `package.json` files of the existing dependencies inside `node_modules` will be checked to verify their actual versions. The data in the `node_modules/.modules.yaml` and `node_modules/.pnpm/lock.yaml` may not be fully reliable, as an installation may fail after changes to dependencies were made but before those state files were updated [#7107](https://github.com/pnpm/pnpm/pull/7107).
+- f394cfccd: Don't update git-hosted dependencies when adding an unrelated dependency [#7008](https://github.com/pnpm/pnpm/issues/7008).
+- Updated dependencies [1f32d3eb8]
+- Updated dependencies [f394cfccd]
+  - @pnpm/headless@22.1.2
+  - @pnpm/resolve-dependencies@31.1.18
+  - @pnpm/lockfile-utils@8.0.5
+  - @pnpm/filter-lockfile@8.0.9
+  - @pnpm/lockfile-to-pnp@3.0.9
+  - @pnpm/hoist@8.0.12
+  - @pnpm/modules-cleaner@14.0.14
+  - @pnpm/package-requester@24.0.1
+
+## 12.1.1
+
+### Patch Changes
+
+- Updated dependencies [78a97774d]
+  - @pnpm/headless@22.1.1
+  - @pnpm/package-requester@24.0.0
+
+## 12.1.0
+
+### Minor Changes
+
+- 9caa33d53: Remove `disableRelinkFromStore` and `relinkLocalDirDeps`. Replace them with `disableRelinkLocalDirDeps`.
+
+### Patch Changes
+
+- Updated dependencies [9caa33d53]
+- Updated dependencies [9caa33d53]
+  - @pnpm/store-controller-types@17.0.0
+  - @pnpm/headless@23.0.0
+  - @pnpm/worker@0.3.0
+  - @pnpm/package-requester@24.0.0
+  - @pnpm/lifecycle@16.0.0
+  - @pnpm/build-modules@11.0.15
+  - @pnpm/modules-cleaner@14.0.13
+  - @pnpm/resolve-dependencies@31.1.17
+  - @pnpm/read-project-manifest@5.0.6
+  - @pnpm/link-bins@9.0.7
+  - @pnpm/hoist@8.0.11
+  - @pnpm/symlink-dependency@7.1.0
+  - @pnpm/crypto.base32-hash@2.0.0
+
+## 12.0.1
+
+### Patch Changes
+
+- @pnpm/package-requester@23.0.1
+- @pnpm/worker@0.2.1
+- @pnpm/headless@22.0.1
+
+## 12.0.0
+
+### Minor Changes
+
+- 03cdccc6e: New option added: disableRelinkFromStore.
+- 48dcd108c: Improve performance of installation by using a worker for creating the symlinks inside `node_modules/.pnpm` [#7069](https://github.com/pnpm/pnpm/pull/7069).
+
+### Patch Changes
+
+- Updated dependencies [03cdccc6e]
+- Updated dependencies [48dcd108c]
+- Updated dependencies [48dcd108c]
+  - @pnpm/store-controller-types@16.1.0
+  - @pnpm/headless@22.0.0
+  - @pnpm/worker@0.2.0
+  - @pnpm/symlink-dependency@7.1.0
+  - @pnpm/build-modules@11.0.14
+  - @pnpm/lifecycle@15.0.9
+  - @pnpm/modules-cleaner@14.0.12
+  - @pnpm/package-requester@23.0.0
+  - @pnpm/resolve-dependencies@31.1.16
+  - @pnpm/pkg-manager.direct-dep-linker@2.1.5
+  - @pnpm/crypto.base32-hash@2.0.0
+  - @pnpm/link-bins@9.0.6
+
+## 11.0.2
+
+### Patch Changes
+
+- @pnpm/headless@21.0.16
+- @pnpm/package-requester@22.0.2
+- @pnpm/worker@0.1.2
+- @pnpm/symlink-dependency@7.0.3
+- @pnpm/crypto.base32-hash@2.0.0
+- @pnpm/lifecycle@15.0.8
+- @pnpm/link-bins@9.0.6
+
+## 11.0.1
+
+### Patch Changes
+
+- @pnpm/headless@21.0.15
+- @pnpm/package-requester@22.0.1
+- @pnpm/worker@0.1.1
+- @pnpm/lifecycle@15.0.8
+- @pnpm/store-controller-types@16.0.1
+- @pnpm/build-modules@11.0.13
+- @pnpm/modules-cleaner@14.0.11
+- @pnpm/resolve-dependencies@31.1.15
+- @pnpm/symlink-dependency@7.0.3
+- @pnpm/crypto.base32-hash@2.0.0
+- @pnpm/link-bins@9.0.6
+
+## 11.0.0
+
+### Patch Changes
+
+- Updated dependencies [64bf3c860]
+- Updated dependencies [494f87544]
+- Updated dependencies [083bbf590]
+- Updated dependencies [77e24d341]
+- Updated dependencies [083bbf590]
+- Updated dependencies [e9aa6f682]
+  - @pnpm/hooks.read-package-hook@3.0.6
+  - @pnpm/package-requester@22.0.0
+  - @pnpm/store-controller-types@16.0.0
+  - @pnpm/worker@0.1.0
+  - @pnpm/resolve-dependencies@31.1.14
+  - @pnpm/lockfile-utils@8.0.4
+  - @pnpm/lifecycle@15.0.7
+  - @pnpm/headless@21.0.14
+  - @pnpm/build-modules@11.0.12
+  - @pnpm/modules-cleaner@14.0.10
+  - @pnpm/read-project-manifest@5.0.5
+  - @pnpm/filter-lockfile@8.0.8
+  - @pnpm/lockfile-to-pnp@3.0.8
+  - @pnpm/hoist@8.0.10
+  - @pnpm/link-bins@9.0.6
+  - @pnpm/symlink-dependency@7.0.3
+  - @pnpm/crypto.base32-hash@2.0.0
+
+## 10.2.15
+
+### Patch Changes
+
+- ecad8a724: `pnpm install --frozen-lockfile --lockfile-only` should fail if the lockfile is not up to date with the `package.json` files [#6913](https://github.com/pnpm/pnpm/issues/6913).
+- Updated dependencies [92f42224c]
+- Updated dependencies [ec50dc98c]
+  - @pnpm/package-requester@21.1.0
+  - @pnpm/hooks.read-package-hook@3.0.5
+  - @pnpm/headless@21.0.13
+
+## 10.2.14
+
+### Patch Changes
+
+- 5e7ee2473: Change the install error message when a lockfile is wanted but absent to indicate the wanted lockfile is absent, not present. This now reflects the actual error [#6851](https://github.com/pnpm/pnpm/pull/6851).
+- Updated dependencies [692197df3]
+  - @pnpm/lifecycle@15.0.6
+  - @pnpm/build-modules@11.0.11
+  - @pnpm/headless@21.0.12
+  - @pnpm/package-requester@21.0.12
+
+## 10.2.13
+
+### Patch Changes
+
+- Updated dependencies [dac59e632]
+  - @pnpm/package-requester@21.0.12
+  - @pnpm/headless@21.0.11
+
+## 10.2.12
+
+### Patch Changes
+
+- Updated dependencies [3d9503461]
+- Updated dependencies [73f2b6826]
+  - @pnpm/symlink-dependency@7.0.3
+  - @pnpm/package-requester@21.0.11
+  - @pnpm/pkg-manager.direct-dep-linker@2.1.4
+  - @pnpm/headless@21.0.10
+  - @pnpm/crypto.base32-hash@2.0.0
+  - @pnpm/lifecycle@15.0.5
+  - @pnpm/link-bins@9.0.5
+
+## 10.2.11
+
+### Patch Changes
+
+- 388a13b56: Sort keys in `packageExtensions` before calculating `packageExtensionsChecksum`. Fix [#6824](https://github.com/pnpm/pnpm/issues/6824).
+- Updated dependencies [a13a0e8f5]
+  - @pnpm/resolve-dependencies@31.1.13
+  - @pnpm/headless@21.0.9
+  - @pnpm/package-requester@21.0.10
+  - @pnpm/symlink-dependency@7.0.2
+  - @pnpm/crypto.base32-hash@2.0.0
+  - @pnpm/lifecycle@15.0.5
+  - @pnpm/link-bins@9.0.5
+
+## 10.2.10
+
+### Patch Changes
+
+- @pnpm/headless@21.0.8
+- @pnpm/package-requester@21.0.9
+- @pnpm/symlink-dependency@7.0.2
+- @pnpm/crypto.base32-hash@2.0.0
+- @pnpm/lifecycle@15.0.5
+- @pnpm/link-bins@9.0.5
+
+## 10.2.9
+
+### Patch Changes
+
+- b8cb91cf4: Treat the linked dependency which version type is tag as update-to-date [#6592](https://github.com/pnpm/pnpm/issues/6592)
+- Updated dependencies [aa2ae8fe2]
+- Updated dependencies [e26d15c6d]
+- Updated dependencies [e958707b2]
+  - @pnpm/types@9.2.0
+  - @pnpm/link-bins@9.0.5
+  - @pnpm/package-requester@21.0.8
+  - @pnpm/normalize-registries@5.0.2
+  - @pnpm/build-modules@11.0.10
+  - @pnpm/lifecycle@15.0.5
+  - @pnpm/symlink-dependency@7.0.2
+  - @pnpm/hooks.read-package-hook@3.0.4
+  - @pnpm/hooks.types@1.0.2
+  - @pnpm/filter-lockfile@8.0.7
+  - @pnpm/lockfile-file@8.1.2
+  - @pnpm/lockfile-to-pnp@3.0.7
+  - @pnpm/lockfile-utils@8.0.3
+  - @pnpm/lockfile-walker@7.0.4
+  - @pnpm/prune-lockfile@5.0.5
+  - @pnpm/core-loggers@9.0.2
+  - @pnpm/dependency-path@2.1.3
+  - @pnpm/get-context@10.0.3
+  - @pnpm/headless@21.0.7
+  - @pnpm/hoist@8.0.9
+  - @pnpm/modules-cleaner@14.0.9
+  - @pnpm/modules-yaml@12.1.2
+  - @pnpm/remove-bins@5.0.3
+  - @pnpm/resolve-dependencies@31.1.12
+  - @pnpm/manifest-utils@5.0.3
+  - @pnpm/read-package-json@8.0.3
+  - @pnpm/read-project-manifest@5.0.4
+  - @pnpm/resolver-base@10.0.2
+  - @pnpm/store-controller-types@15.0.2
+  - @pnpm/crypto.base32-hash@2.0.0
+  - @pnpm/pkg-manager.direct-dep-linker@2.1.3
+  - @pnpm/calc-dep-state@4.1.1
+
+## 10.2.8
+
+### Patch Changes
+
+- Updated dependencies [16bbac8d5]
+  - @pnpm/calc-dep-state@4.1.0
+  - @pnpm/build-modules@11.0.9
+  - @pnpm/headless@21.0.6
+
+## 10.2.7
+
+### Patch Changes
+
+- Updated dependencies [b4892acc5]
+- Updated dependencies [6fb5da19d]
+  - @pnpm/read-project-manifest@5.0.3
+  - @pnpm/modules-cleaner@14.0.8
+  - @pnpm/headless@21.0.5
+  - @pnpm/link-bins@9.0.4
+  - @pnpm/lifecycle@15.0.4
+  - @pnpm/build-modules@11.0.8
+  - @pnpm/hoist@8.0.8
+  - @pnpm/package-requester@21.0.7
+
+## 10.2.6
+
+### Patch Changes
+
+- b81cefdcd: Installation of a git-hosted dependency without `package.json` should not fail, when the dependency is read from cache [#6721](https://github.com/pnpm/pnpm/issues/6721).
+- dddb8ad71: Local workspace bin files that should be compiled first are linked to dependent projects after compilation [#1801](https://github.com/pnpm/pnpm/issues/1801).
+- Updated dependencies [e9684b559]
+- Updated dependencies [9b5110810]
+- Updated dependencies [8a68f5ad2]
+- Updated dependencies [fee263822]
+- Updated dependencies [17e4a3ab1]
+- Updated dependencies [abdb77f48]
+- Updated dependencies [dddb8ad71]
+- Updated dependencies [ba9335601]
+  - @pnpm/resolve-dependencies@31.1.11
+  - @pnpm/headless@21.0.4
+  - @pnpm/lifecycle@15.0.3
+  - @pnpm/package-requester@21.0.7
+  - @pnpm/build-modules@11.0.7
+  - @pnpm/symlink-dependency@7.0.1
+  - @pnpm/crypto.base32-hash@2.0.0
+  - @pnpm/link-bins@9.0.3
+
+## 10.2.5
+
+### Patch Changes
+
+- Updated dependencies [e2c3ef313]
+- Updated dependencies [df3eb8313]
+  - @pnpm/resolve-dependencies@31.1.10
+  - @pnpm/headless@21.0.3
+  - @pnpm/package-requester@21.0.6
+
+## 10.2.4
+
+### Patch Changes
+
+- Updated dependencies [61f22f9ef]
+  - @pnpm/resolve-dependencies@31.1.9
+
+## 10.2.3
+
+### Patch Changes
+
+- Updated dependencies [59aba9e72]
+  - @pnpm/headless@21.0.3
+  - @pnpm/package-requester@21.0.6
+  - @pnpm/build-modules@11.0.6
+  - @pnpm/symlink-dependency@7.0.1
+  - @pnpm/crypto.base32-hash@2.0.0
+  - @pnpm/lifecycle@15.0.2
+  - @pnpm/link-bins@9.0.3
+
+## 10.2.2
+
+### Patch Changes
+
+- d9da627cd: Should always treat local file dependency as new dependency [#5381](https://github.com/pnpm/pnpm/issues/5381)
+- Updated dependencies [d9da627cd]
+- Updated dependencies [302ebffc5]
+  - @pnpm/lockfile-utils@8.0.2
+  - @pnpm/headless@21.0.2
+  - @pnpm/constants@7.1.1
+  - @pnpm/filter-lockfile@8.0.6
+  - @pnpm/lockfile-to-pnp@3.0.6
+  - @pnpm/hoist@8.0.7
+  - @pnpm/modules-cleaner@14.0.7
+  - @pnpm/resolve-dependencies@31.1.8
+  - @pnpm/lockfile-file@8.1.1
+  - @pnpm/prune-lockfile@5.0.4
+  - @pnpm/calc-dep-state@4.0.2
+  - @pnpm/error@5.0.2
+  - @pnpm/get-context@10.0.2
+  - @pnpm/build-modules@11.0.5
+  - @pnpm/lifecycle@15.0.2
+  - @pnpm/hooks.read-package-hook@3.0.3
+  - @pnpm/link-bins@9.0.3
+  - @pnpm/package-requester@21.0.5
+  - @pnpm/manifest-utils@5.0.2
+  - @pnpm/read-package-json@8.0.2
+  - @pnpm/read-project-manifest@5.0.2
+  - @pnpm/symlink-dependency@7.0.1
+  - @pnpm/crypto.base32-hash@2.0.0
+  - @pnpm/remove-bins@5.0.2
+
+## 10.2.1
+
+### Patch Changes
+
+- 4b97f1f07: Don't use await in loops.
+- Updated dependencies [e83eacdcc]
+- Updated dependencies [4b97f1f07]
+- Updated dependencies [d55b41a8b]
+  - @pnpm/resolve-dependencies@31.1.7
+  - @pnpm/get-context@10.0.1
+  - @pnpm/headless@21.0.1
+  - @pnpm/read-modules-dir@6.0.1
+  - @pnpm/package-requester@21.0.4
+  - @pnpm/pkg-manager.direct-dep-linker@2.1.2
+  - @pnpm/link-bins@9.0.2
+  - @pnpm/modules-cleaner@14.0.6
+  - @pnpm/build-modules@11.0.4
+  - @pnpm/hoist@8.0.6
+  - @pnpm/symlink-dependency@7.0.1
+  - @pnpm/crypto.base32-hash@2.0.0
+  - @pnpm/lifecycle@15.0.1
+
+## 10.2.0
+
+### Minor Changes
+
+- 9c4ae87bd: Some settings influence the structure of the lockfile, so we cannot reuse the lockfile if those settings change. As a result, we need to store such settings in the lockfile. This way we will know with which settings the lockfile has been created.
+
+  A new field will now be present in the lockfile: `settings`. It will store the values of two settings: `autoInstallPeers` and `excludeLinksFromLockfile`. If someone tries to perform a `frozen-lockfile` installation and their active settings don't match the ones in the lockfile, then an error message will be thrown.
+
+  The lockfile format version is bumped from v6.0 to v6.1.
+
+  Related PR: [#6557](https://github.com/pnpm/pnpm/pull/6557)
+  Related issue: [#6312](https://github.com/pnpm/pnpm/issues/6312)
+
+### Patch Changes
+
+- a53ef4d19: Don't print "Lockfile is up-to-date" message before finishing all the lockfile checks [#6544](https://github.com/pnpm/pnpm/issues/6544).
+- Updated dependencies [a53ef4d19]
+- Updated dependencies [4fc497882]
+- Updated dependencies [9c4ae87bd]
+- Updated dependencies [a9e0b7cbf]
+- Updated dependencies [9c4ae87bd]
+- Updated dependencies [a53ef4d19]
+- Updated dependencies [a9e0b7cbf]
+- Updated dependencies [9c4ae87bd]
+- Updated dependencies [9c4ae87bd]
+- Updated dependencies [6ce3424a9]
+  - @pnpm/headless@21.0.0
+  - @pnpm/which-version-is-pinned@5.0.1
+  - @pnpm/lockfile-file@8.1.0
+  - @pnpm/types@9.1.0
+  - @pnpm/get-context@10.0.0
+  - @pnpm/manifest-utils@5.0.1
+  - @pnpm/constants@7.1.0
+  - @pnpm/lifecycle@15.0.1
+  - @pnpm/resolve-dependencies@31.1.6
+  - @pnpm/hooks.types@1.0.1
+  - @pnpm/filter-lockfile@8.0.5
+  - @pnpm/lockfile-utils@8.0.1
+  - @pnpm/lockfile-walker@7.0.3
+  - @pnpm/prune-lockfile@5.0.3
+  - @pnpm/hoist@8.0.5
+  - @pnpm/modules-cleaner@14.0.5
+  - @pnpm/lockfile-to-pnp@3.0.5
+  - @pnpm/normalize-registries@5.0.1
+  - @pnpm/build-modules@11.0.3
+  - @pnpm/symlink-dependency@7.0.1
+  - @pnpm/hooks.read-package-hook@3.0.2
+  - @pnpm/core-loggers@9.0.1
+  - @pnpm/dependency-path@2.1.2
+  - @pnpm/link-bins@9.0.1
+  - @pnpm/modules-yaml@12.1.1
+  - @pnpm/package-requester@21.0.3
+  - @pnpm/remove-bins@5.0.1
+  - @pnpm/read-package-json@8.0.1
+  - @pnpm/read-project-manifest@5.0.1
+  - @pnpm/resolver-base@10.0.1
+  - @pnpm/store-controller-types@15.0.1
+  - @pnpm/calc-dep-state@4.0.1
+  - @pnpm/error@5.0.1
+  - @pnpm/crypto.base32-hash@2.0.0
+  - @pnpm/pkg-manager.direct-dep-linker@2.1.1
+
+## 10.1.2
+
+### Patch Changes
+
+- Updated dependencies [ee78f144d]
+  - @pnpm/resolve-dependencies@31.1.5
+
+## 10.1.1
+
+### Patch Changes
+
+- Updated dependencies [d58cdb962]
+- Updated dependencies [d58cdb962]
+  - @pnpm/lockfile-utils@8.0.0
+  - @pnpm/headless@20.2.2
+  - @pnpm/filter-lockfile@8.0.4
+  - @pnpm/lockfile-to-pnp@3.0.4
+  - @pnpm/hoist@8.0.4
+  - @pnpm/modules-cleaner@14.0.4
+  - @pnpm/resolve-dependencies@31.1.4
+
+## 10.1.0
+
+### Minor Changes
+
+- 1ffedcb8d: New option added: confirmModulesPurge.
+
+### Patch Changes
+
+- 3fa14d7e4: Show cyclic workspace dependency details [#5059](https://github.com/pnpm/pnpm/issues/5059).
+- Updated dependencies [1ffedcb8d]
+- Updated dependencies [d8c1013a9]
+- Updated dependencies [3fa14d7e4]
+- Updated dependencies [32801442e]
+  - @pnpm/get-context@9.1.0
+  - @pnpm/resolve-dependencies@31.1.3
+  - @pnpm/build-modules@11.0.2
+  - @pnpm/headless@20.2.1
+
+## 10.0.0
+
+### Major Changes
+
+- 42902ef85: Return installation stats. Breaking change to the API.
+
+### Patch Changes
+
+- Updated dependencies [3a1a1385d]
+- Updated dependencies [42902ef85]
+- Updated dependencies [497b0a79c]
+- Updated dependencies [e6b83c84e]
+- Updated dependencies [42902ef85]
+  - @pnpm/headless@20.2.0
+  - @pnpm/pkg-manager.direct-dep-linker@2.1.0
+  - @pnpm/get-context@9.0.4
+  - @pnpm/modules-yaml@12.1.0
+  - @pnpm/resolve-dependencies@31.1.2
+  - @pnpm/package-requester@21.0.2
+  - @pnpm/symlink-dependency@7.0.0
+  - @pnpm/crypto.base32-hash@2.0.0
+  - @pnpm/lifecycle@15.0.0
+  - @pnpm/link-bins@9.0.0
+
+## 9.3.1
+
+### Patch Changes
+
+- Updated dependencies [837078f92]
+  - @pnpm/headless@20.1.2
+
+## 9.3.0
+
+### Minor Changes
+
+- 71a3ee77b: `pnpm install --resolution-only` re-runs resolution to print out any peer dependency issues [#6411](https://github.com/pnpm/pnpm/pull/6411).
+
+### Patch Changes
+
+- 6706a7d17: Add lockfileCheck option for lockfile only diff installs
+- d43ccc44d: Update `@pnpm/graph-sequencer`.
+- c0760128d: bump semver to 7.4.0
+- Updated dependencies [8f7e99477]
+- Updated dependencies [d43ccc44d]
+- Updated dependencies [ece5a1aeb]
+- Updated dependencies [c0760128d]
+  - @pnpm/headless@20.1.1
+  - @pnpm/build-modules@11.0.1
+  - @pnpm/hooks.types@1.0.0
+  - @pnpm/resolve-dependencies@31.1.1
+  - @pnpm/package-requester@21.0.2
+  - @pnpm/dependency-path@2.1.1
+  - @pnpm/hooks.read-package-hook@3.0.1
+  - @pnpm/lockfile-file@8.0.2
+  - @pnpm/filter-lockfile@8.0.3
+  - @pnpm/lockfile-to-pnp@3.0.3
+  - @pnpm/lockfile-utils@7.0.1
+  - @pnpm/lockfile-walker@7.0.2
+  - @pnpm/prune-lockfile@5.0.2
+  - @pnpm/hoist@8.0.3
+  - @pnpm/modules-cleaner@14.0.3
+  - @pnpm/get-context@9.0.3
+
+## 9.2.0
+
+### Minor Changes
+
+- 72ba638e3: When `excludeLinksFromLockfile` is set to `true`, linked dependencies are not added to the lockfile.
+
+### Patch Changes
+
+- 080fee0b8: Add -g to mismatch registries error info when original command has -g option [#6224](https://github.com/pnpm/pnpm/issues/6224).
+- Updated dependencies [72ba638e3]
+- Updated dependencies [e440d784f]
+- Updated dependencies [d52c6d751]
+- Updated dependencies [080fee0b8]
+- Updated dependencies [72ba638e3]
+  - @pnpm/lockfile-utils@7.0.0
+  - @pnpm/resolve-dependencies@31.1.0
+  - @pnpm/get-context@9.0.2
+  - @pnpm/headless@20.1.0
+  - @pnpm/filter-lockfile@8.0.2
+  - @pnpm/lockfile-to-pnp@3.0.2
+  - @pnpm/hoist@8.0.2
+  - @pnpm/modules-cleaner@14.0.2
+
+## 9.1.1
+
+### Patch Changes
+
+- c36c87c1c: Registries are now passed to the preResolution hook.
+- Updated dependencies [5087636b6]
+- Updated dependencies [94f94eed6]
+- Updated dependencies [94f94eed6]
+  - @pnpm/dependency-path@2.1.0
+  - @pnpm/lockfile-file@8.0.1
+  - @pnpm/filter-lockfile@8.0.1
+  - @pnpm/lockfile-to-pnp@3.0.1
+  - @pnpm/lockfile-utils@6.0.1
+  - @pnpm/lockfile-walker@7.0.1
+  - @pnpm/prune-lockfile@5.0.1
+  - @pnpm/headless@20.0.2
+  - @pnpm/hoist@8.0.1
+  - @pnpm/modules-cleaner@14.0.1
+  - @pnpm/package-requester@21.0.1
+  - @pnpm/resolve-dependencies@31.0.3
+  - @pnpm/get-context@9.0.1
+
+## 9.1.0
+
+### Minor Changes
+
+- e2cb4b63d: Add `ignore-workspace-cycles` to silence workspace cycle warning [#6308](https://github.com/pnpm/pnpm/pull/6308).
+
+### Patch Changes
+
+- e87754df1: Improve the outdated lockfile error message [#6304](https://github.com/pnpm/pnpm/pull/6304).
+  - @pnpm/resolve-dependencies@31.0.2
+  - @pnpm/headless@20.0.1
+  - @pnpm/package-requester@21.0.0
+
+## 9.0.2
+
+### Patch Changes
+
+- 3f0ea1def: Dedupe direct dependencies after hoisting.
+- Updated dependencies [65e3af8a0]
+  - @pnpm/resolve-dependencies@31.0.1
+
+## 9.0.1
+
+### Patch Changes
+
+- Updated dependencies [e10d046a4]
+  - @pnpm/headless@20.0.1
+
+## 9.0.0
+
+### Major Changes
+
+- 47e45d717: `auto-install-peers` is `true` by default.
+- 47e45d717: `save-workspace-protocol` is `rolling` by default.
+- 54591c686: `dedupe-peer-dependents` is `true` by default.
+- 158d8cf22: `useLockfileV6` field is deleted. Lockfile v5 cannot be written anymore, only transformed to the new format.
+- eceaa8b8b: Node.js 14 support dropped.
+- 8e35c21d1: Use lockfile v6 by default.
+- 47e45d717: `resolve-peers-from-workspace-root` is `true` by default.
+- 47e45d717: `publishConfig.linkDirectory` is `true` by default.
+- 113f0ae26: `resolution-mode` is `lowest-direct` by default.
+- 47e45d717: Direct dependencies are deduped. So if the same dependency is both in a project and in the workspace root, then it is only linked to the workspace root.
+
+### Patch Changes
+
+- 2a2032810: Don't write the `pnpm-lock.yaml` file if it has no changes and `pnpm install --frozen-lockfile` was executed [#6158](https://github.com/pnpm/pnpm/issues/6158).
+- Updated dependencies [1d105e7fc]
+- Updated dependencies [c92936158]
+- Updated dependencies [2a2032810]
+- Updated dependencies [df107f2ef]
+- Updated dependencies [158d8cf22]
+- Updated dependencies [0a8b48f04]
+- Updated dependencies [ca8f51e60]
+- Updated dependencies [eceaa8b8b]
+- Updated dependencies [0e26acb0f]
+- Updated dependencies [634d6874b]
+- Updated dependencies [b4f26e41a]
+- Updated dependencies [cfb6bb3bf]
+- Updated dependencies [417c8ac59]
+  - @pnpm/resolve-dependencies@31.0.0
+  - @pnpm/lockfile-utils@6.0.0
+  - @pnpm/get-context@9.0.0
+  - @pnpm/hooks.read-package-hook@3.0.0
+  - @pnpm/lockfile-file@8.0.0
+  - @pnpm/dependency-path@2.0.0
+  - @pnpm/read-project-manifest@5.0.0
+  - @pnpm/parse-wanted-dependency@5.0.0
+  - @pnpm/which-version-is-pinned@5.0.0
+  - @pnpm/read-package-json@8.0.0
+  - @pnpm/pkg-manager.direct-dep-linker@2.0.0
+  - @pnpm/package-requester@21.0.0
+  - @pnpm/store-controller-types@15.0.0
+  - @pnpm/normalize-registries@5.0.0
+  - @pnpm/crypto.base32-hash@2.0.0
+  - @pnpm/modules-cleaner@14.0.0
+  - @pnpm/manifest-utils@5.0.0
+  - @pnpm/filter-lockfile@8.0.0
+  - @pnpm/lockfile-to-pnp@3.0.0
+  - @pnpm/lockfile-walker@7.0.0
+  - @pnpm/modules-yaml@12.0.0
+  - @pnpm/prune-lockfile@5.0.0
+  - @pnpm/calc-dep-state@4.0.0
+  - @pnpm/remove-bins@5.0.0
+  - @pnpm/resolver-base@10.0.0
+  - @pnpm/symlink-dependency@7.0.0
+  - @pnpm/core-loggers@9.0.0
+  - @pnpm/link-bins@9.0.0
+  - @pnpm/headless@20.0.0
+  - @pnpm/read-modules-dir@6.0.0
+  - @pnpm/build-modules@11.0.0
+  - @pnpm/constants@7.0.0
+  - @pnpm/hoist@8.0.0
+  - @pnpm/matcher@5.0.0
+  - @pnpm/lifecycle@15.0.0
+  - @pnpm/error@5.0.0
+  - @pnpm/types@9.0.0
+
+## 8.0.4
+
+### Patch Changes
+
+- Updated dependencies [685b3a7ea]
+  - @pnpm/link-bins@8.0.11
+  - @pnpm/build-modules@10.1.9
+  - @pnpm/headless@19.5.4
+  - @pnpm/hoist@7.0.18
+
+## 8.0.3
+
+### Patch Changes
+
+- Updated dependencies [f9c30c6d7]
+  - @pnpm/link-bins@8.0.10
+  - @pnpm/build-modules@10.1.8
+  - @pnpm/headless@19.5.3
+  - @pnpm/hoist@7.0.17
+
+## 8.0.2
+
+### Patch Changes
+
+- Updated dependencies [787c43dcc]
+  - @pnpm/lockfile-file@7.0.6
+  - @pnpm/package-requester@20.1.7
+  - @pnpm/read-project-manifest@4.1.4
+  - @pnpm/lockfile-to-pnp@2.0.14
+  - @pnpm/get-context@8.2.4
+  - @pnpm/headless@19.5.2
+  - @pnpm/link-bins@8.0.9
+  - @pnpm/resolve-dependencies@30.0.2
+  - @pnpm/lifecycle@14.1.7
+  - @pnpm/build-modules@10.1.7
+  - @pnpm/hoist@7.0.16
+  - @pnpm/symlink-dependency@6.0.3
+  - @pnpm/crypto.base32-hash@1.0.1
+
+## 8.0.1
+
+### Patch Changes
+
+- Updated dependencies [9d906fc94]
+  - @pnpm/resolve-dependencies@30.0.1
+
+## 8.0.0
+
+### Major Changes
+
+- 670bea844: The update options are passed on per project basis. So the `update` and `updateMatching` options are options of importers/projects.
+
+### Patch Changes
+
+- Updated dependencies [670bea844]
+  - @pnpm/resolve-dependencies@30.0.0
+
+## 7.9.0
+
+### Minor Changes
+
+- 5c31fa8be: A new setting is now supported: `dedupe-peer-dependents`.
+
+  When this setting is set to `true`, packages with peer dependencies will be deduplicated after peers resolution.
+
+  For instance, let's say we have a workspace with two projects and both of them have `webpack` in their dependencies. `webpack` has `esbuild` in its optional peer dependencies, and one of the projects has `esbuild` in its dependencies. In this case, pnpm will link two instances of `webpack` to the `node_modules/.pnpm` directory: one with `esbuild` and another one without it:
+
+  ```
+  node_modules
+    .pnpm
+      webpack@1.0.0_esbuild@1.0.0
+      webpack@1.0.0
+  project1
+    node_modules
+      webpack -> ../../node_modules/.pnpm/webpack@1.0.0/node_modules/webpack
+  project2
+    node_modules
+      webpack -> ../../node_modules/.pnpm/webpack@1.0.0_esbuild@1.0.0/node_modules/webpack
+      esbuild
+  ```
+
+  This makes sense because `webpack` is used in two projects, and one of the projects doesn't have `esbuild`, so the two projects cannot share the same instance of `webpack`. However, this is not what most developers expect, especially since in a hoisted `node_modules`, there would only be one instance of `webpack`. Therefore, you may now use the `dedupe-peer-dependents` setting to deduplicate `webpack` when it has no conflicting peer dependencies. In this case, if we set `dedupe-peer-dependents` to `true`, both projects will use the same `webpack` instance, which is the one that has `esbuild` resolved:
+
+  ```
+  node_modules
+    .pnpm
+      webpack@1.0.0_esbuild@1.0.0
+  project1
+    node_modules
+      webpack -> ../../node_modules/.pnpm/webpack@1.0.0_esbuild@1.0.0/node_modules/webpack
+  project2
+    node_modules
+      webpack -> ../../node_modules/.pnpm/webpack@1.0.0_esbuild@1.0.0/node_modules/webpack
+      esbuild
+  ```
+
+### Patch Changes
+
+- Updated dependencies [5c31fa8be]
+- Updated dependencies [d583fbb2a]
+  - @pnpm/resolve-dependencies@29.4.0
+  - @pnpm/hooks.read-package-hook@2.1.1
+
+## 7.8.4
+
+### Patch Changes
+
+- ed946c73e: Automatically fix conflicts in v6 lockfile.
+- Updated dependencies [f39d608ac]
+- Updated dependencies [ed946c73e]
+  - @pnpm/hooks.read-package-hook@2.1.0
+  - @pnpm/lockfile-file@7.0.5
+  - @pnpm/lockfile-to-pnp@2.0.13
+  - @pnpm/get-context@8.2.3
+  - @pnpm/headless@19.5.1
+
+## 7.8.3
+
+### Patch Changes
+
+- 972de58ab: Update the lockfile if a workspace has a new project with no dependencies.
+- Updated dependencies [972de58ab]
+- Updated dependencies [1b2e09ccf]
+- Updated dependencies [972de58ab]
+  - @pnpm/headless@19.5.0
+  - @pnpm/resolve-dependencies@29.3.2
+
+## 7.8.2
+
+### Patch Changes
+
+- f17ca4218: Don't retry installation if the integrity checksum of a package failed and no lockfile was present.
+  - @pnpm/headless@19.4.12
+  - @pnpm/package-requester@20.1.6
+
+## 7.8.1
+
+### Patch Changes
+
+- 029143cff: When resolving dependencies, prefer versions that are already used in the root of the project. This is important to minimize the number of packages that will be nested during hoisting [#6054](https://github.com/pnpm/pnpm/pull/6054).
+- Updated dependencies [029143cff]
+- Updated dependencies [029143cff]
+  - @pnpm/resolver-base@9.2.0
+  - @pnpm/resolve-dependencies@29.3.1
+  - @pnpm/lockfile-utils@5.0.7
+  - @pnpm/package-requester@20.1.6
+  - @pnpm/store-controller-types@14.3.1
+  - @pnpm/symlink-dependency@6.0.3
+  - @pnpm/crypto.base32-hash@1.0.1
+  - @pnpm/headless@19.4.12
+  - @pnpm/lifecycle@14.1.6
+  - @pnpm/filter-lockfile@7.0.10
+  - @pnpm/lockfile-to-pnp@2.0.12
+  - @pnpm/hoist@7.0.15
+  - @pnpm/modules-cleaner@13.0.12
+  - @pnpm/build-modules@10.1.6
+  - @pnpm/link-bins@8.0.8
+
+## 7.8.0
+
+### Minor Changes
+
+- 59ee53678: A new `resolution-mode` added: `lowest-direct`. With this resolution mode direct dependencies will be resolved to their lowest versions. So if there is `foo@^1.1.0` in the dependencies, then `1.1.0` will be installed, even if the latest version of `foo` is `1.2.0`.
+
+### Patch Changes
+
+- 74b535f19: Deduplicate direct dependencies.
+
+  Let's say there are two projects in the workspace that dependend on `foo`. One project has `foo@1.0.0` in the dependencies while another one has `foo@^1.0.0` in the dependencies. In this case, `foo@1.0.0` should be installed to both projects as satisfies the version specs of both projects.
+
+- 308eb2c9b: Use Map rather than Object in `createPackageExtender` to prevent read the prototype property to native function
+- Updated dependencies [d89d7a078]
+- Updated dependencies [308eb2c9b]
+- Updated dependencies [59ee53678]
+  - @pnpm/dependency-path@1.1.3
+  - @pnpm/hooks.read-package-hook@2.0.12
+  - @pnpm/resolve-dependencies@29.3.0
+  - @pnpm/filter-lockfile@7.0.9
+  - @pnpm/lockfile-file@7.0.4
+  - @pnpm/lockfile-to-pnp@2.0.11
+  - @pnpm/lockfile-utils@5.0.6
+  - @pnpm/lockfile-walker@6.0.8
+  - @pnpm/prune-lockfile@4.0.24
+  - @pnpm/headless@19.4.11
+  - @pnpm/hoist@7.0.14
+  - @pnpm/modules-cleaner@13.0.11
+  - @pnpm/package-requester@20.1.5
+  - @pnpm/get-context@8.2.2
+
+## 7.7.3
+
+### Patch Changes
+
+- Updated dependencies [9247f6781]
+- Updated dependencies [6348f5931]
+  - @pnpm/dependency-path@1.1.2
+  - @pnpm/resolve-dependencies@29.2.5
+  - @pnpm/build-modules@10.1.5
+  - @pnpm/filter-lockfile@7.0.8
+  - @pnpm/lockfile-file@7.0.3
+  - @pnpm/lockfile-to-pnp@2.0.10
+  - @pnpm/lockfile-utils@5.0.5
+  - @pnpm/lockfile-walker@6.0.7
+  - @pnpm/prune-lockfile@4.0.23
+  - @pnpm/headless@19.4.10
+  - @pnpm/hoist@7.0.13
+  - @pnpm/modules-cleaner@13.0.10
+  - @pnpm/package-requester@20.1.4
+  - @pnpm/get-context@8.2.1
+
+## 7.7.2
+
+### Patch Changes
+
+- @pnpm/build-modules@10.1.4
+- @pnpm/headless@19.4.9
+- @pnpm/package-requester@20.1.3
+
+## 7.7.1
+
+### Patch Changes
+
+- Updated dependencies [04efe8646]
+- Updated dependencies [5cfe9e77a]
+  - @pnpm/headless@19.4.8
+  - @pnpm/resolve-dependencies@29.2.4
+
+## 7.7.0
+
+### Minor Changes
+
+- e8f6ab683: Add a `pnpm dedupe` command that removes dependencies from the lockfile by re-resolving the dependency graph. This work similar to yarn's [`yarn dedupe --strategy highest`](https://yarnpkg.com/cli/dedupe) command.
+
+### Patch Changes
+
+- 1072ec128: Packages hoisted to the virtual store are not removed on repeat install, when the non-headless algorithm runs the installation.
+- Updated dependencies [1072ec128]
+  - @pnpm/modules-cleaner@13.0.9
+  - @pnpm/headless@19.4.7
+
+## 7.6.5
+
+### Patch Changes
+
+- Updated dependencies [98d6603f3]
+- Updated dependencies [90d26c449]
+- Updated dependencies [6c7ac6320]
+  - @pnpm/package-requester@20.1.3
+  - @pnpm/link-bins@8.0.8
+  - @pnpm/resolve-dependencies@29.2.3
+  - @pnpm/headless@19.4.6
+  - @pnpm/build-modules@10.1.3
+  - @pnpm/hoist@7.0.12
+  - @pnpm/symlink-dependency@6.0.3
+  - @pnpm/crypto.base32-hash@1.0.1
+  - @pnpm/lifecycle@14.1.5
+
+## 7.6.4
+
+### Patch Changes
+
+- Updated dependencies [2ae1c449d]
+- Updated dependencies [28b47a156]
+- Updated dependencies [4008a5236]
+- Updated dependencies [bc8df3787]
+  - @pnpm/parse-wanted-dependency@4.1.0
+  - @pnpm/get-context@8.2.0
+  - @pnpm/link-bins@8.0.7
+  - @pnpm/headless@19.4.5
+  - @pnpm/hooks.read-package-hook@2.0.11
+  - @pnpm/build-modules@10.1.2
+  - @pnpm/hoist@7.0.11
+
+## 7.6.3
+
+### Patch Changes
+
+- 9d425962f: Don't break lockfile v6 on repeat install if `use-lockfile-v6` is not set to `true`.
+- Updated dependencies [1e6de89b6]
+  - @pnpm/package-requester@20.1.2
+  - @pnpm/headless@19.4.4
+  - @pnpm/resolve-dependencies@29.2.2
+  - @pnpm/symlink-dependency@6.0.3
+  - @pnpm/crypto.base32-hash@1.0.1
+  - @pnpm/lifecycle@14.1.5
+  - @pnpm/link-bins@8.0.6
+
+## 7.6.2
+
+### Patch Changes
+
+- Updated dependencies [9a68ebbae]
+  - @pnpm/lockfile-file@7.0.2
+  - @pnpm/lockfile-to-pnp@2.0.9
+  - @pnpm/get-context@8.1.2
+  - @pnpm/headless@19.4.3
+
+## 7.6.1
+
+### Patch Changes
+
+- Updated dependencies [0f6e95872]
+  - @pnpm/dependency-path@1.1.1
+  - @pnpm/filter-lockfile@7.0.7
+  - @pnpm/lockfile-file@7.0.1
+  - @pnpm/lockfile-to-pnp@2.0.8
+  - @pnpm/lockfile-utils@5.0.4
+  - @pnpm/lockfile-walker@6.0.6
+  - @pnpm/prune-lockfile@4.0.22
+  - @pnpm/headless@19.4.2
+  - @pnpm/hoist@7.0.10
+  - @pnpm/modules-cleaner@13.0.8
+  - @pnpm/package-requester@20.1.1
+  - @pnpm/resolve-dependencies@29.2.1
+  - @pnpm/get-context@8.1.1
+
+## 7.6.0
+
+### Minor Changes
+
+- 3ebce5db7: Added support for `pnpm-lock.yaml` format v6. This new format will be the new lockfile format in pnpm v8. To use the new lockfile format, use the `use-lockfile-v6=true` setting in `.npmrc`. Or run `pnpm install --use-lockfile-v6` [#5810](https://github.com/pnpm/pnpm/pull/5810).
+
+### Patch Changes
+
+- c7b05cd9a: When ignoreScripts=true is passed to the fetcher, do not build git-hosted dependencies.
+- Updated dependencies [891a8d763]
+- Updated dependencies [891a8d763]
+- Updated dependencies [c7b05cd9a]
+- Updated dependencies [3ebce5db7]
+- Updated dependencies [3ebce5db7]
+- Updated dependencies [3ebce5db7]
+- Updated dependencies [3ebce5db7]
+  - @pnpm/headless@19.4.1
+  - @pnpm/package-requester@20.1.0
+  - @pnpm/store-controller-types@14.3.0
+  - @pnpm/resolve-dependencies@29.2.0
+  - @pnpm/constants@6.2.0
+  - @pnpm/lockfile-file@7.0.0
+  - @pnpm/get-context@8.1.0
+  - @pnpm/dependency-path@1.1.0
+  - @pnpm/build-modules@10.1.1
+  - @pnpm/lifecycle@14.1.5
+  - @pnpm/modules-cleaner@13.0.7
+  - @pnpm/filter-lockfile@7.0.6
+  - @pnpm/prune-lockfile@4.0.21
+  - @pnpm/calc-dep-state@3.0.2
+  - @pnpm/error@4.0.1
+  - @pnpm/hoist@7.0.9
+  - @pnpm/lockfile-to-pnp@2.0.7
+  - @pnpm/lockfile-utils@5.0.3
+  - @pnpm/lockfile-walker@6.0.5
+  - @pnpm/link-bins@8.0.6
+  - @pnpm/manifest-utils@4.1.4
+  - @pnpm/read-package-json@7.0.5
+  - @pnpm/read-project-manifest@4.1.3
+  - @pnpm/symlink-dependency@6.0.3
+  - @pnpm/crypto.base32-hash@1.0.1
+  - @pnpm/hooks.read-package-hook@2.0.10
+  - @pnpm/remove-bins@4.0.5
+
+## 7.5.0
+
+### Minor Changes
+
+- 1fad508b0: When the `resolve-peers-from-workspace-root` setting is set to `true`, pnpm will use dependencies installed in the root of the workspace to resolve peer dependencies in any of the workspace's projects [#5882](https://github.com/pnpm/pnpm/pull/5882).
+
+### Patch Changes
+
+- Updated dependencies [1fad508b0]
+  - @pnpm/resolve-dependencies@29.1.0
+
+## 7.4.1
+
+### Patch Changes
+
+- 08ceaf3fc: replace dependency `is-ci` by `ci-info` (`is-ci` is just a simple wrapper around `ci-info`).
+- Updated dependencies [08ceaf3fc]
+  - @pnpm/get-context@8.0.6
+  - @pnpm/headless@19.4.0
+  - @pnpm/package-requester@20.0.5
+  - @pnpm/resolve-dependencies@29.0.12
+
+## 7.4.0
+
+### Minor Changes
+
+- 2458741fa: When the hoisted node linker is used, preserve `node_modules` directories when linking new dependencies. This improves performance, when installing in a project that already has a `node_modules` directory [#5795](https://github.com/pnpm/pnpm/pull/5795).
+
+### Patch Changes
+
+- Updated dependencies [b77651d14]
+- Updated dependencies [bc18d33fe]
+- Updated dependencies [2458741fa]
+- Updated dependencies [2458741fa]
+- Updated dependencies [6b00a8325]
+- Updated dependencies [3360c9f4b]
+- Updated dependencies [2458741fa]
+  - @pnpm/types@8.10.0
+  - @pnpm/link-bins@8.0.5
+  - @pnpm/store-controller-types@14.2.0
+  - @pnpm/headless@19.4.0
+  - @pnpm/lifecycle@14.1.4
+  - @pnpm/build-modules@10.1.0
+  - @pnpm/modules-yaml@11.1.0
+  - @pnpm/normalize-registries@4.0.3
+  - @pnpm/symlink-dependency@6.0.3
+  - @pnpm/hooks.read-package-hook@2.0.9
+  - @pnpm/filter-lockfile@7.0.5
+  - @pnpm/lockfile-file@6.0.5
+  - @pnpm/lockfile-to-pnp@2.0.6
+  - @pnpm/lockfile-utils@5.0.2
+  - @pnpm/lockfile-walker@6.0.4
+  - @pnpm/prune-lockfile@4.0.20
+  - @pnpm/core-loggers@8.0.3
+  - @pnpm/dependency-path@1.0.1
+  - @pnpm/get-context@8.0.5
+  - @pnpm/hoist@7.0.8
+  - @pnpm/modules-cleaner@13.0.6
+  - @pnpm/package-requester@20.0.5
+  - @pnpm/remove-bins@4.0.4
+  - @pnpm/resolve-dependencies@29.0.11
+  - @pnpm/manifest-utils@4.1.3
+  - @pnpm/read-package-json@7.0.4
+  - @pnpm/read-project-manifest@4.1.2
+  - @pnpm/resolver-base@9.1.5
+  - @pnpm/crypto.base32-hash@1.0.1
+  - @pnpm/pkg-manager.direct-dep-linker@1.0.2
+
+## 7.3.0
+
+### Minor Changes
+
+- 450e0b1d1: A new option added for avoiding hoisting some dependencies to the root of `node_modules`: `externalDependencies`. This option is a set of dependency names that were added to `node_modules` by another tool. pnpm doesn't have information about these dependencies but they shouldn't be overwritten by hoisted dependencies.
+
+### Patch Changes
+
+- Updated dependencies [450e0b1d1]
+- Updated dependencies [313702d76]
+  - @pnpm/headless@19.3.0
+  - @pnpm/dependency-path@1.0.0
+  - @pnpm/filter-lockfile@7.0.4
+  - @pnpm/lockfile-file@6.0.4
+  - @pnpm/lockfile-to-pnp@2.0.5
+  - @pnpm/lockfile-utils@5.0.1
+  - @pnpm/lockfile-walker@6.0.3
+  - @pnpm/prune-lockfile@4.0.19
+  - @pnpm/hoist@7.0.7
+  - @pnpm/modules-cleaner@13.0.5
+  - @pnpm/package-requester@20.0.4
+  - @pnpm/resolve-dependencies@29.0.10
+  - @pnpm/get-context@8.0.4
+
+## 7.2.5
+
+### Patch Changes
+
+- 49f6c917f: `pnpm update` should not replace `workspace:*`, `workspace:~`, and `workspace:^` with `workspace:<version>` [#5764](https://github.com/pnpm/pnpm/pull/5764).
+- Updated dependencies [49f6c917f]
+- Updated dependencies [f5c377a8d]
+  - @pnpm/resolve-dependencies@29.0.9
+  - @pnpm/lifecycle@14.1.3
+  - @pnpm/build-modules@10.0.7
+  - @pnpm/headless@19.2.4
+
+## 7.2.4
+
+### Patch Changes
+
+- Updated dependencies [b11a8c363]
+  - @pnpm/hooks.read-package-hook@2.0.8
+
 ## 7.2.3
 
 ### Patch Changes

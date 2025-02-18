@@ -1,5 +1,621 @@
 # @pnpm/pnpmfile
 
+## 1001.0.4
+
+### Patch Changes
+
+- Updated dependencies [b562deb]
+  - @pnpm/types@1000.1.1
+  - @pnpm/error@1000.0.2
+  - @pnpm/hooks.types@1001.0.2
+  - @pnpm/lockfile.types@1001.0.2
+  - @pnpm/core-loggers@1000.1.2
+  - @pnpm/store-controller-types@1001.0.1
+  - @pnpm/crypto.hash@1000.0.0
+
+## 1001.0.3
+
+### Patch Changes
+
+- Updated dependencies [dde650b]
+  - @pnpm/store-controller-types@1001.0.0
+  - @pnpm/crypto.hash@1000.0.0
+
+## 1001.0.2
+
+### Patch Changes
+
+- Updated dependencies [9591a18]
+  - @pnpm/types@1000.1.0
+  - @pnpm/hooks.types@1001.0.1
+  - @pnpm/lockfile.types@1001.0.1
+  - @pnpm/core-loggers@1000.1.1
+  - @pnpm/store-controller-types@1000.1.1
+  - @pnpm/crypto.hash@1000.0.0
+
+## 1001.0.1
+
+### Patch Changes
+
+- Updated dependencies [516c4b3]
+  - @pnpm/core-loggers@1000.1.0
+  - @pnpm/crypto.hash@1000.0.0
+
+## 1001.0.0
+
+### Major Changes
+
+- a76da0c: Removed lockfile conversion from v6 to v9. If you need to convert lockfile v6 to v9, use pnpm CLI v9.
+
+### Minor Changes
+
+- d47c426: On repeat install perform a fast check if `node_modules` is up to date [#8838](https://github.com/pnpm/pnpm/pull/8838).
+
+### Patch Changes
+
+- Updated dependencies [6483b64]
+- Updated dependencies [a76da0c]
+  - @pnpm/store-controller-types@1000.1.0
+  - @pnpm/lockfile.types@1001.0.0
+  - @pnpm/hooks.types@1001.0.0
+  - @pnpm/error@1000.0.1
+  - @pnpm/crypto.hash@1000.0.0
+
+## 7.0.0
+
+### Major Changes
+
+- bcffd4d: Use SHA256 for storing the pnpmfile checksum in the lockfile [#8530](https://github.com/pnpm/pnpm/pull/8530).
+
+### Patch Changes
+
+- Updated dependencies [dcd2917]
+  - @pnpm/crypto.hash@1.0.0
+  - @pnpm/error@6.0.3
+  - @pnpm/store-controller-types@18.1.6
+
+## 6.0.13
+
+### Patch Changes
+
+- @pnpm/crypto.base32-hash@3.0.1
+
+## 6.0.12
+
+### Patch Changes
+
+- @pnpm/error@6.0.2
+- @pnpm/crypto.base32-hash@3.0.0
+
+## 6.0.11
+
+### Patch Changes
+
+- Updated dependencies [d500d9f]
+  - @pnpm/types@12.2.0
+  - @pnpm/hooks.types@2.0.9
+  - @pnpm/lockfile.types@1.0.3
+  - @pnpm/core-loggers@10.0.7
+  - @pnpm/store-controller-types@18.1.6
+  - @pnpm/crypto.base32-hash@3.0.0
+
+## 6.0.10
+
+### Patch Changes
+
+- Updated dependencies [7ee59a1]
+  - @pnpm/types@12.1.0
+  - @pnpm/hooks.types@2.0.8
+  - @pnpm/lockfile.types@1.0.2
+  - @pnpm/core-loggers@10.0.6
+  - @pnpm/store-controller-types@18.1.5
+  - @pnpm/crypto.base32-hash@3.0.0
+
+## 6.0.9
+
+### Patch Changes
+
+- Updated dependencies [cb006df]
+  - @pnpm/lockfile.types@1.0.1
+  - @pnpm/types@12.0.0
+  - @pnpm/hooks.types@2.0.7
+  - @pnpm/core-loggers@10.0.5
+  - @pnpm/store-controller-types@18.1.4
+  - @pnpm/crypto.base32-hash@3.0.0
+
+## 6.0.8
+
+### Patch Changes
+
+- Updated dependencies [797ef0f]
+  - @pnpm/lockfile.types@1.0.0
+  - @pnpm/hooks.types@2.0.6
+  - @pnpm/crypto.base32-hash@3.0.0
+
+## 6.0.7
+
+### Patch Changes
+
+- Updated dependencies [0ef168b]
+  - @pnpm/types@11.1.0
+  - @pnpm/hooks.types@2.0.5
+  - @pnpm/lockfile-types@7.1.3
+  - @pnpm/core-loggers@10.0.4
+  - @pnpm/store-controller-types@18.1.3
+  - @pnpm/crypto.base32-hash@3.0.0
+
+## 6.0.6
+
+### Patch Changes
+
+- Updated dependencies [dd00eeb]
+- Updated dependencies
+  - @pnpm/types@11.0.0
+  - @pnpm/store-controller-types@18.1.2
+  - @pnpm/hooks.types@2.0.4
+  - @pnpm/lockfile-types@7.1.2
+  - @pnpm/core-loggers@10.0.3
+  - @pnpm/crypto.base32-hash@3.0.0
+
+## 6.0.5
+
+### Patch Changes
+
+- Updated dependencies [13e55b2]
+  - @pnpm/types@10.1.1
+  - @pnpm/hooks.types@2.0.3
+  - @pnpm/lockfile-types@7.1.1
+  - @pnpm/core-loggers@10.0.2
+  - @pnpm/store-controller-types@18.1.1
+  - @pnpm/crypto.base32-hash@3.0.0
+
+## 6.0.4
+
+### Patch Changes
+
+- Updated dependencies [47341e5]
+  - @pnpm/lockfile-types@7.1.0
+  - @pnpm/hooks.types@2.0.2
+  - @pnpm/crypto.base32-hash@3.0.0
+
+## 6.0.3
+
+### Patch Changes
+
+- Updated dependencies [0c08e1c]
+  - @pnpm/store-controller-types@18.1.0
+  - @pnpm/crypto.base32-hash@3.0.0
+
+## 6.0.2
+
+### Patch Changes
+
+- Updated dependencies [45f4262]
+- Updated dependencies
+  - @pnpm/types@10.1.0
+  - @pnpm/lockfile-types@7.0.0
+  - @pnpm/hooks.types@2.0.1
+  - @pnpm/core-loggers@10.0.1
+  - @pnpm/store-controller-types@18.0.1
+  - @pnpm/crypto.base32-hash@3.0.0
+
+## 6.0.1
+
+### Patch Changes
+
+- Updated dependencies [a7aef51]
+  - @pnpm/error@6.0.1
+
+## 6.0.0
+
+### Major Changes
+
+- 43cdd87: Node.js v16 support dropped. Use at least Node.js v18.12.
+
+### Minor Changes
+
+- 086b69c: The checksum of the `.pnpmfile.cjs` is saved into the lockfile. If the pnpmfile gets modified, the lockfile is reanalyzed to apply the changes [#7662](https://github.com/pnpm/pnpm/pull/7662).
+
+### Patch Changes
+
+- Updated dependencies [7733f3a]
+- Updated dependencies [3ded840]
+- Updated dependencies [43cdd87]
+- Updated dependencies [086b69c]
+- Updated dependencies [27a96a8]
+- Updated dependencies [730929e]
+  - @pnpm/types@10.0.0
+  - @pnpm/error@6.0.0
+  - @pnpm/store-controller-types@18.0.0
+  - @pnpm/crypto.base32-hash@3.0.0
+  - @pnpm/lockfile-types@6.0.0
+  - @pnpm/core-loggers@10.0.0
+  - @pnpm/hooks.types@2.0.0
+
+## 5.0.20
+
+### Patch Changes
+
+- Updated dependencies [31054a63e]
+  - @pnpm/store-controller-types@17.2.0
+
+## 5.0.19
+
+### Patch Changes
+
+- Updated dependencies [4d34684f1]
+  - @pnpm/lockfile-types@5.1.5
+  - @pnpm/types@9.4.2
+  - @pnpm/hooks.types@1.0.6
+  - @pnpm/core-loggers@9.0.6
+  - @pnpm/store-controller-types@17.1.4
+
+## 5.0.18
+
+### Patch Changes
+
+- Updated dependencies
+  - @pnpm/lockfile-types@5.1.4
+  - @pnpm/types@9.4.1
+  - @pnpm/hooks.types@1.0.5
+  - @pnpm/core-loggers@9.0.5
+  - @pnpm/store-controller-types@17.1.3
+
+## 5.0.17
+
+### Patch Changes
+
+- Updated dependencies [291607c5a]
+  - @pnpm/store-controller-types@17.1.2
+
+## 5.0.16
+
+### Patch Changes
+
+- Updated dependencies [7ea45afbe]
+  - @pnpm/store-controller-types@17.1.1
+
+## 5.0.15
+
+### Patch Changes
+
+- Updated dependencies [43ce9e4a6]
+  - @pnpm/store-controller-types@17.1.0
+  - @pnpm/types@9.4.0
+  - @pnpm/hooks.types@1.0.4
+  - @pnpm/lockfile-types@5.1.3
+  - @pnpm/core-loggers@9.0.4
+
+## 5.0.14
+
+### Patch Changes
+
+- Updated dependencies [d774a3196]
+  - @pnpm/types@9.3.0
+  - @pnpm/hooks.types@1.0.3
+  - @pnpm/lockfile-types@5.1.2
+  - @pnpm/core-loggers@9.0.3
+  - @pnpm/store-controller-types@17.0.1
+
+## 5.0.13
+
+### Patch Changes
+
+- Updated dependencies [9caa33d53]
+- Updated dependencies [9caa33d53]
+  - @pnpm/store-controller-types@17.0.0
+
+## 5.0.12
+
+### Patch Changes
+
+- Updated dependencies [03cdccc6e]
+  - @pnpm/store-controller-types@16.1.0
+
+## 5.0.11
+
+### Patch Changes
+
+- @pnpm/store-controller-types@16.0.1
+
+## 5.0.10
+
+### Patch Changes
+
+- Updated dependencies [494f87544]
+  - @pnpm/store-controller-types@16.0.0
+
+## 5.0.9
+
+### Patch Changes
+
+- Updated dependencies [aa2ae8fe2]
+  - @pnpm/types@9.2.0
+  - @pnpm/hooks.types@1.0.2
+  - @pnpm/lockfile-types@5.1.1
+  - @pnpm/core-loggers@9.0.2
+  - @pnpm/store-controller-types@15.0.2
+
+## 5.0.8
+
+### Patch Changes
+
+- @pnpm/error@5.0.2
+
+## 5.0.7
+
+### Patch Changes
+
+- Updated dependencies [9c4ae87bd]
+- Updated dependencies [a9e0b7cbf]
+  - @pnpm/lockfile-types@5.1.0
+  - @pnpm/types@9.1.0
+  - @pnpm/hooks.types@1.0.1
+  - @pnpm/core-loggers@9.0.1
+  - @pnpm/store-controller-types@15.0.1
+  - @pnpm/error@5.0.1
+
+## 5.0.6
+
+### Patch Changes
+
+- Updated dependencies [ece5a1aeb]
+  - @pnpm/hooks.types@1.0.0
+
+## 5.0.5
+
+### Patch Changes
+
+- Updated dependencies [080fee0b8]
+- Updated dependencies [72ba638e3]
+  - @pnpm/core@9.2.0
+
+## 5.0.4
+
+### Patch Changes
+
+- Updated dependencies [c36c87c1c]
+  - @pnpm/core@9.1.1
+
+## 5.0.3
+
+### Patch Changes
+
+- Updated dependencies [e2cb4b63d]
+- Updated dependencies [e87754df1]
+  - @pnpm/core@9.1.0
+
+## 5.0.2
+
+### Patch Changes
+
+- Updated dependencies [3f0ea1def]
+  - @pnpm/core@9.0.2
+
+## 5.0.1
+
+### Patch Changes
+
+- @pnpm/core@9.0.1
+
+## 5.0.0
+
+### Major Changes
+
+- eceaa8b8b: Node.js 14 support dropped.
+
+### Patch Changes
+
+- Updated dependencies [47e45d717]
+- Updated dependencies [c92936158]
+- Updated dependencies [47e45d717]
+- Updated dependencies [54591c686]
+- Updated dependencies [158d8cf22]
+- Updated dependencies [2a2032810]
+- Updated dependencies [eceaa8b8b]
+- Updated dependencies [8e35c21d1]
+- Updated dependencies [47e45d717]
+- Updated dependencies [47e45d717]
+- Updated dependencies [113f0ae26]
+- Updated dependencies [47e45d717]
+  - @pnpm/core@9.0.0
+  - @pnpm/lockfile-types@5.0.0
+  - @pnpm/store-controller-types@15.0.0
+  - @pnpm/core-loggers@9.0.0
+  - @pnpm/error@5.0.0
+  - @pnpm/types@9.0.0
+
+## 4.0.40
+
+### Patch Changes
+
+- @pnpm/core@8.0.4
+
+## 4.0.39
+
+### Patch Changes
+
+- @pnpm/core@8.0.3
+
+## 4.0.38
+
+### Patch Changes
+
+- @pnpm/core@8.0.2
+
+## 4.0.37
+
+### Patch Changes
+
+- @pnpm/core@8.0.1
+
+## 4.0.36
+
+### Patch Changes
+
+- Updated dependencies [670bea844]
+  - @pnpm/core@8.0.0
+
+## 4.0.35
+
+### Patch Changes
+
+- Updated dependencies [5c31fa8be]
+  - @pnpm/core@7.9.0
+
+## 4.0.34
+
+### Patch Changes
+
+- Updated dependencies [ed946c73e]
+  - @pnpm/core@7.8.4
+
+## 4.0.33
+
+### Patch Changes
+
+- Updated dependencies [972de58ab]
+  - @pnpm/core@7.8.3
+
+## 4.0.32
+
+### Patch Changes
+
+- Updated dependencies [f17ca4218]
+  - @pnpm/core@7.8.2
+
+## 4.0.31
+
+### Patch Changes
+
+- Updated dependencies [029143cff]
+  - @pnpm/core@7.8.1
+  - @pnpm/store-controller-types@14.3.1
+
+## 4.0.30
+
+### Patch Changes
+
+- Updated dependencies [74b535f19]
+- Updated dependencies [308eb2c9b]
+- Updated dependencies [59ee53678]
+  - @pnpm/core@7.8.0
+
+## 4.0.29
+
+### Patch Changes
+
+- @pnpm/core@7.7.3
+
+## 4.0.28
+
+### Patch Changes
+
+- @pnpm/core@7.7.2
+
+## 4.0.27
+
+### Patch Changes
+
+- @pnpm/core@7.7.1
+
+## 4.0.26
+
+### Patch Changes
+
+- Updated dependencies [e8f6ab683]
+- Updated dependencies [1072ec128]
+  - @pnpm/core@7.7.0
+
+## 4.0.25
+
+### Patch Changes
+
+- @pnpm/core@7.6.5
+
+## 4.0.24
+
+### Patch Changes
+
+- @pnpm/core@7.6.4
+
+## 4.0.23
+
+### Patch Changes
+
+- Updated dependencies [9d425962f]
+  - @pnpm/core@7.6.3
+
+## 4.0.22
+
+### Patch Changes
+
+- @pnpm/core@7.6.2
+
+## 4.0.21
+
+### Patch Changes
+
+- @pnpm/core@7.6.1
+
+## 4.0.20
+
+### Patch Changes
+
+- Updated dependencies [891a8d763]
+- Updated dependencies [c7b05cd9a]
+- Updated dependencies [3ebce5db7]
+  - @pnpm/store-controller-types@14.3.0
+  - @pnpm/core@7.6.0
+  - @pnpm/error@4.0.1
+
+## 4.0.19
+
+### Patch Changes
+
+- Updated dependencies [1fad508b0]
+  - @pnpm/core@7.5.0
+
+## 4.0.18
+
+### Patch Changes
+
+- Updated dependencies [08ceaf3fc]
+  - @pnpm/core@7.4.1
+
+## 4.0.17
+
+### Patch Changes
+
+- Updated dependencies [b77651d14]
+- Updated dependencies [2458741fa]
+- Updated dependencies [2458741fa]
+  - @pnpm/types@8.10.0
+  - @pnpm/store-controller-types@14.2.0
+  - @pnpm/core@7.4.0
+  - @pnpm/lockfile-types@4.3.6
+  - @pnpm/core-loggers@8.0.3
+
+## 4.0.16
+
+### Patch Changes
+
+- Updated dependencies [450e0b1d1]
+  - @pnpm/core@7.3.0
+
+## 4.0.15
+
+### Patch Changes
+
+- Updated dependencies [49f6c917f]
+  - @pnpm/core@7.2.5
+
+## 4.0.14
+
+### Patch Changes
+
+- @pnpm/core@7.2.4
+
 ## 4.0.13
 
 ### Patch Changes

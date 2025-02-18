@@ -8,34 +8,18 @@ const argv = process.argv.slice(2)
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 ; (async () => {
   switch (argv[0]) {
-  case '-v':
-  case '--version': {
-    const { version } = (await import('@pnpm/cli-meta')).packageManager
-    console.log(version)
-    break
-  }
-  case 'install-completion': {
-    const { install: installCompletion } = await import('@pnpm/tabtab')
-    await installCompletion({ name: 'pnpm', completer: 'pnpm', shell: argv[1] })
-    return
-  }
-  case 'uninstall-completion': {
-    const { uninstall: uninstallCompletion } = await import('@pnpm/tabtab')
-    await uninstallCompletion({ name: 'pnpm' })
-    return
-  }
   // commands that are passed through to npm:
   case 'access':
   case 'adduser':
   case 'bugs':
-  case 'c':
-  case 'config':
   case 'deprecate':
   case 'dist-tag':
   case 'docs':
   case 'edit':
-  case 'get':
+  case 'find':
+  case 'home':
   case 'info':
+  case 'issues':
   case 'login':
   case 'logout':
   case 'owner':
@@ -47,8 +31,8 @@ const argv = process.argv.slice(2)
   case 's':
   case 'se':
   case 'search':
-  case 'set':
   case 'set-script':
+  case 'show':
   case 'star':
   case 'stars':
   case 'team':
@@ -68,17 +52,17 @@ const argv = process.argv.slice(2)
   }
 })()
 
-async function runPnpm () {
+async function runPnpm (): Promise<void> {
   const { errorHandler } = await import('./errorHandler')
   try {
     const { main } = await import('./main')
     await main(argv)
   } catch (err: any) { // eslint-disable-line
-    errorHandler(err)
+    await errorHandler(err)
   }
 }
 
-async function passThruToNpm () {
+async function passThruToNpm (): Promise<void> {
   const { runNpm } = await import('./runNpm')
   const { status } = await runNpm(argv)
   process.exit(status!)

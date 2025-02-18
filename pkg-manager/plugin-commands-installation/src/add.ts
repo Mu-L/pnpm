@@ -2,12 +2,14 @@ import { docsUrl } from '@pnpm/cli-utils'
 import { FILTERING, OPTIONS, UNIVERSAL_OPTIONS } from '@pnpm/common-cli-options-help'
 import { types as allTypes } from '@pnpm/config'
 import { PnpmError } from '@pnpm/error'
+import { prepareExecutionEnv } from '@pnpm/plugin-commands-env'
 import pick from 'ramda/src/pick'
 import renderHelp from 'render-help'
-import { InstallCommandOptions } from './install'
+import { createProjectManifestWriter } from './createProjectManifestWriter'
+import { type InstallCommandOptions } from './install'
 import { installDeps } from './installDeps'
 
-export function rcOptionsTypes () {
+export function rcOptionsTypes (): Record<string, unknown> {
   return pick([
     'cache-dir',
     'child-concurrency',
@@ -37,7 +39,7 @@ export function rcOptionsTypes () {
     'network-concurrency',
     'node-linker',
     'noproxy',
-    'npmPath',
+    'npm-path',
     'package-import-method',
     'pnpmfile',
     'prefer-offline',
@@ -58,7 +60,6 @@ export function rcOptionsTypes () {
     'shared-workspace-lockfile',
     'side-effects-cache-readonly',
     'side-effects-cache',
-    'store',
     'store-dir',
     'strict-peer-dependencies',
     'unsafe-perm',
@@ -72,9 +73,10 @@ export function rcOptionsTypes () {
   ], allTypes)
 }
 
-export function cliOptionsTypes () {
+export function cliOptionsTypes (): Record<string, unknown> {
   return {
     ...rcOptionsTypes(),
+    'allow-build': [String, Array],
     recursive: Boolean,
     save: Boolean,
     workspace: Boolean,
@@ -83,7 +85,7 @@ export function cliOptionsTypes () {
 
 export const commandNames = ['add']
 
-export function help () {
+export function help (): string {
   return renderHelp({
     description: 'Installs a package and any packages that it depends on.',
     descriptionLists: [
@@ -142,6 +144,10 @@ For options that may be used with `-r`, see "pnpm help recursive"',
           OPTIONS.virtualStoreDir,
           OPTIONS.globalDir,
           ...UNIVERSAL_OPTIONS,
+          {
+            description: 'A list of package names that are allowed to run postinstall scripts during installation',
+            name: '--allow-build',
+          },
         ],
       },
       FILTERING,
@@ -162,6 +168,7 @@ For options that may be used with `-r`, see "pnpm help recursive"',
 }
 
 export type AddCommandOptions = InstallCommandOptions & {
+  allowBuild?: string[]
   allowNew?: boolean
   ignoreWorkspaceRootCheck?: boolean
   save?: boolean
@@ -173,7 +180,7 @@ export type AddCommandOptions = InstallCommandOptions & {
 export async function handler (
   opts: AddCommandOptions,
   params: string[]
-) {
+): Promise<void> {
   if (opts.cliOptions['save'] === false) {
     throw new PnpmError('OPTION_NOT_SUPPORTED', 'The "add" command currently does not support the no-save option')
   }
@@ -193,15 +200,44 @@ export async function handler (
       'If you don\'t want to see this warning anymore, you may set the ignore-workspace-root-check setting to true.'
     )
   }
+  if (opts.global) {
+    if (!opts.bin) {
+      throw new PnpmError('NO_GLOBAL_BIN_DIR', 'Unable to find the global bin directory', {
+        hint: 'Run "pnpm setup" to create it automatically, or set the global-bin-dir setting, or the PNPM_HOME env variable. The global bin directory should be in the PATH.',
+      })
+    }
+    if (params.includes('pnpm') || params.includes('@pnpm/exe')) {
+      throw new PnpmError('GLOBAL_PNPM_INSTALL', 'Use the "pnpm self-update" command to install or update pnpm')
+    }
+  }
 
   const include = {
     dependencies: opts.production !== false,
     devDependencies: opts.dev !== false,
     optionalDependencies: opts.optional !== false,
   }
+  if (opts.allowBuild?.length) {
+    if (opts.rootProjectManifest?.pnpm?.ignoredBuiltDependencies?.length) {
+      const overlapDependencies = opts.rootProjectManifest.pnpm.ignoredBuiltDependencies.filter((dep) => opts.allowBuild?.includes(dep))
+      if (overlapDependencies.length) {
+        throw new PnpmError('OVERRIDING_IGNORED_BUILT_DEPENDENCIES', `The following dependencies are ignored by the root project, but are allowed to be built by the current command: ${overlapDependencies.join(', ')}`, {
+          hint: 'If you are sure you want to allow those dependencies to run installation scripts, remove them from the pnpm.ignoredBuiltDependencies list.',
+        })
+      }
+    }
+    opts.rootProjectManifest = opts.rootProjectManifest ?? {}
+    opts.rootProjectManifest.pnpm = opts.rootProjectManifest.pnpm ?? {}
+    opts.rootProjectManifest.pnpm.onlyBuiltDependencies = Array.from(new Set([
+      ...(opts.rootProjectManifest.pnpm.onlyBuiltDependencies ?? []),
+      ...opts.allowBuild,
+    ])).sort((a, b) => a.localeCompare(b))
+    const writeProjectManifest = await createProjectManifestWriter(opts.rootProjectManifestDir)
+    await writeProjectManifest(opts.rootProjectManifest)
+  }
   return installDeps({
     ...opts,
     include,
     includeDirect: include,
+    prepareExecutionEnv: prepareExecutionEnv.bind(null, opts),
   }, params)
 }

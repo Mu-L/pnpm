@@ -1,5 +1,374 @@
 # @pnpm/link-bins
 
+## 1000.0.6
+
+### Patch Changes
+
+- Updated dependencies [1e229d7]
+  - @pnpm/read-project-manifest@1000.0.5
+
+## 1000.0.5
+
+### Patch Changes
+
+- Updated dependencies [b562deb]
+  - @pnpm/types@1000.1.1
+  - @pnpm/error@1000.0.2
+  - @pnpm/package-bins@1000.0.2
+  - @pnpm/manifest-utils@1000.0.4
+  - @pnpm/read-package-json@1000.0.3
+  - @pnpm/read-project-manifest@1000.0.4
+
+## 1000.0.4
+
+### Patch Changes
+
+- Updated dependencies [e050221]
+  - @pnpm/read-project-manifest@1000.0.3
+
+## 1000.0.3
+
+### Patch Changes
+
+- Updated dependencies [9591a18]
+  - @pnpm/types@1000.1.0
+  - @pnpm/package-bins@1000.0.1
+  - @pnpm/manifest-utils@1000.0.3
+  - @pnpm/read-package-json@1000.0.2
+  - @pnpm/read-project-manifest@1000.0.2
+
+## 1000.0.2
+
+### Patch Changes
+
+- @pnpm/manifest-utils@1000.0.2
+
+## 1000.0.1
+
+### Patch Changes
+
+- @pnpm/error@1000.0.1
+- @pnpm/manifest-utils@1000.0.1
+- @pnpm/read-package-json@1000.0.1
+- @pnpm/read-project-manifest@1000.0.1
+
+## 10.0.12
+
+### Patch Changes
+
+- @pnpm/error@6.0.3
+- @pnpm/manifest-utils@6.0.10
+- @pnpm/read-package-json@9.0.10
+- @pnpm/read-project-manifest@6.0.10
+
+## 10.0.11
+
+### Patch Changes
+
+- @pnpm/error@6.0.2
+- @pnpm/manifest-utils@6.0.9
+- @pnpm/read-package-json@9.0.9
+- @pnpm/read-project-manifest@6.0.9
+
+## 10.0.10
+
+### Patch Changes
+
+- Updated dependencies [d500d9f]
+  - @pnpm/types@12.2.0
+  - @pnpm/package-bins@9.0.7
+  - @pnpm/manifest-utils@6.0.8
+  - @pnpm/read-package-json@9.0.8
+  - @pnpm/read-project-manifest@6.0.8
+
+## 10.0.9
+
+### Patch Changes
+
+- Updated dependencies [7ee59a1]
+  - @pnpm/types@12.1.0
+  - @pnpm/package-bins@9.0.6
+  - @pnpm/manifest-utils@6.0.7
+  - @pnpm/read-package-json@9.0.7
+  - @pnpm/read-project-manifest@6.0.7
+
+## 10.0.8
+
+### Patch Changes
+
+- Updated dependencies [cb006df]
+  - @pnpm/types@12.0.0
+  - @pnpm/package-bins@9.0.5
+  - @pnpm/manifest-utils@6.0.6
+  - @pnpm/read-package-json@9.0.6
+  - @pnpm/read-project-manifest@6.0.6
+
+## 10.0.7
+
+### Patch Changes
+
+- Updated dependencies [0ef168b]
+  - @pnpm/types@11.1.0
+  - @pnpm/package-bins@9.0.4
+  - @pnpm/manifest-utils@6.0.5
+  - @pnpm/read-package-json@9.0.5
+  - @pnpm/read-project-manifest@6.0.5
+
+## 10.0.6
+
+### Patch Changes
+
+- afe520d: Update symlink-dir to v6.0.1.
+
+## 10.0.5
+
+### Patch Changes
+
+- Updated dependencies [dd00eeb]
+- Updated dependencies
+  - @pnpm/types@11.0.0
+  - @pnpm/package-bins@9.0.3
+  - @pnpm/manifest-utils@6.0.4
+  - @pnpm/read-package-json@9.0.4
+  - @pnpm/read-project-manifest@6.0.4
+
+## 10.0.4
+
+### Patch Changes
+
+- Updated dependencies [13e55b2]
+  - @pnpm/types@10.1.1
+  - @pnpm/package-bins@9.0.2
+  - @pnpm/manifest-utils@6.0.3
+  - @pnpm/read-package-json@9.0.3
+  - @pnpm/read-project-manifest@6.0.3
+
+## 10.0.3
+
+### Patch Changes
+
+- 80aaa9f: Deduplicate bin names to prevent race condition and corrupted bin scripts [#7833](https://github.com/pnpm/pnpm/issues/7833).
+
+## 10.0.2
+
+### Patch Changes
+
+- Updated dependencies [45f4262]
+  - @pnpm/types@10.1.0
+  - @pnpm/package-bins@9.0.1
+  - @pnpm/manifest-utils@6.0.2
+  - @pnpm/read-package-json@9.0.2
+  - @pnpm/read-project-manifest@6.0.2
+
+## 10.0.1
+
+### Patch Changes
+
+- Updated dependencies [a7aef51]
+  - @pnpm/error@6.0.1
+  - @pnpm/manifest-utils@6.0.1
+  - @pnpm/read-package-json@9.0.1
+  - @pnpm/read-project-manifest@6.0.1
+
+## 10.0.0
+
+### Major Changes
+
+- 43cdd87: Node.js v16 support dropped. Use at least Node.js v18.12.
+
+### Patch Changes
+
+- Updated dependencies [7733f3a]
+- Updated dependencies [3ded840]
+- Updated dependencies [43cdd87]
+- Updated dependencies [730929e]
+  - @pnpm/types@10.0.0
+  - @pnpm/error@6.0.0
+  - @pnpm/read-project-manifest@6.0.0
+  - @pnpm/read-package-json@9.0.0
+  - @pnpm/manifest-utils@6.0.0
+  - @pnpm/package-bins@9.0.0
+  - @pnpm/read-modules-dir@7.0.0
+
+## 9.0.12
+
+### Patch Changes
+
+- Updated dependencies [4d34684f1]
+  - @pnpm/types@9.4.2
+  - @pnpm/package-bins@8.0.6
+  - @pnpm/manifest-utils@5.0.7
+  - @pnpm/read-package-json@8.0.7
+  - @pnpm/read-project-manifest@5.0.10
+
+## 9.0.11
+
+### Patch Changes
+
+- Updated dependencies
+  - @pnpm/types@9.4.1
+  - @pnpm/package-bins@8.0.5
+  - @pnpm/manifest-utils@5.0.6
+  - @pnpm/read-package-json@8.0.6
+  - @pnpm/read-project-manifest@5.0.9
+
+## 9.0.10
+
+### Patch Changes
+
+- Updated dependencies [43ce9e4a6]
+- Updated dependencies [d2dc2e66a]
+  - @pnpm/types@9.4.0
+  - @pnpm/package-bins@8.0.4
+  - @pnpm/manifest-utils@5.0.5
+  - @pnpm/read-package-json@8.0.5
+  - @pnpm/read-project-manifest@5.0.8
+
+## 9.0.9
+
+### Patch Changes
+
+- 5c8c9196c: Improved the performance of linking bins of hoisted dependencies to `node_modules/.pnpm/node_modules/.bin` [#7212](https://github.com/pnpm/pnpm/pull/7212).
+
+## 9.0.8
+
+### Patch Changes
+
+- Updated dependencies [d774a3196]
+  - @pnpm/types@9.3.0
+  - @pnpm/package-bins@8.0.3
+  - @pnpm/manifest-utils@5.0.4
+  - @pnpm/read-package-json@8.0.4
+  - @pnpm/read-project-manifest@5.0.7
+
+## 9.0.7
+
+### Patch Changes
+
+- @pnpm/read-project-manifest@5.0.6
+
+## 9.0.6
+
+### Patch Changes
+
+- @pnpm/read-project-manifest@5.0.5
+
+## 9.0.5
+
+### Patch Changes
+
+- e26d15c6d: When a command cannot be created in `.bin`, print the exact error message that happened.
+- Updated dependencies [aa2ae8fe2]
+  - @pnpm/types@9.2.0
+  - @pnpm/package-bins@8.0.2
+  - @pnpm/manifest-utils@5.0.3
+  - @pnpm/read-package-json@8.0.3
+  - @pnpm/read-project-manifest@5.0.4
+
+## 9.0.4
+
+### Patch Changes
+
+- Updated dependencies [b4892acc5]
+  - @pnpm/read-project-manifest@5.0.3
+
+## 9.0.3
+
+### Patch Changes
+
+- @pnpm/error@5.0.2
+- @pnpm/manifest-utils@5.0.2
+- @pnpm/read-package-json@8.0.2
+- @pnpm/read-project-manifest@5.0.2
+
+## 9.0.2
+
+### Patch Changes
+
+- Updated dependencies [4b97f1f07]
+  - @pnpm/read-modules-dir@6.0.1
+
+## 9.0.1
+
+### Patch Changes
+
+- Updated dependencies [a9e0b7cbf]
+- Updated dependencies [a9e0b7cbf]
+  - @pnpm/types@9.1.0
+  - @pnpm/manifest-utils@5.0.1
+  - @pnpm/package-bins@8.0.1
+  - @pnpm/read-package-json@8.0.1
+  - @pnpm/read-project-manifest@5.0.1
+  - @pnpm/error@5.0.1
+
+## 9.0.0
+
+### Major Changes
+
+- eceaa8b8b: Node.js 14 support dropped.
+
+### Patch Changes
+
+- Updated dependencies [eceaa8b8b]
+  - @pnpm/read-project-manifest@5.0.0
+  - @pnpm/read-package-json@8.0.0
+  - @pnpm/manifest-utils@5.0.0
+  - @pnpm/package-bins@8.0.0
+  - @pnpm/read-modules-dir@6.0.0
+  - @pnpm/error@5.0.0
+  - @pnpm/types@9.0.0
+
+## 8.0.11
+
+### Patch Changes
+
+- 685b3a7ea: New directories should be prepended to NODE_PATH in command shims, not appended.
+
+## 8.0.10
+
+### Patch Changes
+
+- f9c30c6d7: Command shim should not set higher priority to the `node_modules/.pnpm/node_modules` directory through the `NODE_PATH` env variable, then the command's own `node_modules` directory [#5176](https://github.com/pnpm/pnpm/issues/5176).
+
+## 8.0.9
+
+### Patch Changes
+
+- @pnpm/read-project-manifest@4.1.4
+
+## 8.0.8
+
+### Patch Changes
+
+- 90d26c449: Don't crash when a bin file is not found and `prefer-symlinked-executables` is `true` [#5946](https://github.com/pnpm/pnpm/pull/5946).
+
+## 8.0.7
+
+### Patch Changes
+
+- 4008a5236: Ensure the permission of bin file when `prefer-symlinked-executables` is set to `true` [#5913](https://github.com/pnpm/pnpm/pull/5913).
+
+## 8.0.6
+
+### Patch Changes
+
+- @pnpm/error@4.0.1
+- @pnpm/manifest-utils@4.1.4
+- @pnpm/read-package-json@7.0.5
+- @pnpm/read-project-manifest@4.1.3
+
+## 8.0.5
+
+### Patch Changes
+
+- bc18d33fe: Allow the `-S` flag in command shims [pnpm/cmd-shim#42](https://github.com/pnpm/cmd-shim/pull/42).
+- Updated dependencies [b77651d14]
+  - @pnpm/types@8.10.0
+  - @pnpm/package-bins@7.0.3
+  - @pnpm/manifest-utils@4.1.3
+  - @pnpm/read-package-json@7.0.4
+  - @pnpm/read-project-manifest@4.1.2
+
 ## 8.0.4
 
 ### Patch Changes

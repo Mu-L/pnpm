@@ -1,11 +1,15 @@
-import { readProjectManifestOnly } from '@pnpm/read-project-manifest'
-import { DependenciesField, Registries } from '@pnpm/types'
-import { buildDependenciesHierarchy } from 'dependencies-hierarchy'
-import { createPackagesSearcher } from './createPackagesSearcher'
+import path from 'path'
+import { safeReadProjectManifestOnly } from '@pnpm/read-project-manifest'
+import { type DependenciesField, type Registries } from '@pnpm/types'
+import { type PackageNode, buildDependenciesHierarchy, type DependenciesHierarchy, createPackagesSearcher } from '@pnpm/reviewing.dependencies-hierarchy'
 import { renderJson } from './renderJson'
 import { renderParseable } from './renderParseable'
 import { renderTree } from './renderTree'
-import { PackageDependencyHierarchy } from './types'
+import { type PackageDependencyHierarchy } from './types'
+import { pruneDependenciesTrees } from './pruneTree'
+
+export type { PackageNode } from '@pnpm/reviewing.dependencies-hierarchy'
+export { renderJson, renderParseable, renderTree, type PackageDependencyHierarchy }
 
 const DEFAULTS = {
   alwaysPrintRootPackage: true,
@@ -14,6 +18,82 @@ const DEFAULTS = {
   registries: undefined,
   reportAs: 'tree' as const,
   showExtraneous: true,
+}
+
+export interface FlattenedSearchPackage extends PackageDependencyHierarchy {
+  depPath: string
+}
+
+export function flattenSearchedPackages (pkgs: PackageDependencyHierarchy[], opts: {
+  lockfileDir: string
+}): FlattenedSearchPackage[] {
+  const flattedPkgs: FlattenedSearchPackage[] = []
+  for (const pkg of pkgs) {
+    _walker([
+      ...(pkg.optionalDependencies ?? []),
+      ...(pkg.dependencies ?? []),
+      ...(pkg.devDependencies ?? []),
+      ...(pkg.unsavedDependencies ?? []),
+    ], path.relative(opts.lockfileDir, pkg.path) || '.')
+  }
+
+  return flattedPkgs
+
+  function _walker (packages: PackageNode[], depPath: string): void {
+    for (const pkg of packages) {
+      const nextDepPath = `${depPath} > ${pkg.name}@${pkg.version}`
+      if (pkg.dependencies?.length) {
+        _walker(pkg.dependencies, nextDepPath)
+      } else {
+        flattedPkgs.push({
+          depPath: nextDepPath,
+          ...pkg,
+        })
+      }
+    }
+  }
+}
+
+export async function searchForPackages (
+  packages: string[],
+  projectPaths: string[],
+  opts: {
+    depth: number
+    excludePeerDependencies?: boolean
+    lockfileDir: string
+    include?: { [dependenciesField in DependenciesField]: boolean }
+    onlyProjects?: boolean
+    registries?: Registries
+    modulesDir?: string
+    virtualStoreDirMaxLength: number
+  }
+): Promise<PackageDependencyHierarchy[]> {
+  const search = createPackagesSearcher(packages)
+
+  return Promise.all(
+    Object.entries(await buildDependenciesHierarchy(projectPaths, {
+      depth: opts.depth,
+      excludePeerDependencies: opts.excludePeerDependencies,
+      include: opts.include,
+      lockfileDir: opts.lockfileDir,
+      onlyProjects: opts.onlyProjects,
+      registries: opts.registries,
+      search,
+      modulesDir: opts.modulesDir,
+      virtualStoreDirMaxLength: opts.virtualStoreDirMaxLength,
+    }))
+      .map(async ([projectPath, buildDependenciesHierarchy]) => {
+        const entryPkg = await safeReadProjectManifestOnly(projectPath) ?? {}
+        return {
+          name: entryPkg.name,
+          version: entryPkg.version,
+          private: entryPkg.private,
+
+          path: projectPath,
+          ...buildDependenciesHierarchy,
+        } as PackageDependencyHierarchy
+      })
+  )
 }
 
 export async function listForPackages (
@@ -25,36 +105,21 @@ export async function listForPackages (
     lockfileDir: string
     long?: boolean
     include?: { [dependenciesField in DependenciesField]: boolean }
+    onlyProjects?: boolean
     reportAs?: 'parseable' | 'tree' | 'json'
     registries?: Registries
+    modulesDir?: string
+    virtualStoreDirMaxLength: number
   }
-) {
+): Promise<string> {
   const opts = { ...DEFAULTS, ...maybeOpts }
 
-  const search = createPackagesSearcher(packages)
+  const pkgs = await searchForPackages(packages, projectPaths, opts)
 
-  const pkgs = await Promise.all(
-    Object.entries(await buildDependenciesHierarchy(projectPaths, {
-      depth: opts.depth,
-      include: maybeOpts?.include,
-      lockfileDir: maybeOpts?.lockfileDir,
-      registries: opts.registries,
-      search,
-    }))
-      .map(async ([projectPath, buildDependenciesHierarchy]) => {
-        const entryPkg = await readProjectManifestOnly(projectPath)
-        return {
-          name: entryPkg.name,
-          version: entryPkg.version,
-
-          path: projectPath,
-          ...buildDependenciesHierarchy,
-        } as PackageDependencyHierarchy
-      })
-  )
+  const prunedPkgs = pruneDependenciesTrees(pkgs ?? null, 10)
 
   const print = getPrinter(opts.reportAs)
-  return print(pkgs, {
+  return print(prunedPkgs, {
     alwaysPrintRootPackage: opts.alwaysPrintRootPackage,
     depth: opts.depth,
     long: opts.long,
@@ -68,14 +133,18 @@ export async function list (
   maybeOpts: {
     alwaysPrintRootPackage?: boolean
     depth?: number
+    excludePeerDependencies?: boolean
     lockfileDir: string
     long?: boolean
     include?: { [dependenciesField in DependenciesField]: boolean }
+    onlyProjects?: boolean
     reportAs?: 'parseable' | 'tree' | 'json'
     registries?: Registries
     showExtraneous?: boolean
+    modulesDir?: string
+    virtualStoreDirMaxLength: number
   }
-) {
+): Promise<string> {
   const opts = { ...DEFAULTS, ...maybeOpts }
 
   const pkgs = await Promise.all(
@@ -84,16 +153,20 @@ export async function list (
         ? projectPaths.reduce((acc, projectPath) => {
           acc[projectPath] = {}
           return acc
-        }, {})
+        }, {} as Record<string, DependenciesHierarchy>)
         : await buildDependenciesHierarchy(projectPaths, {
           depth: opts.depth,
+          excludePeerDependencies: maybeOpts?.excludePeerDependencies,
           include: maybeOpts?.include,
           lockfileDir: maybeOpts?.lockfileDir,
+          onlyProjects: maybeOpts?.onlyProjects,
           registries: opts.registries,
+          modulesDir: opts.modulesDir,
+          virtualStoreDirMaxLength: opts.virtualStoreDirMaxLength,
         })
     )
       .map(async ([projectPath, dependenciesHierarchy]) => {
-        const entryPkg = await readProjectManifestOnly(projectPath)
+        const entryPkg = await safeReadProjectManifestOnly(projectPath) ?? {}
         return {
           name: entryPkg.name,
           version: entryPkg.version,
@@ -115,7 +188,15 @@ export async function list (
   })
 }
 
-function getPrinter (reportAs: 'parseable' | 'tree' | 'json') {
+type Printer = (packages: PackageDependencyHierarchy[], opts: {
+  alwaysPrintRootPackage: boolean
+  depth: number
+  long: boolean
+  search: boolean
+  showExtraneous: boolean
+}) => Promise<string>
+
+function getPrinter (reportAs: 'parseable' | 'tree' | 'json'): Printer {
   switch (reportAs) {
   case 'parseable': return renderParseable
   case 'json': return renderJson
