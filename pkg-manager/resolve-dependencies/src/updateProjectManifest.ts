@@ -1,14 +1,17 @@
 import {
   createVersionSpec,
   getPrefix,
-  PackageSpecObject,
-  PinnedVersion,
+  type PackageSpecObject,
+  type PinnedVersion,
   updateProjectManifestObject,
 } from '@pnpm/manifest-utils'
 import versionSelectorType from 'version-selector-type'
 import semver from 'semver'
-import { ResolvedDirectDependency } from './resolveDependencyTree'
-import { ImporterToResolve } from '.'
+import { isGitHostedPkgUrl } from '@pnpm/pick-fetcher'
+import { type TarballResolution } from '@pnpm/resolver-base'
+import { type ProjectManifest } from '@pnpm/types'
+import { type ResolvedDirectDependency } from './resolveDependencyTree'
+import { type ImporterToResolve } from '.'
 
 export async function updateProjectManifest (
   importer: ImporterToResolve,
@@ -17,7 +20,7 @@ export async function updateProjectManifest (
     preserveWorkspaceProtocol: boolean
     saveWorkspaceProtocol: boolean | 'rolling'
   }
-) {
+): Promise<Array<ProjectManifest | undefined>> {
   if (!importer.manifest) {
     throw new Error('Cannot save because no package.json found')
   }
@@ -25,9 +28,18 @@ export async function updateProjectManifest (
     .filter((rdd, index) => importer.wantedDependencies[index]?.updateSpec)
     .map((rdd, index) => {
       const wantedDep = importer.wantedDependencies[index]!
-      return resolvedDirectDepToSpecObject({ ...rdd, isNew: wantedDep.isNew, specRaw: wantedDep.raw }, importer, {
+      return resolvedDirectDepToSpecObject({
+        ...rdd,
+        isNew:
+        wantedDep.isNew,
+        specRaw: wantedDep.raw,
+        preserveNonSemverVersionSpec: wantedDep.preserveNonSemverVersionSpec,
+        // For git-protocol dependencies that are already installed locally, there is no normalizedPref unless do force resolve,
+        // so we use pref in wantedDependency here.
+        normalizedPref: rdd.normalizedPref ?? (isGitHostedPkgUrl((rdd.resolution as TarballResolution).tarball ?? '') ? wantedDep.pref : undefined),
+      }, importer, {
         nodeExecPath: wantedDep.nodeExecPath,
-        pinnedVersion: wantedDep.pinnedVersion ?? importer['pinnedVersion'] ?? 'major',
+        pinnedVersion: wantedDep.pinnedVersion ?? importer.pinnedVersion ?? 'major',
         preserveWorkspaceProtocol: opts.preserveWorkspaceProtocol,
         saveWorkspaceProtocol: opts.saveWorkspaceProtocol,
       })
@@ -37,8 +49,8 @@ export async function updateProjectManifest (
       specsToUpsert.push({
         alias: pkgToInstall.alias,
         nodeExecPath: pkgToInstall.nodeExecPath,
-        peer: importer['peer'],
-        saveType: importer['targetDependenciesField'],
+        peer: importer.peer,
+        saveType: importer.targetDependenciesField,
       })
     }
   }
@@ -60,13 +72,15 @@ export async function updateProjectManifest (
 function resolvedDirectDepToSpecObject (
   {
     alias,
+    catalogLookup,
     isNew,
     name,
     normalizedPref,
     resolution,
     specRaw,
     version,
-  }: ResolvedDirectDependency & { isNew?: Boolean, specRaw: string },
+    preserveNonSemverVersionSpec,
+  }: ResolvedDirectDependency & { isNew?: boolean, specRaw: string, preserveNonSemverVersionSpec?: boolean },
   importer: ImporterToResolve,
   opts: {
     nodeExecPath?: string
@@ -76,7 +90,9 @@ function resolvedDirectDepToSpecObject (
   }
 ): PackageSpecObject {
   let pref!: string
-  if (normalizedPref) {
+  if (catalogLookup) {
+    pref = catalogLookup.userSpecifiedPref
+  } else if (normalizedPref) {
     pref = normalizedPref
   } else {
     const shouldUseWorkspaceProtocol = resolution.type === 'directory' &&
@@ -103,12 +119,14 @@ function resolvedDirectDepToSpecObject (
         specRaw,
         version,
         rolling: shouldUseWorkspaceProtocol && opts.saveWorkspaceProtocol === 'rolling',
+        preserveNonSemverVersionSpec,
       })
     }
     if (
       shouldUseWorkspaceProtocol &&
       !pref.startsWith('workspace:')
     ) {
+      pref = pref.replace(/^npm:/, '')
       pref = `workspace:${pref}`
     }
   }
@@ -117,7 +135,7 @@ function resolvedDirectDepToSpecObject (
     nodeExecPath: opts.nodeExecPath,
     peer: importer['peer'],
     pref,
-    saveType: (isNew === true) ? importer['targetDependenciesField'] : undefined,
+    saveType: importer['targetDependenciesField'],
   }
 }
 
@@ -130,7 +148,7 @@ function getPrefPreferSpecifiedSpec (
     pinnedVersion?: PinnedVersion
     rolling: boolean
   }
-) {
+): string {
   const prefix = getPrefix(opts.alias, opts.name)
   if (opts.specRaw?.startsWith(`${opts.alias}@${prefix}`)) {
     const range = opts.specRaw.slice(`${opts.alias}@${prefix}`.length)
@@ -156,15 +174,30 @@ function getPrefPreferSpecifiedExoticSpec (
     specRaw: string
     pinnedVersion: PinnedVersion
     rolling: boolean
+    preserveNonSemverVersionSpec?: boolean
   }
-) {
+): string {
   const prefix = getPrefix(opts.alias, opts.name)
-  if (opts.specRaw?.startsWith(`${opts.alias}@${prefix}`) && opts.specRaw !== `${opts.alias}@workspace:*`) {
-    const specWithoutName = opts.specRaw.slice(`${opts.alias}@${prefix}`.length)
+  if (opts.specRaw?.startsWith(`${opts.alias}@${prefix}`)) {
+    let specWithoutName = opts.specRaw.slice(`${opts.alias}@${prefix}`.length)
+    if (specWithoutName.startsWith('workspace:')) {
+      specWithoutName = specWithoutName.slice(10)
+      if (specWithoutName === '*' || specWithoutName === '^' || specWithoutName === '~') {
+        return specWithoutName
+      }
+    }
     const selector = versionSelectorType(specWithoutName)
-    if (!((selector != null) && (selector.type === 'version' || selector.type === 'range'))) {
+    if (
+      ((selector == null) || (selector.type !== 'version' && selector.type !== 'range')) &&
+      opts.preserveNonSemverVersionSpec
+    ) {
       return opts.specRaw.slice(opts.alias.length + 1)
     }
   }
+  // A prerelease version is always added as an exact version
+  if (semver.parse(opts.version)?.prerelease.length) {
+    return `${prefix}${opts.version}`
+  }
+
   return `${prefix}${createVersionSpec(opts.version, { pinnedVersion: opts.pinnedVersion, rolling: opts.rolling })}`
 }

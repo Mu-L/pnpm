@@ -1,7 +1,13 @@
-lockfileVersion: 5.3
+lockfileVersion: '9.0'
 
-specifiers:
-  general: 0.0.0
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
 
-dependencies:
-  general: link:../general
+importers:
+
+  .:
+    dependencies:
+      general:
+        specifier: 0.0.0
+        version: link:../general

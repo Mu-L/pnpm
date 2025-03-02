@@ -2,13 +2,13 @@ import url from 'url'
 import { requestRetryLogger } from '@pnpm/core-loggers'
 import {
   FetchError,
-  FetchErrorRequest,
-  FetchErrorResponse,
+  type FetchErrorRequest,
+  type FetchErrorResponse,
   PnpmError,
 } from '@pnpm/error'
-import { FetchFromRegistry, RetryTimeoutOptions } from '@pnpm/fetching-types'
+import { type FetchFromRegistry, type RetryTimeoutOptions } from '@pnpm/fetching-types'
 import * as retry from '@zkochan/retry'
-import { PackageMeta } from './pickPackage'
+import { type PackageMeta } from './pickPackage'
 
 interface RegistryResponse {
   status: number
@@ -17,6 +17,7 @@ interface RegistryResponse {
 }
 
 // https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
+// eslint-disable-next-line regexp/no-super-linear-backtracking, regexp/use-ignore-case
 const semverRegex = /(.*)(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
 
 export class RegistryResponseError extends FetchError {
@@ -49,7 +50,7 @@ export async function fromRegistry (
 ): Promise<PackageMeta> {
   const uri = toUri(pkgName, registry)
   const op = retry.operation(fetchOpts.retry)
-  return new Promise((resolve, reject) =>
+  return new Promise((resolve, reject) => {
     op.attempt(async (attempt) => {
       let response: RegistryResponse
       try {
@@ -94,10 +95,10 @@ export async function fromRegistry (
         })
       }
     })
-  )
+  })
 }
 
-function toUri (pkgName: string, registry: string) {
+function toUri (pkgName: string, registry: string): string {
   let encodedName: string
 
   if (pkgName[0] === '@') {

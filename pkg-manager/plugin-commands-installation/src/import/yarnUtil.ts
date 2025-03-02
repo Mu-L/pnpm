@@ -1,10 +1,10 @@
 /**
  * https://github.com/snyk/nodejs-lockfile-parser/blob/master/lib/parsers/yarn-utils.ts
  */
-import { structUtils } from '@yarnpkg/core'
+import { type structUtils } from '@yarnpkg/core'
 
 const BUILTIN_PLACEHOLDER = 'builtin'
-const MULTIPLE_KEYS_REGEXP = / *, */g
+const MULTIPLE_KEYS_REGEXP = / *, */
 
 export type ParseDescriptor = typeof structUtils.parseDescriptor
 export type ParseRange = typeof structUtils.parseRange
@@ -47,7 +47,6 @@ const keyNormalizer = (
       descriptors.push(range.source)
     } else {
       descriptors.push(
-        // eslint-disable-next-line
         `${name}@${protocol}${range.source}${
           range.selector ? '#' + range.selector : ''
         }`

@@ -1,12 +1,12 @@
 import path from 'path'
-import { Config } from '@pnpm/config'
+import { type Config } from '@pnpm/config'
 import { globalInfo } from '@pnpm/logger'
 import { serverConnectionInfoDir, tryLoadServerJson } from '@pnpm/store-connection-manager'
 import { getStorePath } from '@pnpm/store-path'
 
 export async function status (
   opts: Pick<Config, 'dir' | 'pnpmHomeDir' | 'storeDir'>
-) {
+): Promise<void> {
   const storeDir = await getStorePath({
     pkgRoot: opts.dir,
     storePath: opts.storeDir,

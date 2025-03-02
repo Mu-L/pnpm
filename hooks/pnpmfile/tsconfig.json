@@ -10,10 +10,13 @@
   ],
   "references": [
     {
+      "path": "../../crypto/hash"
+    },
+    {
       "path": "../../fetching/fetcher-base"
     },
     {
-      "path": "../../lockfile/lockfile-types"
+      "path": "../../lockfile/types"
     },
     {
       "path": "../../packages/core-loggers"
@@ -22,13 +25,16 @@
       "path": "../../packages/error"
     },
     {
+      "path": "../../packages/logger"
+    },
+    {
       "path": "../../packages/types"
     },
     {
-      "path": "../../pkg-manager/core"
+      "path": "../../store/store-controller-types"
     },
     {
-      "path": "../../store/store-controller-types"
+      "path": "../types"
     }
   ]
 }

@@ -1,11 +1,12 @@
 import { filterDependenciesByType } from '@pnpm/manifest-utils'
 import {
-  Dependencies,
-  DependenciesMeta,
-  IncludedDependencies,
-  ProjectManifest,
+  type Dependencies,
+  type DependenciesMeta,
+  type IncludedDependencies,
+  type ProjectManifest,
 } from '@pnpm/types'
 import { whichVersionIsPinned } from '@pnpm/which-version-is-pinned'
+import { WorkspaceSpec } from '@pnpm/workspace.spec-parser'
 
 export type PinnedVersion = 'major' | 'minor' | 'patch' | 'none'
 
@@ -16,6 +17,8 @@ export interface WantedDependency {
   optional: boolean
   raw: string
   pinnedVersion?: PinnedVersion
+  nodeExecPath?: string
+  updateSpec?: boolean
 }
 
 export function getWantedDependencies (
@@ -51,8 +54,11 @@ export function getWantedDependencies (
   })
 }
 
-function updateWorkspacePref (pref: string) {
-  return pref.startsWith('workspace:') ? 'workspace:*' : pref
+function updateWorkspacePref (pref: string): string {
+  const spec = WorkspaceSpec.parse(pref)
+  if (!spec) return pref
+  spec.version = '*'
+  return spec.toString()
 }
 
 function getWantedDependenciesFromGivenSet (
@@ -83,7 +89,7 @@ function getWantedDependenciesFromGivenSet (
       nodeExecPath: opts.nodeExecPath ?? opts.dependenciesMeta[alias]?.node,
       pinnedVersion: whichVersionIsPinned(pref),
       pref: updatedPref,
-      raw: `${alias}@${updatedPref}`,
+      raw: `${alias}@${pref}`,
     }
   })
 }

@@ -1,15 +1,20 @@
-import { CompletionFunc } from '@pnpm/command'
+import { cache } from '@pnpm/cache.commands'
+import { type CompletionFunc } from '@pnpm/command'
 import { types as allTypes } from '@pnpm/config'
+import { approveBuilds, ignoredBuilds } from '@pnpm/exec.build-commands'
 import { audit } from '@pnpm/plugin-commands-audit'
+import { generateCompletion, createCompletionServer } from '@pnpm/plugin-commands-completion'
+import { config, getCommand, setCommand } from '@pnpm/plugin-commands-config'
 import { doctor } from '@pnpm/plugin-commands-doctor'
 import { env } from '@pnpm/plugin-commands-env'
 import { deploy } from '@pnpm/plugin-commands-deploy'
-import { add, fetch, install, link, prune, remove, unlink, update, importCommand } from '@pnpm/plugin-commands-installation'
+import { add, ci, dedupe, fetch, install, link, prune, remove, unlink, update, importCommand } from '@pnpm/plugin-commands-installation'
+import { selfUpdate } from '@pnpm/tools.plugin-commands-self-updater'
 import { list, ll, why } from '@pnpm/plugin-commands-listing'
 import { licenses } from '@pnpm/plugin-commands-licenses'
 import { outdated } from '@pnpm/plugin-commands-outdated'
 import { pack, publish } from '@pnpm/plugin-commands-publishing'
-import { patch, patchCommit } from '@pnpm/plugin-commands-patching'
+import { patch, patchCommit, patchRemove } from '@pnpm/plugin-commands-patching'
 import { rebuild } from '@pnpm/plugin-commands-rebuild'
 import {
   create,
@@ -17,16 +22,17 @@ import {
   exec,
   restart,
   run,
-  test,
 } from '@pnpm/plugin-commands-script-runners'
 import { server } from '@pnpm/plugin-commands-server'
 import { setup } from '@pnpm/plugin-commands-setup'
 import { store } from '@pnpm/plugin-commands-store'
+import { catFile, catIndex, findHash } from '@pnpm/plugin-commands-store-inspecting'
 import { init } from '@pnpm/plugin-commands-init'
 import pick from 'ramda/src/pick'
-import { PnpmOptions } from '../types'
+import { type PnpmOptions } from '../types'
+import { shorthands as universalShorthands } from '../shorthands'
+import { parseCliArgs } from '../parseCliArgs'
 import * as bin from './bin'
-import { createCompletion } from './completion'
 import { createHelp } from './help'
 import * as installTest from './installTest'
 import * as recursive from './recursive'
@@ -38,7 +44,6 @@ export const GLOBAL_OPTIONS = pick([
   'filter',
   'filter-prod',
   'loglevel',
-  'help',
   'parseable',
   'prefix',
   'reporter',
@@ -51,18 +56,22 @@ export const GLOBAL_OPTIONS = pick([
   'workspace-packages',
   'workspace-root',
   'include-workspace-root',
+  'fail-if-no-match',
 ], allTypes)
 
-export type CommandResponse = string | { output: string, exitCode: number } | undefined
+export type CommandResponse = string | { output?: string, exitCode: number }
 
 export type Command = (
-  opts: PnpmOptions,
-  params: string[]
-) => CommandResponse | Promise<CommandResponse>
+  (opts: PnpmOptions | any, params: string[]) => CommandResponse | Promise<CommandResponse> // eslint-disable-line @typescript-eslint/no-explicit-any
+) | (
+  (opts: PnpmOptions | any, params: string[]) => void // eslint-disable-line @typescript-eslint/no-explicit-any
+) | (
+  (opts: PnpmOptions | any, params: string[]) => Promise<void> // eslint-disable-line @typescript-eslint/no-explicit-any
+)
 
 export interface CommandDefinition {
   /** The main logic of the command. */
-  handler: Function
+  handler: Command
   /** The help text for the command that describes its usage and options. */
   help: () => string
   /** The names that will trigger this command handler. */
@@ -72,7 +81,7 @@ export interface CommandDefinition {
    * for this command and whose values are the types of values
    * for these options for validation.
    */
-  cliOptionsTypes: () => Object
+  cliOptionsTypes: () => Record<string, unknown>
   /**
    * A function that returns an object whose keys are acceptable options
    * in the .npmrc file for this command and whose values are the types of values
@@ -93,12 +102,23 @@ export interface CommandDefinition {
    * ```
    */
   shorthands?: Record<string, string | string[]>
+  /**
+   * If true, this command should not care about what package manager is specified in the "packageManager" field of "package.json".
+   */
+  skipPackageManagerCheck?: boolean
 }
 
 const commands: CommandDefinition[] = [
   add,
+  approveBuilds,
   audit,
   bin,
+  cache,
+  ci,
+  config,
+  dedupe,
+  getCommand,
+  setCommand,
   create,
   deploy,
   dlx,
@@ -106,7 +126,10 @@ const commands: CommandDefinition[] = [
   env,
   exec,
   fetch,
+  generateCompletion,
+  ignoredBuilds,
   importCommand,
+  selfUpdate,
   init,
   install,
   installTest,
@@ -118,6 +141,7 @@ const commands: CommandDefinition[] = [
   pack,
   patch,
   patchCommit,
+  patchRemove,
   prune,
   publish,
   rebuild,
@@ -129,7 +153,9 @@ const commands: CommandDefinition[] = [
   server,
   setup,
   store,
-  test,
+  catFile,
+  catIndex,
+  findHash,
   unlink,
   update,
   why,
@@ -137,11 +163,12 @@ const commands: CommandDefinition[] = [
 
 const handlerByCommandName: Record<string, Command> = {}
 const helpByCommandName: Record<string, () => string> = {}
-const cliOptionsTypesByCommandName: Record<string, () => Object> = {}
-const aliasToFullName: Map<string, string> = new Map()
+const cliOptionsTypesByCommandName: Record<string, () => Record<string, unknown>> = {}
+const aliasToFullName = new Map<string, string>()
 const completionByCommandName: Record<string, CompletionFunc> = {}
 const shorthandsByCommandName: Record<string, Record<string, string | string[]>> = {}
 const rcOptionsTypes: Record<string, unknown> = {}
+const skipPackageManagerCheckForCommandArray = ['completion-server']
 
 for (let i = 0; i < commands.length; i++) {
   const {
@@ -152,6 +179,7 @@ for (let i = 0; i < commands.length; i++) {
     help,
     rcOptionsTypes,
     shorthands,
+    skipPackageManagerCheck,
   } = commands[i]
   if (!commandNames || commandNames.length === 0) {
     throw new Error(`The command at index ${i} doesn't have command names`)
@@ -166,6 +194,9 @@ for (let i = 0; i < commands.length; i++) {
     }
     Object.assign(rcOptionsTypes, rcOptionsTypes())
   }
+  if (skipPackageManagerCheck) {
+    skipPackageManagerCheckForCommandArray.push(...commandNames)
+  }
   if (commandNames.length > 1) {
     const fullName = commandNames[0]
     for (let i = 1; i < commandNames.length; i++) {
@@ -175,25 +206,29 @@ for (let i = 0; i < commands.length; i++) {
 }
 
 handlerByCommandName.help = createHelp(helpByCommandName)
-handlerByCommandName.completion = createCompletion({
+handlerByCommandName['completion-server'] = createCompletionServer({
   cliOptionsTypesByCommandName,
   completionByCommandName,
   initialCompletion,
   shorthandsByCommandName,
   universalOptionsTypes: GLOBAL_OPTIONS,
+  universalShorthands,
+  parseCliArgs,
 })
 
-function initialCompletion () {
+function initialCompletion (): Array<{ name: string }> {
   return Object.keys(handlerByCommandName).map((name) => ({ name }))
 }
 
 export const pnpmCmds = handlerByCommandName
 
-export function getCliOptionsTypes (commandName: string) {
+export const skipPackageManagerCheckForCommand = new Set(skipPackageManagerCheckForCommandArray)
+
+export function getCliOptionsTypes (commandName: string): Record<string, unknown> {
   return cliOptionsTypesByCommandName[commandName]?.() || {}
 }
 
-export function getCommandFullName (commandName: string) {
+export function getCommandFullName (commandName: string): string | null {
   return aliasToFullName.get(commandName) ??
     (handlerByCommandName[commandName] ? commandName : null)
 }

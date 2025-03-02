@@ -12,8 +12,7 @@
     "removeComments": false,
     "sourceMap": true,
     "strict": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "target": "es2020"
+    "target": "es2021"
   },
   "atom": {
     "rewriteTsconfig": true

@@ -2,7 +2,9 @@
   "extends": "@pnpm/tsconfig",
   "compilerOptions": {
     "outDir": "lib",
-    "rootDir": "src"
+    "rootDir": "src",
+    "suppressImplicitAnyIndexErrors": true,
+    "ignoreDeprecations": "5.0"
   },
   "include": [
     "src/**/*.ts",
@@ -13,16 +15,28 @@
       "path": "../../config/config"
     },
     {
+      "path": "../../dedupe/issues-renderer"
+    },
+    {
+      "path": "../../dedupe/types"
+    },
+    {
       "path": "../../packages/core-loggers"
     },
     {
       "path": "../../packages/error"
     },
     {
+      "path": "../../packages/logger"
+    },
+    {
       "path": "../../packages/render-peer-issues"
     },
     {
       "path": "../../packages/types"
+    },
+    {
+      "path": "../cli-meta"
     }
   ]
 }

@@ -1,25 +1,26 @@
 import { PnpmError } from '@pnpm/error'
 import {
-  FetchFunction,
-  FetchOptions,
+  type FetchFunction,
+  type FetchOptions,
+  type FetchResult,
 } from '@pnpm/fetcher-base'
 import type { Cafs } from '@pnpm/cafs-types'
 import {
-  FetchFromRegistry,
-  GetAuthHeader,
-  RetryTimeoutOptions,
+  type FetchFromRegistry,
+  type GetAuthHeader,
+  type RetryTimeoutOptions,
 } from '@pnpm/fetching-types'
+import { TarballIntegrityError } from '@pnpm/worker'
 import {
   createDownloader,
-  DownloadFunction,
-  TarballIntegrityError,
+  type DownloadFunction,
 } from './remoteTarballFetcher'
 import { createLocalTarballFetcher } from './localTarballFetcher'
-import { createGitHostedTarballFetcher, waitForFilesIndex } from './gitHostedTarballFetcher'
+import { createGitHostedTarballFetcher } from './gitHostedTarballFetcher'
 
 export { BadTarballError } from './errorTypes'
 
-export { TarballIntegrityError, waitForFilesIndex }
+export { TarballIntegrityError }
 
 export interface TarballFetchers {
   localTarball: FetchFunction
@@ -31,6 +32,9 @@ export function createTarballFetcher (
   fetchFromRegistry: FetchFromRegistry,
   getAuthHeader: GetAuthHeader,
   opts: {
+    rawConfig: Record<string, unknown>
+    unsafePerm?: boolean
+    ignoreScripts?: boolean
     timeout?: number
     retry?: RetryTimeoutOptions
     offline?: boolean
@@ -50,7 +54,7 @@ export function createTarballFetcher (
   return {
     localTarball: createLocalTarballFetcher(),
     remoteTarball: remoteTarballFetcher,
-    gitHostedTarball: createGitHostedTarballFetcher(remoteTarballFetcher),
+    gitHostedTarball: createGitHostedTarballFetcher(remoteTarballFetcher, opts),
   }
 }
 
@@ -67,7 +71,7 @@ async function fetchFromTarball (
     tarball: string
   },
   opts: FetchOptions
-) {
+): Promise<FetchResult> {
   if (ctx.offline) {
     throw new PnpmError('NO_OFFLINE_TARBALL',
       `A package is missing from the store but cannot download it in offline mode. The missing package may be downloaded from ${resolution.tarball}.`)
@@ -76,9 +80,11 @@ async function fetchFromTarball (
     getAuthHeaderByURI: ctx.getAuthHeaderByURI,
     cafs,
     integrity: resolution.integrity,
-    manifest: opts.manifest,
+    readManifest: opts.readManifest,
     onProgress: opts.onProgress,
     onStart: opts.onStart,
     registry: resolution.registry,
+    filesIndexFile: opts.filesIndexFile,
+    pkg: opts.pkg,
   })
 }

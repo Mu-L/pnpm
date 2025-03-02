@@ -25,22 +25,31 @@
       "path": "../../packages/error"
     },
     {
+      "path": "../../packages/logger"
+    },
+    {
       "path": "../../packages/types"
     },
     {
       "path": "../../pkg-manifest/read-project-manifest"
     },
     {
-      "path": "../lockfile-file"
+      "path": "../../reviewing/list"
     },
     {
-      "path": "../lockfile-types"
+      "path": "../detect-dep-types"
     },
     {
-      "path": "../lockfile-utils"
+      "path": "../fs"
     },
     {
-      "path": "../lockfile-walker"
+      "path": "../types"
+    },
+    {
+      "path": "../utils"
+    },
+    {
+      "path": "../walker"
     }
   ]
 }

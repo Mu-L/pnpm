@@ -1,7 +1,8 @@
 import { parseWantedDependency } from '@pnpm/parse-wanted-dependency'
-import { Dependencies } from '@pnpm/types'
+import { type Dependencies } from '@pnpm/types'
 import { whichVersionIsPinned } from '@pnpm/which-version-is-pinned'
-import { PinnedVersion, WantedDependency } from '@pnpm/resolve-dependencies/lib/getWantedDependencies'
+import { type PinnedVersion, type WantedDependency } from '@pnpm/resolve-dependencies/lib/getWantedDependencies'
+import { type Catalog } from '@pnpm/catalogs.types'
 
 export function parseWantedDependencies (
   rawWantedDependencies: string[],
@@ -16,6 +17,7 @@ export function parseWantedDependencies (
     overrides?: Record<string, string>
     updateWorkspaceDependencies?: boolean
     preferredSpecs?: Record<string, string>
+    defaultCatalog?: Catalog
   }
 ): WantedDependency[] {
   return rawWantedDependencies
@@ -24,9 +26,16 @@ export function parseWantedDependencies (
       const alias = parsed['alias']
       let pref = parsed['pref']
       let pinnedVersion!: PinnedVersion | undefined
-      /* eslint-enable @typescript-eslint/dot-notation */
+
       if (!opts.allowNew && (!alias || !opts.currentPrefs[alias])) {
         return null
+      }
+      if (alias && opts.defaultCatalog?.[alias] && (
+        (!opts.currentPrefs[alias] && pref === undefined) ||
+          opts.defaultCatalog[alias] === pref ||
+          opts.defaultCatalog[alias] === opts.currentPrefs[alias]
+      )) {
+        pref = 'catalog:'
       }
       if (alias && opts.currentPrefs[alias]) {
         if (!pref) {
@@ -41,7 +50,7 @@ export function parseWantedDependencies (
         dev: Boolean(opts.dev || alias && !!opts.devDependencies[alias]),
         optional: Boolean(opts.optional || alias && !!opts.optionalDependencies[alias]),
         pinnedVersion,
-        raw: rawWantedDependency,
+        raw: alias && opts.currentPrefs?.[alias]?.startsWith('workspace:') ? `${alias}@${opts.currentPrefs[alias]}` : rawWantedDependency,
       }
       if (pref) {
         return {

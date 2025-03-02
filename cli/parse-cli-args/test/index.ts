@@ -1,5 +1,5 @@
 import os from 'os'
-import { PnpmError } from '@pnpm/error'
+import { type PnpmError } from '@pnpm/error'
 import { parseCliArgs } from '@pnpm/parse-cli-args'
 import tempy from 'tempy'
 
@@ -114,7 +114,7 @@ test('detect unknown options', async () => {
       return {}
     },
     universalOptionsTypes: { filter: [String, Array] },
-  }, ['install', '--save-dev', '--registry=https://example.com', '--qar', '--filter=packages'])
+  }, ['install', '--save-dev', '--registry=https://example.com', '--@scope:registry=https://scope.example.com/npm', '--qar', '--filter=packages'])
   expect(Array.from(unknownOptions.entries())).toStrictEqual([['save-dev', []], ['qar', ['bar']]])
 })
 
@@ -244,6 +244,7 @@ test.each([
     // shouldn't affect its arg parsing. Test both scenarios for good measure.
     const input = [...(testWithCommandFallback ? [] : ['run']), ...testInput.split(' ')]
 
+    // eslint-disable-next-line no-await-in-loop
     const { options, cmd, params, fallbackCommandUsed } = await parseCliArgs({
       ...DEFAULT_OPTS,
       fallbackCommand: 'run',
@@ -317,4 +318,21 @@ test('everything after an escape arg is a parameter, even if it has a help optio
   }, ['exec', 'rm', '--help'])
   expect(cmd).toBe('exec')
   expect(params).toStrictEqual(['rm', '--help'])
+})
+
+test('`pnpm install ""` is going to be just `pnpm install`', async () => {
+  const { params, cmd } = await parseCliArgs({
+    ...DEFAULT_OPTS,
+  }, ['install', ''])
+  expect(cmd).toBe('add')
+  // empty string in params will be filtered at: https://github.com/pnpm/pnpm/blob/main/pkg-manager/plugin-commands-installation/src/installDeps.ts#L196
+  expect(params).toStrictEqual([''])
+})
+
+test('should not swallows empty string in params', async () => {
+  const { params, cmd } = await parseCliArgs({
+    ...DEFAULT_OPTS,
+  }, ['run', 'echo', '', 'foo', '', 'bar'])
+  expect(cmd).toBe('run')
+  expect(params).toStrictEqual(['echo', '', 'foo', '', 'bar'])
 })

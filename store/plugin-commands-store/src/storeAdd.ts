@@ -2,9 +2,9 @@ import { PnpmError } from '@pnpm/error'
 import { logger, globalInfo, streamParser } from '@pnpm/logger'
 import { parseWantedDependency } from '@pnpm/parse-wanted-dependency'
 import { pickRegistryForPackage } from '@pnpm/pick-registry-for-package'
-import { StoreController } from '@pnpm/store-controller-types'
-import { Registries } from '@pnpm/types'
-import { ReporterFunction } from './types'
+import { type StoreController } from '@pnpm/store-controller-types'
+import { type SupportedArchitectures, type Registries } from '@pnpm/types'
+import { type ReporterFunction } from './types'
 
 export async function storeAdd (
   fuzzyDeps: string[],
@@ -14,8 +14,9 @@ export async function storeAdd (
     reporter?: ReporterFunction
     storeController: StoreController
     tag?: string
+    supportedArchitectures?: SupportedArchitectures
   }
-) {
+): Promise<void> {
   const reporter = opts?.reporter
   if ((reporter != null) && typeof reporter === 'function') {
     streamParser.on('data', reporter)
@@ -36,8 +37,9 @@ export async function storeAdd (
         preferredVersions: {},
         projectDir: prefix,
         registry: (dep.alias && pickRegistryForPackage(registries, dep.alias)) ?? registries.default,
+        supportedArchitectures: opts.supportedArchitectures,
       })
-      await pkgResponse.files!()
+      await pkgResponse.fetching!()
       globalInfo(`+ ${pkgResponse.body.id}`)
     } catch (e: any) { // eslint-disable-line
       hasFailures = true

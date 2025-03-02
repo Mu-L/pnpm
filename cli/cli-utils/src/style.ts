@@ -24,6 +24,8 @@ export const TABLE_OPTIONS = {
   columns: {},
 }
 
+type BorderKey = keyof typeof TABLE_OPTIONS['border']
+
 for (const [key, value] of Object.entries(TABLE_OPTIONS.border)) {
-  TABLE_OPTIONS.border[key] = chalk.grey(value)
+  TABLE_OPTIONS.border[key as BorderKey] = chalk.grey(value)
 }

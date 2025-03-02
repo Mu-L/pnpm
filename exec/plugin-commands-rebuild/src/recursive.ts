@@ -1,19 +1,20 @@
+import assert from 'assert'
+import util from 'util'
 import {
-  RecursiveSummary,
+  type RecursiveSummary,
   throwOnCommandFail,
 } from '@pnpm/cli-utils'
 import {
-  Config,
+  type Config,
   readLocalConfig,
 } from '@pnpm/config'
-import { arrayOfWorkspacePackagesToMap } from '@pnpm/find-workspace-packages'
 import { logger } from '@pnpm/logger'
 import { sortPackages } from '@pnpm/sort-packages'
-import { createOrConnectStoreController, CreateStoreControllerOptions } from '@pnpm/store-connection-manager'
-import { Project, ProjectManifest } from '@pnpm/types'
+import { createOrConnectStoreController, type CreateStoreControllerOptions } from '@pnpm/store-connection-manager'
+import { type Project, type ProjectManifest, type ProjectRootDir } from '@pnpm/types'
 import mem from 'mem'
 import pLimit from 'p-limit'
-import { rebuildProjects as rebuildAll, RebuildOptions, rebuildSelectedPkgs } from './implementation'
+import { rebuildProjects as rebuildAll, type RebuildOptions, rebuildSelectedPkgs } from './implementation'
 
 type RecursiveRebuildOpts = CreateStoreControllerOptions & Pick<Config,
 | 'hoistPattern'
@@ -22,8 +23,11 @@ type RecursiveRebuildOpts = CreateStoreControllerOptions & Pick<Config,
 | 'ignoreScripts'
 | 'lockfileDir'
 | 'lockfileOnly'
+| 'nodeLinker'
 | 'rawLocalConfig'
 | 'registries'
+| 'rootProjectManifest'
+| 'rootProjectManifestDir'
 | 'sharedWorkspaceLockfile'
 > & {
   pending?: boolean
@@ -35,7 +39,7 @@ export async function recursiveRebuild (
   opts: RecursiveRebuildOpts & {
     ignoredPackages?: Set<string>
   } & Required<Pick<Config, 'selectedProjectsGraph' | 'workspaceDir'>>
-) {
+): Promise<void> {
   if (allProjects.length === 0) {
     // It might make sense to throw an exception in this case
     return
@@ -46,39 +50,34 @@ export async function recursiveRebuild (
   if (pkgs.length === 0) {
     return
   }
-  const manifestsByPath: { [dir: string]: Omit<Project, 'dir'> } = {}
-  for (const { dir, manifest, writeProjectManifest } of pkgs) {
-    manifestsByPath[dir] = { manifest, writeProjectManifest }
+  const manifestsByPath: { [dir: string]: Omit<Project, 'rootDir' | 'rootDirRealPath'> } = {}
+  for (const { rootDir, manifest, writeProjectManifest } of pkgs) {
+    manifestsByPath[rootDir] = { manifest, writeProjectManifest }
   }
 
   const throwOnFail = throwOnCommandFail.bind(null, 'pnpm recursive rebuild')
 
   const chunks = opts.sort !== false
     ? sortPackages(opts.selectedProjectsGraph)
-    : [Object.keys(opts.selectedProjectsGraph).sort()]
+    : [Object.keys(opts.selectedProjectsGraph).sort() as ProjectRootDir[]]
 
   const store = await createOrConnectStoreController(opts)
 
-  const workspacePackages = arrayOfWorkspacePackagesToMap(allProjects)
   const rebuildOpts = Object.assign(opts, {
     ownLifecycleHooksStdio: 'pipe',
     pruneLockfileImporters: ((opts.ignoredPackages == null) || opts.ignoredPackages.size === 0) &&
       pkgs.length === allProjects.length,
     storeController: store.ctrl,
     storeDir: store.dir,
-    workspacePackages,
   }) as RebuildOptions
 
-  const result = {
-    fails: [],
-    passes: 0,
-  } as RecursiveSummary
+  const result: RecursiveSummary = {}
 
   const memReadLocalConfig = mem(readLocalConfig)
 
   async function getImporters () {
-    const importers = [] as Array<{ buildIndex: number, manifest: ProjectManifest, rootDir: string }>
-    await Promise.all(chunks.map(async (prefixes: string[], buildIndex) => {
+    const importers = [] as Array<{ buildIndex: number, manifest: ProjectManifest, rootDir: ProjectRootDir }>
+    await Promise.all(chunks.map(async (prefixes, buildIndex) => {
       if (opts.ignoredPackages != null) {
         prefixes = prefixes.filter((prefix) => !opts.ignoredPackages!.has(prefix))
       }
@@ -113,12 +112,14 @@ export async function recursiveRebuild (
   }
   const limitRebuild = pLimit(opts.workspaceConcurrency ?? 4)
   for (const chunk of chunks) {
-    await Promise.all(chunk.map(async (rootDir: string) =>
+    // eslint-disable-next-line no-await-in-loop
+    await Promise.all(chunk.map(async (rootDir) =>
       limitRebuild(async () => {
         try {
           if (opts.ignoredPackages?.has(rootDir)) {
             return
           }
+          result[rootDir] = { status: 'running' }
           const localConfig = await memReadLocalConfig(rootDir)
           await rebuild(
             [
@@ -139,20 +140,24 @@ export async function recursiveRebuild (
               },
             }
           )
-          result.passes++
-        } catch (err: any) { // eslint-disable-line
-          logger.info(err)
+          result[rootDir].status = 'passed'
+        } catch (err: unknown) {
+          assert(util.types.isNativeError(err))
+          const errWithPrefix = Object.assign(err, {
+            prefix: rootDir,
+          })
+          logger.info(errWithPrefix)
 
           if (!opts.bail) {
-            result.fails.push({
-              error: err,
+            result[rootDir] = {
+              status: 'failure',
+              error: errWithPrefix,
               message: err.message,
               prefix: rootDir,
-            })
+            }
             return
           }
 
-          err['prefix'] = rootDir
           throw err
         }
       })

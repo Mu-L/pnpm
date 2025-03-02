@@ -1,5 +1,5 @@
 import path from 'path'
-import { ContextLog, PackageImportMethodLog } from '@pnpm/core-loggers'
+import { type ContextLog, type PackageImportMethodLog } from '@pnpm/core-loggers'
 import * as Rx from 'rxjs'
 import { map, take } from 'rxjs/operators'
 import normalize from 'normalize-path'
@@ -10,7 +10,7 @@ export function reportContext (
     packageImportMethod: Rx.Observable<PackageImportMethodLog>
   },
   opts: { cwd: string }
-) {
+): Rx.Observable<Rx.Observable<{ msg: string }>> {
   return Rx.combineLatest(
     log$.context.pipe(take(1)),
     log$.packageImportMethod.pipe(take(1))

@@ -21,11 +21,17 @@ const pnpm = JSON.parse(fs.readFileSync(path.join(pnpmDir, 'package.json'), 'utf
 const release = getChangelogEntry(changelog, pnpm.version)
 fs.writeFileSync(path.join(dirname, '../../../RELEASE.md'), release.content)
 
-function getChangelogEntry (changelog: string, version: string) {
+interface ChangelogEntry {
+  content: string
+  highestLevel: number
+}
+
+function getChangelogEntry (changelog: string, version: string): ChangelogEntry {
   const ast = unified().use(remarkParse).parse(changelog)
 
   let highestLevel: number = BumpLevels.dep
 
+  // @ts-expect-error
   const nodes = ast['children'] as any[] // eslint-disable-line @typescript-eslint/no-explicit-any
   let headingStartInfo:
   | {
@@ -62,6 +68,7 @@ function getChangelogEntry (changelog: string, version: string) {
     }
   }
   if (headingStartInfo != null) {
+    // @ts-expect-error
     ast['children'] = (ast['children'] as any).slice( // eslint-disable-line @typescript-eslint/no-explicit-any
       headingStartInfo.index + 1,
       endIndex
@@ -70,84 +77,88 @@ function getChangelogEntry (changelog: string, version: string) {
   return {
     content: `${unified().use(remarkStringify).stringify(ast)}
 
-## Our Gold Sponsors
+## Platinum Sponsors
 
 <table>
   <tbody>
     <tr>
       <td align="center" valign="middle">
-        <a href="https://bit.dev/?utm_source=pnpm&utm_medium=release_notes" target="_blank"><img src="https://pnpm.io/img/users/bit.svg" width="80"></a>
+        <a href="https://bit.dev/?utm_source=pnpm&utm_medium=release_notes" target="_blank"><img src="https://pnpm.io/img/users/bit.svg" width="80" alt="Bit"></a>
       </td>
       <td align="center" valign="middle">
-        <a href="https://nhost.io/?utm_source=pnpm&utm_medium=release_notes" target="_blank">
-          <picture>
-            <source media="(prefers-color-scheme: light)" srcset="https://pnpm.io/img/users/nhost.svg" />
-            <source media="(prefers-color-scheme: dark)" srcset="https://pnpm.io/img/users/nhost_light.svg" />
-            <img src="https://pnpm.io/img/users/nhost.svg" width="180" />
-          </picture>
-        </a>
-      </td>
-    </tr>
-    <tr>
-      <td align="center" valign="middle">
-        <a href="https://novu.co/?utm_source=pnpm&utm_medium=release_notes" target="_blank">
-          <picture>
-            <source media="(prefers-color-scheme: light)" srcset="https://pnpm.io/img/users/novu.svg" />
-            <source media="(prefers-color-scheme: dark)" srcset="https://pnpm.io/img/users/novu_light.svg" />
-            <img src="https://pnpm.io/img/users/novu.svg" width="180" />
-          </picture>
-        </a>
-      </td>
-      <td align="center" valign="middle">
-        <a href="https://prisma.io/?utm_source=pnpm&utm_medium=release_notes" target="_blank">
-          <picture>
-            <source media="(prefers-color-scheme: light)" srcset="https://pnpm.io/img/users/prisma.svg" />
-            <source media="(prefers-color-scheme: dark)" srcset="https://pnpm.io/img/users/prisma_light.svg" />
-            <img src="https://pnpm.io/img/users/prisma.svg" width="180" />
-          </picture>
-        </a>
-      </td>
-    </tr>
-    <tr>
-      <td align="center" valign="middle">
-        <a href="https://www.flightcontrol.dev/?ref=pnpm" target="_blank"><img src="https://pnpm.io/img/users/flightcontrol.png" width="240"></a>
+        <a href="https://sanity.io/?utm_source=pnpm&utm_medium=release_notes" target="_blank"><img src="https://pnpm.io/img/users/sanity.svg" width="180" alt="Bit"></a>
       </td>
     </tr>
   </tbody>
 </table>
 
-## Our Silver Sponsors
+## Gold Sponsors
 
 <table>
   <tbody>
     <tr>
       <td align="center" valign="middle">
-        <a href="https://leniolabs.com/?utm_source=pnpm&utm_medium=release_notes" target="_blank">
-          <img src="https://pnpm.io/img/users/leniolabs.jpg" width="80">
+        <a href="https://discord.com/?utm_source=pnpm&utm_medium=release_notes" target="_blank">
+          <picture>
+            <source media="(prefers-color-scheme: light)" srcset="https://pnpm.io/img/users/discord.svg" />
+            <source media="(prefers-color-scheme: dark)" srcset="https://pnpm.io/img/users/discord_light.svg" />
+            <img src="https://pnpm.io/img/users/discord.svg" width="220" alt="Discord" />
+          </picture>
         </a>
       </td>
       <td align="center" valign="middle">
-        <a href="https://vercel.com/?utm_source=pnpm&utm_medium=release_notes" target="_blank">
+        <a href="https://uscreen.de/?utm_source=pnpm&utm_medium=release_notes" target="_blank">
           <picture>
-            <source media="(prefers-color-scheme: light)" srcset="https://pnpm.io/img/users/vercel.svg" />
-            <source media="(prefers-color-scheme: dark)" srcset="https://pnpm.io/img/users/vercel_light.svg" />
-            <img src="https://pnpm.io/img/users/vercel.svg" width="180" />
+            <source media="(prefers-color-scheme: light)" srcset="https://pnpm.io/img/users/uscreen.svg" />
+            <source media="(prefers-color-scheme: dark)" srcset="https://pnpm.io/img/users/uscreen_light.svg" />
+            <img src="https://pnpm.io/img/users/uscreen.svg" width="180" alt="u|screen" />
           </picture>
         </a>
       </td>
     </tr>
     <tr>
       <td align="center" valign="middle">
-        <a href="https://www.takeshape.io/?utm_source=pnpm&utm_medium=release_notes" target="_blank">
-          <img src="https://pnpm.io/img/users/takeshape.svg" width="280">
+        <a href="https://www.jetbrains.com/?utm_source=pnpm&utm_medium=release_notes" target="_blank">
+          <picture>
+            <source media="(prefers-color-scheme: light)" srcset="https://pnpm.io/img/users/jetbrains.svg" />
+            <source media="(prefers-color-scheme: dark)" srcset="https://pnpm.io/img/users/jetbrains.svg" />
+            <img src="https://pnpm.io/img/users/jetbrains.svg" width="180" alt="JetBrains" />
+          </picture>
         </a>
       </td>
       <td align="center" valign="middle">
-        <a href="https://doppler.com/?utm_source=pnpm&utm_medium=release_notes" target="_blank">
+        <a href="https://nx.dev/?utm_source=pnpm&utm_medium=release_notes" target="_blank">
           <picture>
-            <source media="(prefers-color-scheme: light)" srcset="https://pnpm.io/img/users/doppler.svg" />
-            <source media="(prefers-color-scheme: dark)" srcset="https://pnpm.io/img/users/doppler_light.svg" />
-            <img src="https://pnpm.io/img/users/doppler.svg" width="280" />
+            <source media="(prefers-color-scheme: light)" srcset="https://pnpm.io/img/users/nx.svg" />
+            <source media="(prefers-color-scheme: dark)" srcset="https://pnpm.io/img/users/nx_light.svg" />
+            <img src="https://pnpm.io/img/users/nx.svg" width="120" alt="Nx" />
+          </picture>
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" valign="middle">
+        <a href="https://coderabbit.ai/?utm_source=pnpm&utm_medium=release_notes" target="_blank">
+          <picture>
+            <source media="(prefers-color-scheme: light)" srcset="https://pnpm.io/img/users/coderabbit.svg" />
+            <source media="(prefers-color-scheme: dark)" srcset="https://pnpm.io/img/users/coderabbit_light.svg" />
+            <img src="https://pnpm.io/img/users/coderabbit.svg" width="220" alt="CodeRabbit" />
+          </picture>
+        </a>
+      </td>
+      <td align="center" valign="middle">
+        <a href="https://route4me.com/?utm_source=pnpm&utm_medium=release_notes" target="_blank">
+          <img src="https://pnpm.io/img/users/route4me.svg" width="220" alt="Route4Me" />
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" valign="middle">
+        <a href="https://workleap.com/?utm_source=pnpm&utm_medium=release_notes" target="_blank">
+          <picture>
+            <source media="(prefers-color-scheme: light)" srcset="https://pnpm.io/img/users/workleap.svg" />
+            <source media="(prefers-color-scheme: dark)" srcset="https://pnpm.io/img/users/workleap_light.svg" />
+            <img src="https://pnpm.io/img/users/workleap.svg" width="190" alt="Workleap" />
           </picture>
         </a>
       </td>

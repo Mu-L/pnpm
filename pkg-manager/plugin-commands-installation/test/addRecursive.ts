@@ -1,9 +1,10 @@
 import path from 'path'
-import { readProjects } from '@pnpm/filter-workspace-packages'
-import { Lockfile } from '@pnpm/lockfile-types'
+import { filterPackagesFromDir } from '@pnpm/workspace.filter-packages-from-dir'
+import { type LockfileObject } from '@pnpm/lockfile.types'
 import { add } from '@pnpm/plugin-commands-installation'
 import { preparePackages } from '@pnpm/prepare'
-import readYamlFile from 'read-yaml-file'
+import { type ProjectId } from '@pnpm/types'
+import { sync as readYamlFile } from 'read-yaml-file'
 import { DEFAULT_OPTS } from './utils'
 
 test('recursive add --save-dev, --save-peer on workspace with multiple lockfiles', async () => {
@@ -18,7 +19,7 @@ test('recursive add --save-dev, --save-peer on workspace with multiple lockfiles
     },
   ])
 
-  const { allProjects, selectedProjectsGraph } = await readProjects(process.cwd(), [])
+  const { allProjects, selectedProjectsGraph } = await filterPackagesFromDir(process.cwd(), [])
 
   await add.handler({
     ...DEFAULT_OPTS,
@@ -52,9 +53,18 @@ test('recursive add --save-dev, --save-peer on workspace with multiple lockfiles
       { 'is-negative': '1.0.0' }
     )
     expect(
-      (await projects['project-1'].readLockfile()).devDependencies
+      projects['project-1'].readLockfile().importers['.'].devDependencies
     ).toStrictEqual(
-      { 'is-positive': '1.0.0', 'is-negative': '1.0.0' }
+      {
+        'is-positive': {
+          specifier: '1.0.0',
+          version: '1.0.0',
+        },
+        'is-negative': {
+          specifier: '1.0.0',
+          version: '1.0.0',
+        },
+      }
     )
   }
 
@@ -71,9 +81,18 @@ test('recursive add --save-dev, --save-peer on workspace with multiple lockfiles
       { 'is-negative': '1.0.0' }
     )
     expect(
-      (await projects['project-2'].readLockfile()).devDependencies
+      projects['project-2'].readLockfile().importers['.'].devDependencies
     ).toStrictEqual(
-      { 'is-positive': '1.0.0', 'is-negative': '1.0.0' }
+      {
+        'is-positive': {
+          specifier: '1.0.0',
+          version: '1.0.0',
+        },
+        'is-negative': {
+          specifier: '1.0.0',
+          version: '1.0.0',
+        },
+      }
     )
   }
 })
@@ -90,7 +109,7 @@ test('recursive add --save-dev, --save-peer on workspace with single lockfile', 
     },
   ])
 
-  const { allProjects, selectedProjectsGraph } = await readProjects(process.cwd(), [])
+  const { allProjects, selectedProjectsGraph } = await filterPackagesFromDir(process.cwd(), [])
 
   await add.handler({
     ...DEFAULT_OPTS,
@@ -141,10 +160,19 @@ test('recursive add --save-dev, --save-peer on workspace with single lockfile', 
     )
   }
 
-  const lockfile = await readYamlFile<Lockfile>('./pnpm-lock.yaml')
+  const lockfile = readYamlFile<LockfileObject>('./pnpm-lock.yaml')
   expect(
-    lockfile.importers['project-1'].devDependencies
+    lockfile.importers['project-1' as ProjectId].devDependencies
   ).toStrictEqual(
-    { 'is-positive': '1.0.0', 'is-negative': '1.0.0' }
+    {
+      'is-positive': {
+        specifier: '1.0.0',
+        version: '1.0.0',
+      },
+      'is-negative': {
+        specifier: '1.0.0',
+        version: '1.0.0',
+      },
+    }
   )
 })

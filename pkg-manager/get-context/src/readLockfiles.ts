@@ -4,32 +4,37 @@ import {
 } from '@pnpm/constants'
 import {
   createLockfileObject,
-  existsWantedLockfile,
-  Lockfile,
+  existsNonEmptyWantedLockfile,
+  isEmptyLockfile,
+  type LockfileObject,
   readCurrentLockfile,
   readWantedLockfile,
   readWantedLockfileAndAutofixConflicts,
-} from '@pnpm/lockfile-file'
+} from '@pnpm/lockfile.fs'
 import { logger } from '@pnpm/logger'
-import isCI from 'is-ci'
+import { type ProjectId, type ProjectRootDir } from '@pnpm/types'
+import { isCI } from 'ci-info'
 import clone from 'ramda/src/clone'
 import equals from 'ramda/src/equals'
 
 export interface PnpmContext {
-  currentLockfile: Lockfile
+  currentLockfile: LockfileObject
   existsCurrentLockfile: boolean
   existsWantedLockfile: boolean
-  wantedLockfile: Lockfile
+  existsNonEmptyWantedLockfile: boolean
+  wantedLockfile: LockfileObject
 }
 
 export async function readLockfiles (
   opts: {
+    autoInstallPeers: boolean
+    excludeLinksFromLockfile: boolean
+    peersSuffixMaxLength: number
     force: boolean
-    forceSharedLockfile: boolean
     frozenLockfile: boolean
     projects: Array<{
-      id: string
-      rootDir: string
+      id: ProjectId
+      rootDir: ProjectRootDir
     }>
     lockfileDir: string
     registry: string
@@ -39,22 +44,25 @@ export async function readLockfiles (
     virtualStoreDir: string
   }
 ): Promise<{
-    currentLockfile: Lockfile
+    currentLockfile: LockfileObject
     currentLockfileIsUpToDate: boolean
     existsCurrentLockfile: boolean
     existsWantedLockfile: boolean
-    wantedLockfile: Lockfile
+    existsNonEmptyWantedLockfile: boolean
+    wantedLockfile: LockfileObject
+    wantedLockfileIsModified: boolean
     lockfileHadConflicts: boolean
   }> {
+  const wantedLockfileVersion = LOCKFILE_VERSION
   // ignore `pnpm-lock.yaml` on CI servers
   // a latest pnpm should not break all the builds
   const lockfileOpts = {
     ignoreIncompatible: opts.force || isCI,
-    wantedVersion: LOCKFILE_VERSION,
+    wantedVersions: [LOCKFILE_VERSION],
     useGitBranchLockfile: opts.useGitBranchLockfile,
     mergeGitBranchLockfiles: opts.mergeGitBranchLockfiles,
   }
-  const fileReads = [] as Array<Promise<Lockfile | undefined | null>>
+  const fileReads = [] as Array<Promise<LockfileObject | undefined | null>>
   let lockfileHadConflicts: boolean = false
   if (opts.useLockfile) {
     if (!opts.frozenLockfile) {
@@ -77,7 +85,7 @@ export async function readLockfiles (
       fileReads.push(readWantedLockfile(opts.lockfileDir, lockfileOpts))
     }
   } else {
-    if (await existsWantedLockfile(opts.lockfileDir, lockfileOpts)) {
+    if (await existsNonEmptyWantedLockfile(opts.lockfileDir, lockfileOpts)) {
       logger.warn({
         message: `A ${WANTED_LOCKFILE} file exists. The current configuration prohibits to read or write a lockfile`,
         prefix: opts.lockfileDir,
@@ -98,8 +106,13 @@ export async function readLockfiles (
       }
     })()
   )
-  const files = await Promise.all<Lockfile | null | undefined>(fileReads)
-  const sopts = { lockfileVersion: LOCKFILE_VERSION }
+  const files = await Promise.all<LockfileObject | null | undefined>(fileReads)
+  const sopts = {
+    autoInstallPeers: opts.autoInstallPeers,
+    excludeLinksFromLockfile: opts.excludeLinksFromLockfile,
+    lockfileVersion: wantedLockfileVersion,
+    peersSuffixMaxLength: opts.peersSuffixMaxLength,
+  }
   const importerIds = opts.projects.map((importer) => importer.id)
   const currentLockfile = files[1] ?? createLockfileObject(importerIds, sopts)
   for (const importerId of importerIds) {
@@ -112,19 +125,24 @@ export async function readLockfiles (
   const wantedLockfile = files[0] ??
     (currentLockfile && clone(currentLockfile)) ??
     createLockfileObject(importerIds, sopts)
+  let wantedLockfileIsModified = false
   for (const importerId of importerIds) {
     if (!wantedLockfile.importers[importerId]) {
+      wantedLockfileIsModified = true
       wantedLockfile.importers[importerId] = {
         specifiers: {},
       }
     }
   }
+  const existsWantedLockfile = files[0] != null
   return {
     currentLockfile,
     currentLockfileIsUpToDate: equals(currentLockfile, wantedLockfile),
     existsCurrentLockfile: files[1] != null,
-    existsWantedLockfile: files[0] != null,
+    existsWantedLockfile,
+    existsNonEmptyWantedLockfile: existsWantedLockfile && !isEmptyLockfile(wantedLockfile),
     wantedLockfile,
+    wantedLockfileIsModified,
     lockfileHadConflicts,
   }
 }

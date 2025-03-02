@@ -1,4 +1,6 @@
-import { DependencyManifest } from '@pnpm/types'
+import { type ProjectRootDir, type DependencyManifest, type PkgResolutionId } from '@pnpm/types'
+
+export { type PkgResolutionId }
 
 /**
  * tarball hosted remotely
@@ -7,10 +9,7 @@ export interface TarballResolution {
   type?: undefined
   tarball: string
   integrity?: string
-  // needed in some cases to get the auth token
-  // sometimes the tarball URL is under a different path
-  // and the auth token is specified for the registry only
-  registry?: string
+  path?: string
 }
 
 /**
@@ -24,6 +23,7 @@ export interface DirectoryResolution {
 export interface GitResolution {
   commit: string
   repo: string
+  path?: string
   type: 'git'
 }
 
@@ -34,7 +34,7 @@ export type Resolution =
   ({ type: string } & object)
 
 export interface ResolveResult {
-  id: string
+  id: PkgResolutionId
   latest?: string
   publishedAt?: string
   manifest?: DependencyManifest
@@ -43,17 +43,28 @@ export interface ResolveResult {
   resolvedVia: 'npm-registry' | 'git-repository' | 'local-filesystem' | 'url' | string
 }
 
-export interface WorkspacePackages {
-  [name: string]: {
-    [version: string]: {
-      dir: string
-      manifest: DependencyManifest
-    }
-  }
+export interface WorkspacePackage {
+  rootDir: ProjectRootDir
+  manifest: DependencyManifest
 }
 
+export type WorkspacePackagesByVersion = Map<string, WorkspacePackage>
+
+export type WorkspacePackages = Map<string, WorkspacePackagesByVersion>
+
+// This weight is set for selectors that are used on direct dependencies.
+// It is important to give a bigger weight to direct dependencies.
+export const DIRECT_DEP_SELECTOR_WEIGHT = 1000
+
+export type VersionSelectorType = 'version' | 'range' | 'tag'
+
 export interface VersionSelectors {
-  [selector: string]: 'version' | 'range' | 'tag'
+  [selector: string]: VersionSelectorWithWeight | VersionSelectorType
+}
+
+export interface VersionSelectorWithWeight {
+  selectorType: VersionSelectorType
+  weight: number
 }
 
 export interface PreferredVersions {
@@ -71,6 +82,8 @@ export interface ResolveOptions {
   preferWorkspacePackages?: boolean
   registry: string
   workspacePackages?: WorkspacePackages
+  updateToLatest?: boolean
+  injectWorkspacePackages?: boolean
 }
 
 export type WantedDependency = {

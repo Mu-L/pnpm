@@ -1,58 +1,48 @@
 import fs from 'fs'
 import path from 'path'
-import { assertProject, Modules, Project } from '@pnpm/assert-project'
-import { ProjectManifest } from '@pnpm/types'
-import uniqueString from 'unique-string'
+import { assertProject, type Modules, type Project } from '@pnpm/assert-project'
+import { type ProjectManifest } from '@pnpm/types'
+import { tempDir } from '@pnpm/prepare-temp-dir'
 import { sync as writeJson5File } from 'write-json5-file'
 import { sync as writeYamlFile } from 'write-yaml-file'
 import writePkg from 'write-pkg'
 
-export { Modules, Project }
+export type { Modules, Project }
 export type ManifestFormat = 'JSON' | 'JSON5' | 'YAML'
+export { tempDir }
 
-// The testing folder should be outside of the project to avoid lookup in the project's node_modules
-// Not using the OS temp directory due to issues on Windows CI.
-const tmpPath = path.join(__dirname, `../../../../pnpm_tmp/${uniqueString()}`)
-
-let dirNumber = 0
-
-export function tempDir (chdir: boolean = true) {
-  dirNumber++
-  const dirname = dirNumber.toString()
-  const tmpDir = path.join(tmpPath, dirname)
-  fs.mkdirSync(tmpDir, { recursive: true })
-
-  if (chdir) process.chdir(tmpDir)
-
-  return tmpDir
+interface LocationAndManifest {
+  location: string
+  package: ProjectManifest
 }
 
 export function preparePackages (
-  pkgs: Array<{ location: string, package: ProjectManifest } | ProjectManifest>,
+  pkgs: Array<LocationAndManifest | ProjectManifest>,
   opts?: {
     manifestFormat?: ManifestFormat
     tempDir?: string
   }
-) {
+): Record<string, Project> {
   const pkgTmpPath = opts?.tempDir ?? path.join(tempDir(), 'project')
   const manifestFormat = opts?.manifestFormat
 
   const dirname = path.dirname(pkgTmpPath)
-  const result: { [name: string]: Project } = {}
+  const result: Record<string, Project> = {}
+  const cwd = process.cwd()
   for (const aPkg of pkgs) {
-    if (typeof aPkg['location'] === 'string') {
-      result[aPkg['package']['name']] = prepare(aPkg['package'], {
+    if (typeof (aPkg as LocationAndManifest).location === 'string') {
+      result[(aPkg as LocationAndManifest).package.name!] = prepare((aPkg as LocationAndManifest).package, {
         manifestFormat,
-        tempDir: path.join(dirname, aPkg['location']),
+        tempDir: path.join(dirname, (aPkg as LocationAndManifest).location),
       })
     } else {
-      result[aPkg['name']] = prepare(aPkg as ProjectManifest, {
+      result[(aPkg as ProjectManifest).name!] = prepare(aPkg as ProjectManifest, {
         manifestFormat,
-        tempDir: path.join(dirname, aPkg['name']),
+        tempDir: path.join(dirname, (aPkg as ProjectManifest).name!),
       })
     }
   }
-  process.chdir('..')
+  process.chdir(cwd)
   return result
 }
 
@@ -62,7 +52,7 @@ export function prepare (
     manifestFormat?: ManifestFormat
     tempDir?: string
   }
-) {
+): Project {
   const dir = opts?.tempDir ?? path.join(tempDir(), 'project')
 
   fs.mkdirSync(dir, { recursive: true })
@@ -82,7 +72,7 @@ export function prepare (
   return assertProject(dir)
 }
 
-export function prepareEmpty () {
+export function prepareEmpty (): Project {
   const pkgTmpPath = path.join(tempDir(), 'project')
 
   fs.mkdirSync(pkgTmpPath, { recursive: true })

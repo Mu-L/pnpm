@@ -1,4 +1,4 @@
-import { ScopeLog } from '@pnpm/core-loggers'
+import { type ScopeLog } from '@pnpm/core-loggers'
 import * as Rx from 'rxjs'
 import { map, take } from 'rxjs/operators'
 
@@ -20,7 +20,7 @@ export function reportScope (
     isRecursive: boolean
     cmd: string
   }
-) {
+): Rx.Observable<Rx.Observable<{ msg: string }>> {
   if (!COMMANDS_THAT_REPORT_SCOPE.has(opts.cmd)) {
     return Rx.NEVER
   }
