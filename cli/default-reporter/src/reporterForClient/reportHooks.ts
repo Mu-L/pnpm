@@ -1,4 +1,4 @@
-import { HookLog } from '@pnpm/core-loggers'
+import { type HookLog } from '@pnpm/core-loggers'
 import * as Rx from 'rxjs'
 import { map } from 'rxjs/operators'
 import chalk from 'chalk'
@@ -10,7 +10,7 @@ export function reportHooks (
     cwd: string
     isRecursive: boolean
   }
-) {
+): Rx.Observable<Rx.Observable<{ msg: string }>> {
   return hook$.pipe(
     map((log) => Rx.of({
       msg: autozoom(

@@ -2,16 +2,18 @@ import os from 'os'
 import path from 'path'
 import { PnpmError } from '@pnpm/error'
 import normalize from 'normalize-path'
+import { type PkgResolutionId } from '@pnpm/resolver-base'
 
+// @ts-expect-error
 const isWindows = process.platform === 'win32' || global['FAKE_WINDOWS']
-const isFilespec = isWindows ? /^(?:[.]|~[/]|[/\\]|[a-zA-Z]:)/ : /^(?:[.]|~[/]|[/]|[a-zA-Z]:)/
-const isFilename = /[.](?:tgz|tar.gz|tar)$/i
-const isAbsolutePath = /^[/]|^[A-Za-z]:/
+const isFilespec = isWindows ? /^(?:[./\\]|~\/|[a-z]:)/i : /^(?:[./]|~\/|[a-z]:)/i
+const isFilename = /\.(?:tgz|tar.gz|tar)$/i
+const isAbsolutePath = /^\/|^[A-Z]:/i
 
 export interface LocalPackageSpec {
   dependencyPath: string
   fetchSpec: string
-  id: string
+  id: PkgResolutionId
   type: 'directory' | 'file'
   normalizedPref: string
 }
@@ -42,9 +44,11 @@ export function parsePref (
   if (wd.pref.startsWith('path:')) {
     const err = new PnpmError('PATH_IS_UNSUPPORTED_PROTOCOL', 'Local dependencies via `path:` protocol are not supported. ' +
       'Use the `link:` protocol for folder dependencies and `file:` for local tarballs')
+    // @ts-expect-error
     err['pref'] = wd.pref
+    // @ts-expect-error
     err['protocol'] = 'path:'
-    /* eslint-enable @typescript-eslint/dot-notation */
+
     throw err
   }
   return null
@@ -57,8 +61,8 @@ function fromLocal (
   type: 'file' | 'directory'
 ): LocalPackageSpec {
   const spec = pref.replace(/\\/g, '/')
-    .replace(/^(file|link|workspace):[/]*([A-Za-z]:)/, '$2') // drive name paths on windows
-    .replace(/^(file|link|workspace):(?:[/]*([~./]))?/, '$2')
+    .replace(/^(?:file|link|workspace):\/*([A-Z]:)/i, '$1') // drive name paths on windows
+    .replace(/^(?:file|link|workspace):(?:\/*([~./]))?/, '$1')
 
   let protocol!: string
   if (pref.startsWith('file:')) {
@@ -70,7 +74,7 @@ function fromLocal (
   }
   let fetchSpec!: string
   let normalizedPref!: string
-  if (/^~[/]/.test(spec)) {
+  if (/^~\//.test(spec)) {
     // this is needed for windows and for file:~/foo/bar
     fetchSpec = resolvePath(os.homedir(), spec.slice(2))
     normalizedPref = `${protocol}${spec}`
@@ -87,9 +91,11 @@ function fromLocal (
   const dependencyPath = injected
     ? normalize(path.relative(lockfileDir, fetchSpec))
     : normalize(path.resolve(fetchSpec))
-  const id = !injected && (type === 'directory' || projectDir === lockfileDir)
-    ? `${protocol}${normalize(path.relative(projectDir, fetchSpec))}`
-    : `${protocol}${normalize(path.relative(lockfileDir, fetchSpec))}`
+  const id = (
+    !injected && (type === 'directory' || projectDir === lockfileDir)
+      ? `${protocol}${normalize(path.relative(projectDir, fetchSpec))}`
+      : `${protocol}${normalize(path.relative(lockfileDir, fetchSpec))}`
+  ) as PkgResolutionId
 
   return {
     dependencyPath,
@@ -100,13 +106,13 @@ function fromLocal (
   }
 }
 
-function resolvePath (where: string, spec: string) {
+function resolvePath (where: string, spec: string): string {
   if (isAbsolutePath.test(spec)) return spec
   return path.resolve(where, spec)
 }
 
-function isAbsolute (dir: string) {
+function isAbsolute (dir: string): boolean {
   if (dir[0] === '/') return true
-  if (/^[A-Za-z]:/.test(dir)) return true
+  if (/^[A-Z]:/i.test(dir)) return true
   return false
 }

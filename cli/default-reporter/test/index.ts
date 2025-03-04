@@ -1,6 +1,6 @@
 /// <reference path="../../../__typings__/index.d.ts"/>
 import path from 'path'
-import { Config } from '@pnpm/config'
+import { type Config } from '@pnpm/config'
 import {
   deprecationLogger,
   hookLogger,
@@ -35,7 +35,7 @@ const h1 = chalk.cyanBright
 
 const EOL = '\n'
 
-test.only('prints summary (of current package only)', (done) => {
+test('prints summary (of current package only)', (done) => {
   const prefix = '/home/jane/project'
   const output$ = toOutput$({
     context: {
@@ -225,6 +225,79 @@ ${ADD} qar ${versionColor('2.0.0')}
 
 ${h1('node_modules:')}
 ${ADD} is-linked2 ${chalk.grey(`<- ${path.relative(prefix, '/src/is-linked2')}`)}
+`)
+    },
+  })
+})
+
+test('prints summary without the filtered out entries', (done) => {
+  const prefix = '/home/jane/project'
+  const output$ = toOutput$({
+    context: {
+      argv: ['install'],
+      config: {
+        dir: prefix,
+      } as Config,
+    },
+    streamParser: createStreamParser(),
+    filterPkgsDiff: (diff) => diff.name !== 'bar',
+  })
+
+  rootLogger.debug({
+    added: {
+      dependencyType: 'prod',
+      id: 'registry.npmjs.org/foo/1.0.0',
+      latest: '2.0.0',
+      name: 'foo',
+      realName: 'foo',
+      version: '1.0.0',
+    },
+    prefix,
+  })
+  rootLogger.debug({
+    added: {
+      dependencyType: 'prod',
+      id: 'registry.npmjs.org/bar/2.0.0',
+      latest: '1.0.0', // this won't be printed in summary because latest is less than current version
+      name: 'bar',
+      realName: 'bar',
+      version: '2.0.0',
+    },
+    prefix,
+  })
+  rootLogger.debug({
+    added: {
+      dependencyType: 'dev',
+      id: 'registry.npmjs.org/qar/2.0.0',
+      latest: '1.0.0', // this won't be printed in summary because latest is less than current version
+      name: 'qar',
+      realName: 'qar',
+      version: '2.0.0',
+    },
+    prefix,
+  })
+  packageManifestLogger.debug({
+    prefix,
+    updated: {
+      dependencies: {
+        'is-negative': '^1.0.0',
+      },
+      devDependencies: {
+        'is-13': '^1.0.0',
+      },
+    },
+  })
+  summaryLogger.debug({ prefix })
+
+  expect.assertions(1)
+
+  output$.pipe(take(1), map(normalizeNewline)).subscribe({
+    complete: () => done(),
+    error: done,
+    next: output => {
+      expect(output).toBe(EOL + `\
+${h1('dependencies:')}
+${ADD} foo ${versionColor('1.0.0')} ${versionColor('(2.0.0 is available)')}
 `)
     },
   })
@@ -531,7 +604,7 @@ ${ADD} bar ${versionColor('2.0.0')}
 
 ${h1('optionalDependencies:')} skipped
 
-${h1('devDependencies:')} skipped because NODE_ENV is set to production
+${h1('devDependencies:')} skipped
 `)
     },
   })
@@ -571,34 +644,36 @@ ${formatError('ERROR', 'f failed')}`)
     },
   })
 
-  const err = new PnpmError('RECURSIVE_FAIL', '...')
-  err['fails'] = [
-    {
-      message: 'a failed',
-      prefix: '/a',
-    },
-    {
-      message: 'b failed',
-      prefix: '/b',
-    },
-    {
-      message: 'c failed',
-      prefix: '/c',
-    },
-    {
-      message: 'd failed',
-      prefix: '/d',
-    },
-    {
-      message: 'e failed',
-      prefix: '/e',
-    },
-    {
-      message: 'f failed',
-      prefix: '/f',
-    },
-  ]
-  err['passes'] = 7
+  const err = Object.assign(new PnpmError('RECURSIVE_FAIL', '...'), {
+    failures: [
+      {
+        message: 'a failed',
+        prefix: '/a',
+      },
+      {
+        message: 'b failed',
+        prefix: '/b',
+      },
+      {
+        message: 'c failed',
+        prefix: '/c',
+      },
+      {
+        message: 'd failed',
+        prefix: '/d',
+      },
+      {
+        message: 'e failed',
+        prefix: '/e',
+      },
+      {
+        message: 'f failed',
+        prefix: '/f',
+      },
+    ],
+    passes: 7,
+  })
+
   logger.error(err, err)
 })
 
@@ -853,10 +928,12 @@ test('prints added/removed stats and warnings during recursive installation', (d
     prefix: '/home/jane/repo/dir/pkg-2',
   })
   statsLogger.debug({ removed: 0, prefix: '/home/jane/repo/dir/pkg-2' })
+  // cspell:disable
   statsLogger.debug({ removed: 0, prefix: '/home/jane/repo/loooooooooooooooooooooooooooooooooong/pkg-3' })
   statsLogger.debug({ added: 1, prefix: '/home/jane/repo/loooooooooooooooooooooooooooooooooong/pkg-3' })
   statsLogger.debug({ removed: 1, prefix: '/home/jane/repo/loooooooooooooooooooooooooooooooooong-pkg-4' })
   statsLogger.debug({ added: 0, prefix: '/home/jane/repo/loooooooooooooooooooooooooooooooooong-pkg-4' })
+  // cspell:enable
   deprecationLogger.debug({
     deprecated: 'This package was deprecated because bla bla bla',
     depth: 0,
@@ -872,6 +949,7 @@ test('prints added/removed stats and warnings during recursive installation', (d
     complete: () => done(),
     error: done,
     next: output => {
+      // cspell:disable
       expect(output).toBe(`\
 pkg-5                                    | ${formatWarn('Some issue')}
 .                                        | ${formatWarn('Some other issue')}
@@ -882,6 +960,7 @@ dir/pkg-2                                |   ${chalk.green('+2')} ${ADD}
 .../pkg-3                                |   ${chalk.green('+1')} ${ADD}
 ...ooooooooooooooooooooooooooooong-pkg-4 |   ${chalk.red('-1')} ${SUB}
 .                                        | ${formatWarn(`${DEPRECATED} foo@1.0.0`)}`)
+      // cspell:enable
     },
   })
 })

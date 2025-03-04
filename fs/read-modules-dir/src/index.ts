@@ -4,11 +4,11 @@ import gracefulFs from 'graceful-fs'
 
 const readdir = util.promisify(gracefulFs.readdir)
 
-export async function readModulesDir (modulesDir: string) {
+export async function readModulesDir (modulesDir: string): Promise<string[] | null> {
   try {
     return await _readModulesDir(modulesDir)
-  } catch (err: any) { // eslint-disable-line
-    if (err['code'] === 'ENOENT') return null
+  } catch (err: unknown) {
+    if (util.types.isNativeError(err) && 'code' in err && err.code === 'ENOENT') return null
     throw err
   }
 }
@@ -16,22 +16,19 @@ export async function readModulesDir (modulesDir: string) {
 async function _readModulesDir (
   modulesDir: string,
   scope?: string
-) {
-  let pkgNames: string[] = []
+): Promise<string[]> {
+  const pkgNames: string[] = []
   const parentDir = scope ? path.join(modulesDir, scope) : modulesDir
-  for (const dir of await readdir(parentDir, { withFileTypes: true })) {
-    if (dir.isFile() || dir.name[0] === '.') continue
+  await Promise.all((await readdir(parentDir, { withFileTypes: true })).map(async (dir) => {
+    if (dir.isFile() || dir.name[0] === '.') return
 
     if (!scope && dir.name[0] === '@') {
-      pkgNames = [
-        ...pkgNames,
-        ...await _readModulesDir(modulesDir, dir.name),
-      ]
-      continue
+      pkgNames.push(...await _readModulesDir(modulesDir, dir.name))
+      return
     }
 
     const pkgName = scope ? `${scope}/${dir.name as string}` : dir.name
     pkgNames.push(pkgName)
-  }
+  }))
   return pkgNames
 }

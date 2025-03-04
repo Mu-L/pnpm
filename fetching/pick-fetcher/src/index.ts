@@ -1,7 +1,7 @@
 import type { Resolution } from '@pnpm/resolver-base'
-import type { Fetchers } from '@pnpm/fetcher-base'
+import type { Fetchers, FetchFunction, DirectoryFetcher, GitFetcher } from '@pnpm/fetcher-base'
 
-export function pickFetcher (fetcherByHostingType: Partial<Fetchers>, resolution: Resolution) {
+export function pickFetcher (fetcherByHostingType: Partial<Fetchers>, resolution: Resolution): FetchFunction | DirectoryFetcher | GitFetcher {
   let fetcherType = resolution.type
 
   if (resolution.type == null) {
@@ -14,7 +14,7 @@ export function pickFetcher (fetcherByHostingType: Partial<Fetchers>, resolution
     }
   }
 
-  const fetch = fetcherByHostingType[fetcherType!]
+  const fetch = fetcherByHostingType[fetcherType! as keyof Fetchers]
 
   if (!fetch) {
     throw new Error(`Fetching for dependency type "${resolution.type ?? 'undefined'}" is not supported`)
@@ -23,7 +23,7 @@ export function pickFetcher (fetcherByHostingType: Partial<Fetchers>, resolution
   return fetch
 }
 
-function isGitHostedPkgUrl (url: string) {
+export function isGitHostedPkgUrl (url: string): boolean {
   return (
     url.startsWith('https://codeload.github.com/') ||
     url.startsWith('https://bitbucket.org/') ||

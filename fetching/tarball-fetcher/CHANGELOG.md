@@ -1,5 +1,596 @@
 # @pnpm/tarball-fetcher
 
+## 1000.0.7
+
+### Patch Changes
+
+- @pnpm/prepare-package@1000.0.7
+- @pnpm/fetcher-base@1000.0.4
+- @pnpm/core-loggers@1000.1.3
+- @pnpm/worker@1000.0.6
+
+## 1000.0.6
+
+### Patch Changes
+
+- @pnpm/prepare-package@1000.0.6
+
+## 1000.0.5
+
+### Patch Changes
+
+- @pnpm/error@1000.0.2
+- @pnpm/prepare-package@1000.0.5
+- @pnpm/fetcher-base@1000.0.3
+- @pnpm/core-loggers@1000.1.2
+- @pnpm/worker@1000.0.5
+
+## 1000.0.4
+
+### Patch Changes
+
+- @pnpm/prepare-package@1000.0.4
+- @pnpm/worker@1000.0.4
+
+## 1000.0.3
+
+### Patch Changes
+
+- @pnpm/prepare-package@1000.0.3
+- @pnpm/fetcher-base@1000.0.2
+- @pnpm/core-loggers@1000.1.1
+- @pnpm/worker@1000.0.3
+
+## 1000.0.2
+
+### Patch Changes
+
+- Updated dependencies [516c4b3]
+- Updated dependencies [7272992]
+  - @pnpm/core-loggers@1000.1.0
+  - @pnpm/worker@1000.0.2
+  - @pnpm/prepare-package@1000.0.2
+
+## 1000.0.1
+
+### Patch Changes
+
+- Updated dependencies [b0f3c71]
+  - @pnpm/fetching-types@1000.1.0
+  - @pnpm/error@1000.0.1
+  - @pnpm/fetcher-base@1000.0.1
+  - @pnpm/prepare-package@1000.0.1
+  - @pnpm/worker@1000.0.1
+
+## 20.0.0
+
+### Patch Changes
+
+- Updated dependencies [099e6af]
+  - @pnpm/worker@2.0.0
+  - @pnpm/error@6.0.3
+  - @pnpm/fetcher-base@16.0.7
+  - @pnpm/prepare-package@6.0.15
+
+## 19.0.16
+
+### Patch Changes
+
+- Updated dependencies [222d10a]
+  - @pnpm/worker@1.0.13
+  - @pnpm/prepare-package@6.0.14
+
+## 19.0.15
+
+### Patch Changes
+
+- @pnpm/worker@1.0.12
+- @pnpm/prepare-package@6.0.14
+
+## 19.0.14
+
+### Patch Changes
+
+- @pnpm/error@6.0.2
+- @pnpm/prepare-package@6.0.14
+- @pnpm/worker@1.0.11
+
+## 19.0.13
+
+### Patch Changes
+
+- @pnpm/prepare-package@6.0.13
+- @pnpm/fetcher-base@16.0.7
+- @pnpm/core-loggers@10.0.7
+- @pnpm/worker@1.0.10
+
+## 19.0.12
+
+### Patch Changes
+
+- @pnpm/prepare-package@6.0.12
+- @pnpm/fetcher-base@16.0.6
+- @pnpm/core-loggers@10.0.6
+- @pnpm/worker@1.0.9
+
+## 19.0.11
+
+### Patch Changes
+
+- @pnpm/prepare-package@6.0.11
+- @pnpm/fetcher-base@16.0.5
+- @pnpm/core-loggers@10.0.5
+- @pnpm/worker@1.0.8
+
+## 19.0.10
+
+### Patch Changes
+
+- @pnpm/prepare-package@6.0.10
+
+## 19.0.9
+
+### Patch Changes
+
+- @pnpm/prepare-package@6.0.9
+- @pnpm/fetcher-base@16.0.4
+- @pnpm/core-loggers@10.0.4
+- @pnpm/worker@1.0.7
+
+## 19.0.8
+
+### Patch Changes
+
+- afe520d: Update rename-overwrite to v6.
+  - @pnpm/worker@1.0.6
+  - @pnpm/prepare-package@6.0.8
+
+## 19.0.7
+
+### Patch Changes
+
+- @pnpm/fetcher-base@16.0.3
+- @pnpm/prepare-package@6.0.7
+- @pnpm/core-loggers@10.0.3
+- @pnpm/worker@1.0.5
+
+## 19.0.6
+
+### Patch Changes
+
+- @pnpm/prepare-package@6.0.6
+- @pnpm/fetcher-base@16.0.2
+- @pnpm/core-loggers@10.0.2
+- @pnpm/worker@1.0.4
+
+## 19.0.5
+
+### Patch Changes
+
+- @pnpm/prepare-package@6.0.5
+
+## 19.0.4
+
+### Patch Changes
+
+- @pnpm/prepare-package@6.0.4
+- @pnpm/worker@1.0.3
+
+## 19.0.3
+
+### Patch Changes
+
+- @pnpm/prepare-package@6.0.3
+- @pnpm/fetcher-base@16.0.1
+- @pnpm/core-loggers@10.0.1
+- @pnpm/worker@1.0.2
+
+## 19.0.2
+
+### Patch Changes
+
+- Updated dependencies [a7aef51]
+  - @pnpm/error@6.0.1
+  - @pnpm/prepare-package@6.0.2
+  - @pnpm/worker@1.0.1
+
+## 19.0.1
+
+### Patch Changes
+
+- @pnpm/prepare-package@6.0.1
+
+## 19.0.0
+
+### Major Changes
+
+- 43cdd87: Node.js v16 support dropped. Use at least Node.js v18.12.
+
+### Minor Changes
+
+- b13d2dc: It is now possible to install only a subdirectory from a Git repository.
+
+  For example, `pnpm add github:user/repo#path:packages/foo` will add a dependency from the `packages/foo` subdirectory.
+
+  This new parameter may be combined with other supported parameters separated by `&`. For instance, the next command will install the same package from the `dev` branch: `pnpm add github:user/repo#dev&path:packages/bar`.
+
+  Related issue: [#4765](https://github.com/pnpm/pnpm/issues/4765).
+  Related PR: [#7487](https://github.com/pnpm/pnpm/pull/7487).
+
+- 730929e: Add a field named `ignoredOptionalDependencies`. This is an array of strings. If an optional dependency has its name included in this array, it will be skipped.
+
+### Patch Changes
+
+- 3ded840: Print the right error code when a package fails to be added to the store [#7679](https://github.com/pnpm/pnpm/issues/7679).
+- 36dcaa0: When installing git-hosted dependencies, only pick the files that would be packed with the package [#7638](https://github.com/pnpm/pnpm/pull/7638).
+- Updated dependencies [3ded840]
+- Updated dependencies [43cdd87]
+- Updated dependencies [167ac4d]
+- Updated dependencies [11d9ebd]
+- Updated dependencies [36dcaa0]
+- Updated dependencies [b13d2dc]
+- Updated dependencies [730929e]
+  - @pnpm/error@6.0.0
+  - @pnpm/worker@1.0.0
+  - @pnpm/fetching-types@6.0.0
+  - @pnpm/fetcher-base@16.0.0
+  - @pnpm/core-loggers@10.0.0
+  - @pnpm/prepare-package@6.0.0
+  - @pnpm/graceful-fs@4.0.0
+  - @pnpm/fs.packlist@2.0.0
+
+## 18.0.19
+
+### Patch Changes
+
+- @pnpm/fetcher-base@15.0.7
+- @pnpm/prepare-package@5.0.24
+- @pnpm/worker@0.3.14
+
+## 18.0.18
+
+### Patch Changes
+
+- 342222d20: A git-hosted dependency should not be added to the store if it failed to be built [#7407](https://github.com/pnpm/pnpm/pull/7407).
+  - @pnpm/prepare-package@5.0.23
+
+## 18.0.17
+
+### Patch Changes
+
+- @pnpm/worker@0.3.13
+
+## 18.0.16
+
+### Patch Changes
+
+- @pnpm/worker@0.3.12
+- @pnpm/prepare-package@5.0.22
+- @pnpm/fetcher-base@15.0.6
+- @pnpm/core-loggers@9.0.6
+
+## 18.0.15
+
+### Patch Changes
+
+- @pnpm/prepare-package@5.0.21
+- @pnpm/fetcher-base@15.0.5
+- @pnpm/core-loggers@9.0.5
+- @pnpm/worker@0.3.11
+
+## 18.0.14
+
+### Patch Changes
+
+- @pnpm/worker@0.3.10
+
+## 18.0.13
+
+### Patch Changes
+
+- Updated dependencies [1e7bd4af3]
+  - @pnpm/worker@0.3.9
+
+## 18.0.12
+
+### Patch Changes
+
+- abdf1f2b6: Don't retry fetching missing packages, since the retries will never work [#7276](https://github.com/pnpm/pnpm/pull/7276).
+  - @pnpm/prepare-package@5.0.20
+  - @pnpm/worker@0.3.8
+
+## 18.0.11
+
+### Patch Changes
+
+- @pnpm/prepare-package@5.0.19
+
+## 18.0.10
+
+### Patch Changes
+
+- @pnpm/fetcher-base@15.0.4
+- @pnpm/worker@0.3.7
+- @pnpm/prepare-package@5.0.18
+
+## 18.0.9
+
+### Patch Changes
+
+- @pnpm/prepare-package@5.0.17
+
+## 18.0.8
+
+### Patch Changes
+
+- Updated dependencies [6390033cd]
+  - @pnpm/worker@0.3.6
+  - @pnpm/prepare-package@5.0.16
+  - @pnpm/fetcher-base@15.0.3
+  - @pnpm/core-loggers@9.0.4
+
+## 18.0.7
+
+### Patch Changes
+
+- @pnpm/prepare-package@5.0.15
+
+## 18.0.6
+
+### Patch Changes
+
+- @pnpm/prepare-package@5.0.14
+- @pnpm/worker@0.3.5
+
+## 18.0.5
+
+### Patch Changes
+
+- Updated dependencies [08b65ff78]
+  - @pnpm/worker@0.3.4
+  - @pnpm/prepare-package@5.0.13
+
+## 18.0.4
+
+### Patch Changes
+
+- @pnpm/worker@0.3.3
+
+## 18.0.3
+
+### Patch Changes
+
+- @pnpm/worker@0.3.2
+
+## 18.0.2
+
+### Patch Changes
+
+- @pnpm/prepare-package@5.0.13
+- @pnpm/fetcher-base@15.0.2
+- @pnpm/core-loggers@9.0.3
+- @pnpm/worker@0.3.1
+
+## 18.0.1
+
+### Patch Changes
+
+- Updated dependencies [17d2ddb05]
+  - @pnpm/prepare-package@5.0.12
+
+## 18.0.0
+
+### Major Changes
+
+- 9caa33d53: `fromStore` replaced with `resolvedFrom`.
+
+### Patch Changes
+
+- Updated dependencies [9caa33d53]
+- Updated dependencies [9caa33d53]
+  - @pnpm/worker@0.3.0
+  - @pnpm/graceful-fs@3.2.0
+  - @pnpm/fetcher-base@15.0.1
+  - @pnpm/prepare-package@5.0.11
+
+## 17.0.1
+
+### Patch Changes
+
+- @pnpm/worker@0.2.1
+
+## 17.0.0
+
+### Patch Changes
+
+- Updated dependencies [03cdccc6e]
+- Updated dependencies [48dcd108c]
+  - @pnpm/worker@0.2.0
+  - @pnpm/fetcher-base@15.0.1
+  - @pnpm/prepare-package@5.0.10
+
+## 16.0.2
+
+### Patch Changes
+
+- @pnpm/worker@0.1.2
+- @pnpm/prepare-package@5.0.9
+
+## 16.0.1
+
+### Patch Changes
+
+- Updated dependencies [4a1a9431d]
+  - @pnpm/fetcher-base@15.0.1
+  - @pnpm/worker@0.1.1
+  - @pnpm/prepare-package@5.0.9
+
+## 16.0.0
+
+### Major Changes
+
+- 083bbf590: Breaking changes to the API.
+- 70b2830ac: Breaking changes to the API.
+
+### Patch Changes
+
+- 96e165c7f: Performance optimizations. Package tarballs are now download directly to memory and built to an ArrayBuffer. Hashing and other operations are avoided until the stream has been fully received [#6819](https://github.com/pnpm/pnpm/pull/6819).
+- Updated dependencies [70b2830ac]
+- Updated dependencies [083bbf590]
+- Updated dependencies [083bbf590]
+- Updated dependencies [083bbf590]
+  - @pnpm/fetcher-base@15.0.0
+  - @pnpm/worker@0.1.0
+  - @pnpm/graceful-fs@3.1.0
+  - @pnpm/prepare-package@5.0.8
+
+## 15.0.9
+
+### Patch Changes
+
+- 840b65bda: Report download progress less often to improve performance.
+
+## 15.0.8
+
+### Patch Changes
+
+- @pnpm/prepare-package@5.0.7
+
+## 15.0.7
+
+### Patch Changes
+
+- Updated dependencies [8452bb2d5]
+  - @pnpm/prepare-package@5.0.6
+
+## 15.0.6
+
+### Patch Changes
+
+- @pnpm/prepare-package@5.0.5
+- @pnpm/fetcher-base@14.0.2
+- @pnpm/core-loggers@9.0.2
+
+## 15.0.5
+
+### Patch Changes
+
+- @pnpm/prepare-package@5.0.4
+
+## 15.0.4
+
+### Patch Changes
+
+- @pnpm/prepare-package@5.0.3
+
+## 15.0.3
+
+### Patch Changes
+
+- @pnpm/error@5.0.2
+- @pnpm/prepare-package@5.0.2
+
+## 15.0.2
+
+### Patch Changes
+
+- d55b41a8b: Dependencies have been updated.
+  - @pnpm/prepare-package@5.0.1
+
+## 15.0.1
+
+### Patch Changes
+
+- @pnpm/prepare-package@5.0.1
+- @pnpm/fetcher-base@14.0.1
+- @pnpm/core-loggers@9.0.1
+- @pnpm/error@5.0.1
+
+## 15.0.0
+
+### Major Changes
+
+- eceaa8b8b: Node.js 14 support dropped.
+
+### Patch Changes
+
+- Updated dependencies [eceaa8b8b]
+  - @pnpm/fetching-types@5.0.0
+  - @pnpm/fetcher-base@14.0.0
+  - @pnpm/core-loggers@9.0.0
+  - @pnpm/prepare-package@5.0.0
+  - @pnpm/graceful-fs@3.0.0
+  - @pnpm/error@5.0.0
+
+## 14.1.4
+
+### Patch Changes
+
+- Updated dependencies [955874422]
+  - @pnpm/graceful-fs@2.1.0
+  - @pnpm/prepare-package@4.1.2
+
+## 14.1.3
+
+### Patch Changes
+
+- 2241f77ad: Print a hint that suggests to run `pnpm store prune`, when a tarball integrity error happens.
+
+## 14.1.2
+
+### Patch Changes
+
+- @pnpm/fetcher-base@13.1.6
+- @pnpm/prepare-package@4.1.1
+
+## 14.1.1
+
+### Patch Changes
+
+- 1e6de89b6: Update ssri to v10.0.1.
+  - @pnpm/prepare-package@4.1.0
+
+## 14.1.0
+
+### Minor Changes
+
+- c7b05cd9a: When ignoreScripts=true is passed to the fetcher, do not build git-hosted dependencies.
+
+### Patch Changes
+
+- Updated dependencies [c7b05cd9a]
+  - @pnpm/prepare-package@4.1.0
+  - @pnpm/error@4.0.1
+
+## 14.0.1
+
+### Patch Changes
+
+- ec97a3105: Print more contextual information when a git-hosted package fails to be prepared for installation [#5847](https://github.com/pnpm/pnpm/pull/5847).
+- Updated dependencies [ec97a3105]
+- Updated dependencies [40a481840]
+  - @pnpm/prepare-package@4.0.1
+
+## 14.0.0
+
+### Major Changes
+
+- 339c0a704: A new required option added to the prepare package function: rawConfig. It is needed in order to create a proper environment for the package manager executed during the preparation of a git-hosted dependency.
+
+### Patch Changes
+
+- Updated dependencies [339c0a704]
+- Updated dependencies [339c0a704]
+  - @pnpm/prepare-package@4.0.0
+
+## 13.0.3
+
+### Patch Changes
+
+- @pnpm/fetcher-base@13.1.5
+- @pnpm/core-loggers@8.0.3
+- @pnpm/prepare-package@3.0.4
+
 ## 13.0.2
 
 ### Patch Changes

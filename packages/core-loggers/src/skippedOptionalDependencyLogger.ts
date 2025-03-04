@@ -1,5 +1,5 @@
 import {
-  LogBase,
+  type LogBase,
   logger,
 } from '@pnpm/logger'
 
@@ -22,6 +22,7 @@ export type SkippedOptionalDependencyMessage = {
   | 'build_failure'
 } | {
   package: {
+    id?: never
     name: string | undefined
     version: string | undefined
     pref: string

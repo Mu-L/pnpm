@@ -19,6 +19,9 @@
       "path": "../../__utils__/test-fixtures"
     },
     {
+      "path": "../../__utils__/test-ipc-server"
+    },
+    {
       "path": "../../cli/cli-utils"
     },
     {
@@ -34,22 +37,40 @@
       "path": "../../config/matcher"
     },
     {
+      "path": "../../config/pick-registry-for-package"
+    },
+    {
+      "path": "../../dedupe/check"
+    },
+    {
+      "path": "../../deps/status"
+    },
+    {
+      "path": "../../env/plugin-commands-env"
+    },
+    {
       "path": "../../exec/plugin-commands-rebuild"
     },
     {
       "path": "../../fs/graceful-fs"
     },
     {
+      "path": "../../fs/read-modules-dir"
+    },
+    {
       "path": "../../hooks/pnpmfile"
     },
     {
-      "path": "../../lockfile/lockfile-types"
+      "path": "../../lockfile/types"
     },
     {
       "path": "../../packages/constants"
     },
     {
       "path": "../../packages/error"
+    },
+    {
+      "path": "../../packages/logger"
     },
     {
       "path": "../../packages/parse-wanted-dependency"
@@ -61,7 +82,13 @@
       "path": "../../pkg-manifest/manifest-utils"
     },
     {
+      "path": "../../pkg-manifest/read-package-json"
+    },
+    {
       "path": "../../pkg-manifest/read-project-manifest"
+    },
+    {
+      "path": "../../pkg-manifest/write-project-manifest"
     },
     {
       "path": "../../resolving/resolver-base"
@@ -76,19 +103,31 @@
       "path": "../../store/store-connection-manager"
     },
     {
+      "path": "../../workspace/filter-packages-from-dir"
+    },
+    {
       "path": "../../workspace/filter-workspace-packages"
+    },
+    {
+      "path": "../../workspace/find-packages"
     },
     {
       "path": "../../workspace/find-workspace-dir"
     },
     {
-      "path": "../../workspace/find-workspace-packages"
+      "path": "../../workspace/pkgs-graph"
     },
     {
       "path": "../../workspace/sort-packages"
     },
     {
+      "path": "../../workspace/state"
+    },
+    {
       "path": "../core"
+    },
+    {
+      "path": "../get-context"
     },
     {
       "path": "../modules-yaml"

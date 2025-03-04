@@ -1,14 +1,24 @@
+import type { Catalogs } from '@pnpm/catalogs.types'
 import {
-  Project,
-  ProjectManifest,
-  ProjectsGraph,
-  Registries,
+  type Project,
+  type ProjectManifest,
+  type ProjectsGraph,
+  type Registries,
+  type SslConfig,
 } from '@pnpm/types'
 import type { Hooks } from '@pnpm/pnpmfile'
+import { type OptionsFromRootManifest } from './getOptionsFromRootManifest'
 
 export type UniversalOptions = Pick<Config, 'color' | 'dir' | 'rawConfig' | 'rawLocalConfig'>
 
-export interface Config {
+export interface WantedPackageManager {
+  name: string
+  version?: string
+}
+
+export type VerifyDepsBeforeRun = 'install' | 'warn' | 'error' | 'prompt' | false
+
+export interface Config extends OptionsFromRootManifest {
   allProjects?: Project[]
   selectedProjectsGraph?: ProjectsGraph
   allProjectsGraph?: ProjectsGraph
@@ -19,8 +29,10 @@ export interface Config {
   color: 'always' | 'auto' | 'never'
   cliOptions: Record<string, any>, // eslint-disable-line
   useBetaCli: boolean
+  excludeLinksFromLockfile: boolean
   extraBinPaths: string[]
   extraEnv: Record<string, string>
+  failIfNoMatch: boolean
   filter: string[]
   filterProd: string[]
   rawLocalConfig: Record<string, any>, // eslint-disable-line
@@ -29,10 +41,12 @@ export interface Config {
   global?: boolean
   dir: string
   bin: string
+  verifyDepsBeforeRun?: VerifyDepsBeforeRun
   ignoreDepScripts?: boolean
   ignoreScripts?: boolean
   ignoreCompatibilityDb?: boolean
   includeWorkspaceRoot?: boolean
+  optimisticRepeatInstall?: boolean
   save?: boolean
   saveProd?: boolean
   saveDev?: boolean
@@ -70,6 +84,7 @@ export interface Config {
     name: string
     version: string
   }
+  wantedPackageManager?: WantedPackageManager
   preferOffline?: boolean
   sideEffectsCache?: boolean // for backward compatibility
   sideEffectsCacheReadonly?: boolean // for backward compatibility
@@ -84,9 +99,13 @@ export interface Config {
   useStderr?: boolean
   nodeLinker?: 'hoisted' | 'isolated' | 'pnp'
   preferSymlinkedExecutables?: boolean
-  resolutionMode?: 'highest' | 'time-based'
+  resolutionMode?: 'highest' | 'time-based' | 'lowest-direct'
   registrySupportsTimeField?: boolean
   failedToLoadBuiltInConfig: boolean
+  resolvePeersFromWorkspaceRoot?: boolean
+  deployAllFiles?: boolean
+  forceLegacyDeploy?: boolean
+  reporterHidePrefix?: boolean
 
   // proxy
   httpProxy?: string
@@ -116,20 +135,23 @@ export interface Config {
   fetchingConcurrency?: number
   lockfileOnly?: boolean // like npm's --package-lock-only
   childConcurrency?: number
-  repeatInstallDepth?: number
   ignorePnpmfile?: boolean
   pnpmfile: string
   hooks?: Hooks
   packageImportMethod?: 'auto' | 'hardlink' | 'copy' | 'clone' | 'clone-or-copy'
   hoistPattern?: string[]
-  publicHoistPattern?: string[]
+  publicHoistPattern?: string[] | string
+  hoistWorkspacePackages?: boolean
   useStoreServer?: boolean
   useRunningStoreServer?: boolean
   workspaceConcurrency: number
   workspaceDir?: string
+  workspacePackagePatterns?: string[]
+  catalogs?: Catalogs
   reporter?: string
   aggregateOutput: boolean
   linkWorkspacePackages: boolean | 'deep'
+  injectWorkspacePackages?: boolean
   preferWorkspacePackages: boolean
   reverse: boolean
   sort: boolean
@@ -150,25 +172,55 @@ export interface Config {
   enablePnp?: boolean
   enableModulesDir: boolean
   modulesCacheMaxAge: number
+  dlxCacheMaxAge: number
   embedReadme?: boolean
   gitShallowHosts?: string[]
   legacyDirFiltering?: boolean
   onlyBuiltDependencies?: string[]
+  dedupePeerDependents?: boolean
+  patchesDir?: string
+  ignoreWorkspaceCycles?: boolean
+  disallowWorkspaceCycles?: boolean
+  packGzipLevel?: number
 
   registries: Registries
+  sslConfigs: Record<string, SslConfig>
   ignoreWorkspaceRootCheck: boolean
   workspaceRoot: boolean
 
   testPattern?: string[]
   changedFilesIgnorePattern?: string[]
+  rootProjectManifestDir: string
   rootProjectManifest?: ProjectManifest
   userConfig: Record<string, string>
 
-  // feature flags for experimental testing
-  useInlineSpecifiersLockfileFormat?: boolean // For https://github.com/pnpm/pnpm/issues/4725
+  globalconfig: string
+  hoist: boolean
+  packageLock: boolean
+  pending: boolean
+  userconfig: string
+  workspacePrefix?: string
+  dedupeDirectDeps?: boolean
+  extendNodePath?: boolean
+  gitBranchLockfile?: boolean
+  globalDir?: string
+  globalPkgDir: string
+  lockfile?: boolean
+  dedupeInjectedDeps?: boolean
+  nodeOptions?: string
+  packageManagerStrict?: boolean
+  packageManagerStrictVersion?: boolean
+  virtualStoreDirMaxLength: number
+  peersSuffixMaxLength?: number
+  strictStorePkgContentCheck: boolean
+  managePackageManagerVersions: boolean
+  strictDepBuilds: boolean
+  syncInjectedDepsAfterScripts?: string[]
+  initPackageManager: boolean
 }
 
 export interface ConfigWithDeprecatedSettings extends Config {
   globalPrefix?: string
   proxy?: string
+  shamefullyFlatten?: boolean
 }

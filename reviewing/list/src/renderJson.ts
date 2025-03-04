@@ -1,12 +1,21 @@
 import { DEPENDENCIES_FIELDS } from '@pnpm/types'
-import { PackageNode } from 'dependencies-hierarchy'
+import { type PackageNode } from '@pnpm/reviewing.dependencies-hierarchy'
 import sortBy from 'ramda/src/sortBy'
 import path from 'ramda/src/path'
-import { Ord } from 'ramda'
-import { getPkgInfo } from './getPkgInfo'
-import { PackageDependencyHierarchy } from './types'
+import { type Ord } from 'ramda'
+import { getPkgInfo, type PkgInfo } from './getPkgInfo'
+import { type PackageDependencyHierarchy } from './types'
 
 const sortPackages = sortBy(path(['pkg', 'alias']) as (pkg: PackageNode) => Ord)
+
+type RenderJsonResultItem = Pick<PackageDependencyHierarchy, 'name' | 'version' | 'path'> &
+Required<Pick<PackageDependencyHierarchy, 'private'>> &
+{
+  dependencies?: Record<string, PackageJsonListItem>
+  devDependencies?: Record<string, PackageJsonListItem>
+  optionalDependencies?: Record<string, PackageJsonListItem>
+  unsavedDependencies?: Record<string, PackageJsonListItem>
+}
 
 export async function renderJson (
   pkgs: PackageDependencyHierarchy[],
@@ -15,19 +24,27 @@ export async function renderJson (
     long: boolean
     search: boolean
   }
-) {
+): Promise<string> {
   const jsonArr = await Promise.all(pkgs.map(async (pkg) => {
-    const jsonObj = {
+    const jsonObj: RenderJsonResultItem = {
       name: pkg.name,
       version: pkg.version,
       path: pkg.path,
       private: !!pkg.private,
     }
-    for (const dependenciesField of [...DEPENDENCIES_FIELDS.sort(), 'unsavedDependencies']) {
-      if (pkg[dependenciesField]?.length) {
-        jsonObj[dependenciesField] = await toJsonResult(pkg[dependenciesField], { long: opts.long })
-      }
-    }
+    Object.assign(jsonObj,
+      Object.fromEntries(
+        await Promise.all(
+          ([...DEPENDENCIES_FIELDS.sort(), 'unsavedDependencies'] as const)
+            .filter((dependenciesField) => pkg[dependenciesField]?.length)
+            .map(async (dependenciesField) => [
+              dependenciesField,
+              await toJsonResult(pkg[dependenciesField]!, { long: opts.long }),
+            ]
+            )
+        )
+      )
+    )
 
     return jsonObj
   }))
@@ -40,22 +57,22 @@ export async function toJsonResult (
   opts: {
     long: boolean
   }
-): Promise<{}> {
-  const dependencies = {}
+): Promise<Record<string, PackageJsonListItem>> {
+  const dependencies: Record<string, PackageJsonListItem> = {}
   await Promise.all(
     sortPackages(entryNodes).map(async (node) => {
       const subDependencies = await toJsonResult(node.dependencies ?? [], opts)
-      const dep = opts.long
+      const dep: PackageJsonListItem = opts.long
         ? await getPkgInfo(node)
         : {
           alias: node.alias as string | undefined,
           from: node.name,
           version: node.version,
-
           resolved: node.resolved,
+          path: node.path,
         }
       if (Object.keys(subDependencies).length > 0) {
-        dep['dependencies'] = subDependencies
+        dep.dependencies = subDependencies
       }
       if (!dep.resolved) {
         delete dep.resolved
@@ -65,4 +82,8 @@ export async function toJsonResult (
     })
   )
   return dependencies
+}
+
+interface PackageJsonListItem extends PkgInfo {
+  dependencies?: Record<string, PackageJsonListItem>
 }

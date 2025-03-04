@@ -1,11 +1,11 @@
-import { audit, AuditReport, AuditVulnerabilityCounts } from '@pnpm/audit'
+import { audit, type AuditLevelNumber, type AuditLevelString, type AuditReport, type AuditVulnerabilityCounts, type IgnoredAuditVulnerabilityCounts } from '@pnpm/audit'
 import { createGetAuthHeaderByURI } from '@pnpm/network.auth-header'
 import { docsUrl, TABLE_OPTIONS } from '@pnpm/cli-utils'
-import { Config, types as allTypes, UniversalOptions } from '@pnpm/config'
+import { type Config, types as allTypes, type UniversalOptions } from '@pnpm/config'
 import { WANTED_LOCKFILE } from '@pnpm/constants'
 import { PnpmError } from '@pnpm/error'
-import { readWantedLockfile } from '@pnpm/lockfile-file'
-import { Registries } from '@pnpm/types'
+import { readWantedLockfile } from '@pnpm/lockfile.fs'
+import { type Registries } from '@pnpm/types'
 import { table } from '@zkochan/table'
 import chalk from 'chalk'
 import difference from 'ramda/src/difference'
@@ -20,19 +20,31 @@ const AUDIT_LEVEL_NUMBER = {
   moderate: 1,
   high: 2,
   critical: 3,
-}
+} satisfies Record<AuditLevelString, AuditLevelNumber>
 
 const AUDIT_COLOR = {
   low: chalk.bold,
   moderate: chalk.bold.yellow,
   high: chalk.bold.red,
   critical: chalk.bold.red,
+} satisfies Record<AuditLevelString, chalk.Chalk>
+
+const AUDIT_TABLE_OPTIONS = {
+  ...TABLE_OPTIONS,
+  columns: {
+    1: {
+      width: 54, // = table width of 80
+      wrapWord: true,
+    },
+  },
 }
 // eslint-enable
 
+const MAX_PATHS_COUNT = 3
+
 export const rcOptionsTypes = cliOptionsTypes
 
-export function cliOptionsTypes () {
+export function cliOptionsTypes (): Record<string, unknown> {
   return {
     ...pick([
       'dev',
@@ -48,14 +60,14 @@ export function cliOptionsTypes () {
   }
 }
 
-export const shorthands = {
+export const shorthands: Record<string, string> = {
   D: '--dev',
   P: '--production',
 }
 
 export const commandNames = ['audit']
 
-export function help () {
+export function help (): string {
   return renderHelp({
     description: 'Checks for known security issues with the installed packages.',
     descriptionLists: [
@@ -129,8 +141,9 @@ export async function handler (
   | 'userConfig'
   | 'rawConfig'
   | 'rootProjectManifest'
+  | 'virtualStoreDirMaxLength'
   >
-) {
+): Promise<{ exitCode: number, output: string }> {
   const lockfileDir = opts.lockfileDir ?? opts.dir
   const lockfile = await readWantedLockfile(lockfileDir, { ignoreIncompatible: true })
   if (lockfile == null) {
@@ -167,6 +180,7 @@ export async function handler (
         retries: opts.fetchRetries,
       },
       timeout: opts.fetchTimeout,
+      virtualStoreDirMaxLength: opts.virtualStoreDirMaxLength,
     })
   } catch (err: any) { // eslint-disable-line
     if (opts.ignoreRegistryErrors) {
@@ -196,11 +210,34 @@ ${JSON.stringify(newOverrides, null, 2)}`,
     }
   }
   const vulnerabilities = auditReport.metadata.vulnerabilities
+  const ignoredVulnerabilities: IgnoredAuditVulnerabilityCounts = {
+    low: 0,
+    moderate: 0,
+    high: 0,
+    critical: 0,
+  }
   const totalVulnerabilityCount = Object.values(vulnerabilities)
     .reduce((sum: number, vulnerabilitiesCount: number) => sum + vulnerabilitiesCount, 0)
+  const ignoreGhsas = opts.rootProjectManifest?.pnpm?.auditConfig?.ignoreGhsas
+  if (ignoreGhsas) {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    auditReport.advisories = pickBy(({ github_advisory_id, severity }) => {
+      if (!ignoreGhsas.includes(github_advisory_id)) {
+        return true
+      }
+      ignoredVulnerabilities[severity as AuditLevelString] += 1
+      return false
+    }, auditReport.advisories)
+  }
   const ignoreCves = opts.rootProjectManifest?.pnpm?.auditConfig?.ignoreCves
   if (ignoreCves) {
-    auditReport.advisories = pickBy(({ cves }) => difference(cves, ignoreCves).length > 0, auditReport.advisories)
+    auditReport.advisories = pickBy(({ cves, severity }) => {
+      if (cves.length === 0 || difference(cves, ignoreCves).length > 0) {
+        return true
+      }
+      ignoredVulnerabilities[severity as AuditLevelString] += 1
+      return false
+    }, auditReport.advisories)
   }
   if (opts.json) {
     return {
@@ -216,26 +253,38 @@ ${JSON.stringify(newOverrides, null, 2)}`,
     .filter(({ severity }) => AUDIT_LEVEL_NUMBER[severity] >= auditLevel)
     .sort((a1, a2) => AUDIT_LEVEL_NUMBER[a2.severity] - AUDIT_LEVEL_NUMBER[a1.severity])
   for (const advisory of advisories) {
+    const paths = advisory.findings.map(({ paths }) => paths).flat()
     output += table([
       [AUDIT_COLOR[advisory.severity](advisory.severity), chalk.bold(advisory.title)],
       ['Package', advisory.module_name],
       ['Vulnerable versions', advisory.vulnerable_versions],
       ['Patched versions', advisory.patched_versions],
+      [
+        'Paths',
+        (paths.length > MAX_PATHS_COUNT
+          ? paths
+            .slice(0, MAX_PATHS_COUNT)
+            .concat([
+              `... Found ${paths.length} paths, run \`pnpm why ${advisory.module_name}\` for more information`,
+            ])
+          : paths
+        ).join('\n\n'),
+      ],
       ['More info', advisory.url],
-    ], TABLE_OPTIONS)
+    ], AUDIT_TABLE_OPTIONS)
   }
   return {
     exitCode: output ? 1 : 0,
-    output: `${output}${reportSummary(auditReport.metadata.vulnerabilities, totalVulnerabilityCount)}`,
+    output: `${output}${reportSummary(auditReport.metadata.vulnerabilities, totalVulnerabilityCount, ignoredVulnerabilities)}`,
   }
 }
 
-function reportSummary (vulnerabilities: AuditVulnerabilityCounts, totalVulnerabilityCount: number) {
+function reportSummary (vulnerabilities: AuditVulnerabilityCounts, totalVulnerabilityCount: number, ignoredVulnerabilities: IgnoredAuditVulnerabilityCounts): string {
   if (totalVulnerabilityCount === 0) return 'No known vulnerabilities found\n'
   return `${chalk.red(totalVulnerabilityCount)} vulnerabilities found\nSeverity: ${
     Object.entries(vulnerabilities)
       .filter(([auditLevel, vulnerabilitiesCount]) => vulnerabilitiesCount > 0)
-      .map(([auditLevel, vulnerabilitiesCount]: [string, number]) => AUDIT_COLOR[auditLevel](`${vulnerabilitiesCount} ${auditLevel}`))
+      .map(([auditLevel, vulnerabilitiesCount]) => AUDIT_COLOR[auditLevel as AuditLevelString](`${vulnerabilitiesCount as string} ${auditLevel}${ignoredVulnerabilities[auditLevel as AuditLevelString] > 0 ? ` (${ignoredVulnerabilities[auditLevel as AuditLevelString]} ignored)` : ''}`))
       .join(' | ')
   }`
 }

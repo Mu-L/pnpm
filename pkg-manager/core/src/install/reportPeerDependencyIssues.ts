@@ -1,6 +1,6 @@
 import { PnpmError } from '@pnpm/error'
 import { peerDependencyIssuesLogger } from '@pnpm/core-loggers'
-import { PeerDependencyIssuesByProjects } from '@pnpm/types'
+import { type PeerDependencyIssuesByProjects } from '@pnpm/types'
 import isEmpty from 'ramda/src/isEmpty'
 
 export function reportPeerDependencyIssues (
@@ -9,7 +9,7 @@ export function reportPeerDependencyIssues (
     lockfileDir: string
     strictPeerDependencies: boolean
   }
-) {
+): void {
   if (
     Object.values(peerDependencyIssuesByProjects).every((peerIssuesOfProject) =>
       isEmpty(peerIssuesOfProject.bad) && (

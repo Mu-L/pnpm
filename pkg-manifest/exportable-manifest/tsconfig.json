@@ -10,6 +10,18 @@
   ],
   "references": [
     {
+      "path": "../../__utils__/prepare"
+    },
+    {
+      "path": "../../catalogs/config"
+    },
+    {
+      "path": "../../catalogs/resolver"
+    },
+    {
+      "path": "../../catalogs/types"
+    },
+    {
       "path": "../../packages/error"
     },
     {

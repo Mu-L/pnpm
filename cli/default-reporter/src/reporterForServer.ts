@@ -1,13 +1,13 @@
-import { Config } from '@pnpm/config'
-import { Log } from '@pnpm/core-loggers'
-import * as Rx from 'rxjs'
+import { type Config } from '@pnpm/config'
+import { type Log } from '@pnpm/core-loggers'
+import type * as Rx from 'rxjs'
 import chalk from 'chalk'
 import { reportError } from './reportError'
 
 export function reporterForServer (
   log$: Rx.Observable<Log>,
   config?: Config
-) {
+): Rx.Subscription {
   return log$.subscribe({
     complete: () => undefined,
     error: () => undefined,
@@ -32,7 +32,7 @@ export function reporterForServer (
   })
 }
 
-function formatWarn (message: string) {
+function formatWarn (message: string): string {
   // The \u2009 is the "thin space" unicode character
   // It is used instead of ' ' because chalk (as of version 2.1.0)
   // trims whitespace at the beginning

@@ -1,36 +1,50 @@
+import assert from 'assert'
 import path from 'path'
-import { RecursiveSummary, throwOnCommandFail } from '@pnpm/cli-utils'
-import { Config } from '@pnpm/config'
+import util from 'util'
+import { throwOnCommandFail } from '@pnpm/cli-utils'
+import { type Config } from '@pnpm/config'
+import { prepareExecutionEnv } from '@pnpm/plugin-commands-env'
 import { PnpmError } from '@pnpm/error'
 import {
-  runLifecycleHook,
   makeNodeRequireOption,
-  RunLifecycleHookOptions,
+  type RunLifecycleHookOptions,
 } from '@pnpm/lifecycle'
 import { logger } from '@pnpm/logger'
+import { groupStart } from '@pnpm/log.group'
 import { sortPackages } from '@pnpm/sort-packages'
 import pLimit from 'p-limit'
 import realpathMissing from 'realpath-missing'
 import { existsInDir } from './existsInDir'
+import { createEmptyRecursiveSummary, getExecutionDuration, getResumedPackageChunks, writeRecursiveSummary } from './exec'
+import { type RunScriptOptions, runScript } from './run'
+import { tryBuildRegExpFromCommand } from './regexpCommand'
+import { type PackageScripts, type ProjectRootDir } from '@pnpm/types'
 
 export type RecursiveRunOpts = Pick<Config,
+| 'bin'
 | 'enablePrePostScripts'
 | 'unsafePerm'
+| 'pnpmHomeDir'
 | 'rawConfig'
+| 'rootProjectManifest'
 | 'scriptsPrependNodePath'
 | 'scriptShell'
 | 'shellEmulator'
 | 'stream'
-> & Required<Pick<Config, 'allProjects' | 'selectedProjectsGraph' | 'workspaceDir'>> &
-Partial<Pick<Config, 'extraBinPaths' | 'extraEnv' | 'bail' | 'reverse' | 'sort' | 'workspaceConcurrency'>> &
+| 'syncInjectedDepsAfterScripts'
+| 'workspaceDir'
+> & Required<Pick<Config, 'allProjects' | 'selectedProjectsGraph' | 'workspaceDir' | 'dir'>> &
+Partial<Pick<Config, 'extraBinPaths' | 'extraEnv' | 'bail' | 'reporter' | 'reverse' | 'sort' | 'workspaceConcurrency'>> &
 {
   ifPresent?: boolean
+  resumeFrom?: string
+  reportSummary?: boolean
 }
 
 export async function runRecursive (
   params: string[],
   opts: RecursiveRunOpts
-) {
+): Promise<void> {
   const [scriptName, ...passedThruArgs] = params
   if (!scriptName) {
     throw new PnpmError('SCRIPT_NAME_IS_REQUIRED', 'You must specify the script you want to run')
@@ -39,13 +53,16 @@ export async function runRecursive (
 
   const sortedPackageChunks = opts.sort
     ? sortPackages(opts.selectedProjectsGraph)
-    : [Object.keys(opts.selectedProjectsGraph).sort()]
-  const packageChunks = opts.reverse ? sortedPackageChunks.reverse() : sortedPackageChunks
+    : [(Object.keys(opts.selectedProjectsGraph) as ProjectRootDir[]).sort()]
+  let packageChunks: ProjectRootDir[][] = opts.reverse ? sortedPackageChunks.reverse() : sortedPackageChunks
 
-  const result = {
-    fails: [],
-    passes: 0,
-  } as RecursiveSummary
+  if (opts.resumeFrom) {
+    packageChunks = getResumedPackageChunks({
+      resumeFrom: opts.resumeFrom,
+      chunks: packageChunks,
+      selectedProjectsGraph: opts.selectedProjectsGraph,
+    })
+  }
 
   const limitRun = pLimit(opts.workspaceConcurrency ?? 4)
   const stdio =
@@ -55,10 +72,34 @@ export async function runRecursive (
       ? 'inherit'
       : 'pipe'
   const existsPnp = existsInDir.bind(null, '.pnp.cjs')
-  const workspacePnpPath = opts.workspaceDir && await existsPnp(opts.workspaceDir)
+  const workspacePnpPath = opts.workspaceDir && existsPnp(opts.workspaceDir)
+
+  const requiredScripts = opts.rootProjectManifest?.pnpm?.requiredScripts ?? []
+  if (requiredScripts.includes(scriptName)) {
+    const missingScriptPackages: string[] = packageChunks
+      .flat()
+      .map((prefix) => opts.selectedProjectsGraph[prefix])
+      .filter((pkg) => getSpecifiedScripts(pkg.package.manifest.scripts ?? {}, scriptName).length < 1)
+      .map((pkg) => pkg.package.manifest.name ?? pkg.package.rootDir)
+    if (missingScriptPackages.length) {
+      throw new PnpmError('RECURSIVE_RUN_NO_SCRIPT', `Missing script "${scriptName}" in packages: ${missingScriptPackages.join(', ')}`)
+    }
+  }
+
+  const result = createEmptyRecursiveSummary(packageChunks)
 
   for (const chunk of packageChunks) {
-    await Promise.all(chunk.map(async (prefix: string) =>
+    const selectedScripts = chunk.map(prefix => {
+      const pkg = opts.selectedProjectsGraph[prefix]
+      const specifiedScripts = getSpecifiedScripts(pkg.package.manifest.scripts ?? {}, scriptName)
+      if (!specifiedScripts.length) {
+        result[prefix].status = 'skipped'
+      }
+      return specifiedScripts.map(script => ({ prefix, scriptName: script }))
+    }).flat()
+
+    // eslint-disable-next-line no-await-in-loop
+    await Promise.all(selectedScripts.map(async ({ prefix, scriptName }) =>
       limitRun(async () => {
         const pkg = opts.selectedProjectsGraph[prefix]
         if (
@@ -68,6 +109,8 @@ export async function runRecursive (
         ) {
           return
         }
+        result[prefix].status = 'running'
+        const startTime = process.hrtime()
         hasCommand++
         try {
           const lifecycleOpts: RunLifecycleHookOptions = {
@@ -79,48 +122,64 @@ export async function runRecursive (
             rootModulesDir: await realpathMissing(path.join(prefix, 'node_modules')),
             scriptsPrependNodePath: opts.scriptsPrependNodePath,
             scriptShell: opts.scriptShell,
+            silent: opts.reporter === 'silent',
             shellEmulator: opts.shellEmulator,
             stdio,
             unsafePerm: true, // when running scripts explicitly, assume that they're trusted.
           }
-          const pnpPath = workspacePnpPath ?? await existsPnp(prefix)
+          const { executionEnv } = pkg.package.manifest.pnpm ?? {}
+          if (executionEnv != null) {
+            lifecycleOpts.extraBinPaths = (await prepareExecutionEnv(opts, { executionEnv })).extraBinPaths
+          }
+          const pnpPath = workspacePnpPath ?? existsPnp(prefix)
           if (pnpPath) {
             lifecycleOpts.extraEnv = {
               ...lifecycleOpts.extraEnv,
               ...makeNodeRequireOption(pnpPath),
             }
           }
-          if (
-            opts.enablePrePostScripts &&
-            pkg.package.manifest.scripts?.[`pre${scriptName}`] &&
-            !pkg.package.manifest.scripts[scriptName].includes(`pre${scriptName}`)
-          ) {
-            await runLifecycleHook(`pre${scriptName}`, pkg.package.manifest, lifecycleOpts)
+
+          const runScriptOptions: RunScriptOptions = {
+            enablePrePostScripts: opts.enablePrePostScripts ?? false,
+            syncInjectedDepsAfterScripts: opts.syncInjectedDepsAfterScripts,
+            workspaceDir: opts.workspaceDir,
           }
-          await runLifecycleHook(scriptName, pkg.package.manifest, { ...lifecycleOpts, args: passedThruArgs })
-          if (
-            opts.enablePrePostScripts &&
-            pkg.package.manifest.scripts?.[`post${scriptName}`] &&
-            !pkg.package.manifest.scripts[scriptName].includes(`post${scriptName}`)
-          ) {
-            await runLifecycleHook(`post${scriptName}`, pkg.package.manifest, lifecycleOpts)
+          const _runScript = runScript.bind(null, { manifest: pkg.package.manifest, lifecycleOpts, runScriptOptions, passedThruArgs })
+          const groupEnd = (opts.workspaceConcurrency ?? 4) > 1
+            ? undefined
+            : groupStart(formatSectionName({
+              name: pkg.package.manifest.name,
+              script: scriptName,
+              version: pkg.package.manifest.version,
+              prefix: path.normalize(path.relative(opts.workspaceDir, prefix)),
+            }))
+          await _runScript(scriptName)
+          groupEnd?.()
+          result[prefix].status = 'passed'
+          result[prefix].duration = getExecutionDuration(startTime)
+        } catch (err: unknown) {
+          assert(util.types.isNativeError(err))
+          result[prefix] = {
+            status: 'failure',
+            duration: getExecutionDuration(startTime),
+            error: err,
+            message: err.message,
+            prefix,
           }
-          result.passes++
-        } catch (err: any) { // eslint-disable-line
-          logger.info(err)
 
           if (!opts.bail) {
-            result.fails.push({
-              error: err,
-              message: err.message,
-              prefix,
-            })
             return
           }
 
-          err['code'] = 'ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL'
-          err['prefix'] = prefix
-          /* eslint-enable @typescript-eslint/dot-notation */
+          Object.assign(err, {
+            code: 'ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL',
+            prefix,
+          })
+          opts.reportSummary && await writeRecursiveSummary({
+            dir: opts.workspaceDir ?? opts.dir,
+            summary: result,
+          })
+
           throw err
         }
       }
@@ -138,6 +197,40 @@ export async function runRecursive (
       })
     }
   }
-
+  opts.reportSummary && await writeRecursiveSummary({
+    dir: opts.workspaceDir ?? opts.dir,
+    summary: result,
+  })
   throwOnCommandFail('pnpm recursive run', result)
+}
+
+function formatSectionName ({
+  script,
+  name,
+  version,
+  prefix,
+}: {
+  script?: string
+  name?: string
+  version?: string
+  prefix: string
+}) {
+  return `${name ?? 'unknown'}${version ? `@${version}` : ''} ${script ? `: ${script}` : ''} ${prefix}`
+}
+
+export function getSpecifiedScripts (scripts: PackageScripts, scriptName: string): string[] {
+  // if scripts in package.json has script which is equal to scriptName a user passes, return it.
+  if (scripts[scriptName]) {
+    return [scriptName]
+  }
+
+  const scriptSelector = tryBuildRegExpFromCommand(scriptName)
+
+  // if scriptName which a user passes is RegExp (like /build:.*/), multiple scripts to execute will be selected with RegExp
+  if (scriptSelector) {
+    const scriptKeys = Object.keys(scripts)
+    return scriptKeys.filter(script => script.match(scriptSelector))
+  }
+
+  return []
 }

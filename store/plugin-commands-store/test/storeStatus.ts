@@ -1,9 +1,9 @@
 import path from 'path'
-import { PnpmError } from '@pnpm/error'
+import { type PnpmError } from '@pnpm/error'
 import { store } from '@pnpm/plugin-commands-store'
 import { prepare } from '@pnpm/prepare'
 import { REGISTRY_MOCK_PORT } from '@pnpm/registry-mock'
-import rimraf from '@zkochan/rimraf'
+import { sync as rimraf } from '@zkochan/rimraf'
 import execa from 'execa'
 import tempy from 'tempy'
 
@@ -25,10 +25,10 @@ test('CLI fails when store status finds modified packages', async () => {
     '--verify-store-integrity',
   ])
 
-  await rimraf('node_modules/.pnpm/is-positive@3.1.0/node_modules/is-positive/index.js')
+  rimraf('node_modules/.pnpm/is-positive@3.1.0/node_modules/is-positive/index.js')
 
-  let err!: PnpmError
-  const modulesState = await project.readModulesManifest()
+  let err!: PnpmError & { modified: string[] }
+  const modulesState = project.readModulesManifest()
   try {
     await store.handler({
       cacheDir,
@@ -40,13 +40,15 @@ test('CLI fails when store status finds modified packages', async () => {
       registries: modulesState!.registries!,
       storeDir,
       userConfig: {},
+      dlxCacheMaxAge: 0,
+      virtualStoreDirMaxLength: process.platform === 'win32' ? 60 : 120,
     }, ['status'])
   } catch (_err: any) { // eslint-disable-line
     err = _err
   }
   expect(err.code).toBe('ERR_PNPM_MODIFIED_DEPENDENCY')
-  expect(err['modified'].length).toBe(1)
-  expect(err['modified'][0]).toMatch(/is-positive/)
+  expect(err.modified.length).toBe(1)
+  expect(err.modified[0]).toMatch(/is-positive/)
 })
 
 test('CLI does not fail when store status does not find modified packages', async () => {
@@ -80,7 +82,7 @@ test('CLI does not fail when store status does not find modified packages', asyn
     '--verify-store-integrity',
   ])
 
-  const modulesState = await project.readModulesManifest()
+  const modulesState = project.readModulesManifest()
   await store.handler({
     cacheDir,
     dir: process.cwd(),
@@ -91,5 +93,7 @@ test('CLI does not fail when store status does not find modified packages', asyn
     registries: modulesState!.registries!,
     storeDir,
     userConfig: {},
+    dlxCacheMaxAge: 0,
+    virtualStoreDirMaxLength: process.platform === 'win32' ? 60 : 120,
   }, ['status'])
 })

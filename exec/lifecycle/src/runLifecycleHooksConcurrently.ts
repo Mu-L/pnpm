@@ -1,10 +1,12 @@
 import fs from 'fs'
+import { linkBins } from '@pnpm/link-bins'
+import { logger } from '@pnpm/logger'
 import path from 'path'
 import { fetchFromDir } from '@pnpm/directory-fetcher'
-import { StoreController } from '@pnpm/store-controller-types'
-import { ProjectManifest } from '@pnpm/types'
+import { type StoreController } from '@pnpm/store-controller-types'
+import { type ProjectManifest, type ProjectRootDir } from '@pnpm/types'
 import runGroups from 'run-groups'
-import { runLifecycleHook, RunLifecycleHookOptions } from './runLifecycleHook'
+import { runLifecycleHook, type RunLifecycleHookOptions } from './runLifecycleHook'
 
 export type RunLifecycleHooksConcurrentlyOptions = Omit<RunLifecycleHookOptions,
 | 'depPath'
@@ -13,12 +15,14 @@ export type RunLifecycleHooksConcurrentlyOptions = Omit<RunLifecycleHookOptions,
 > & {
   resolveSymlinksInInjectedDirs?: boolean
   storeController: StoreController
+  extraNodePaths?: string[]
+  preferSymlinkedExecutables?: boolean
 }
 
 export interface Importer {
   buildIndex: number
   manifest: ProjectManifest
-  rootDir: string
+  rootDir: ProjectRootDir
   modulesDir: string
   stages?: string[]
   targetDirs?: string[]
@@ -29,7 +33,7 @@ export async function runLifecycleHooksConcurrently (
   importers: Importer[],
   childConcurrency: number,
   opts: RunLifecycleHooksConcurrentlyOptions
-) {
+): Promise<void> {
   const importersByBuildIndex = new Map<number, Importer[]>()
   for (const importer of importers) {
     if (!importersByBuildIndex.has(importer.buildIndex)) {
@@ -38,22 +42,34 @@ export async function runLifecycleHooksConcurrently (
       importersByBuildIndex.get(importer.buildIndex)!.push(importer)
     }
   }
-  const sortedBuildIndexes = Array.from(importersByBuildIndex.keys()).sort()
+  const sortedBuildIndexes = Array.from(importersByBuildIndex.keys()).sort((a, b) => a - b)
   const groups = sortedBuildIndexes.map((buildIndex) => {
     const importers = importersByBuildIndex.get(buildIndex)!
     return importers.map(({ manifest, modulesDir, rootDir, stages: importerStages, targetDirs }) =>
       async () => {
-        const runLifecycleHookOpts = {
+        // We are linking the bin files, in case they were created by lifecycle scripts of other workspace packages.
+        await linkBins(modulesDir, path.join(modulesDir, '.bin'), {
+          extraNodePaths: opts.extraNodePaths,
+          allowExoticManifests: true,
+          preferSymlinkedExecutables: opts.preferSymlinkedExecutables,
+          projectManifest: manifest,
+          warn: (message: string) => {
+            logger.warn({ message, prefix: rootDir })
+          },
+        })
+        const runLifecycleHookOpts: RunLifecycleHookOptions = {
           ...opts,
           depPath: rootDir,
           pkgRoot: rootDir,
           rootModulesDir: modulesDir,
         }
+        let isBuilt = false
         for (const stage of (importerStages ?? stages)) {
-          if ((manifest.scripts == null) || !manifest.scripts[stage]) continue
-          await runLifecycleHook(stage, manifest, runLifecycleHookOpts)
+          if (await runLifecycleHook(stage, manifest, runLifecycleHookOpts)) { // eslint-disable-line no-await-in-loop
+            isBuilt = true
+          }
         }
-        if (targetDirs == null || targetDirs.length === 0) return
+        if (targetDirs == null || targetDirs.length === 0 || !isBuilt) return
         const filesResponse = await fetchFromDir(rootDir, { resolveSymlinks: opts.resolveSymlinksInInjectedDirs })
         await Promise.all(
           targetDirs.map(async (targetDir) => {
@@ -68,7 +84,7 @@ export async function runLifecycleHooksConcurrently (
             }
             return opts.storeController.importPackage(targetDir, {
               filesResponse: {
-                fromStore: false,
+                resolvedFrom: 'local-dir',
                 ...filesResponse,
                 filesIndex: {
                   ...filesResponse.filesIndex,
@@ -85,7 +101,7 @@ export async function runLifecycleHooksConcurrently (
   await runGroups(childConcurrency, groups)
 }
 
-async function scanDir (prefix: string, rootDir: string, currentDir: string, index: Record<string, string>) {
+async function scanDir (prefix: string, rootDir: string, currentDir: string, index: Record<string, string>): Promise<void> {
   const files = await fs.promises.readdir(currentDir)
   await Promise.all(files.map(async (file) => {
     const fullPath = path.join(currentDir, file)

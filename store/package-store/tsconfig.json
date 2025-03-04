@@ -16,6 +16,9 @@
       "path": "../../fetching/fetcher-base"
     },
     {
+      "path": "../../packages/logger"
+    },
+    {
       "path": "../../packages/types"
     },
     {
@@ -26,6 +29,9 @@
     },
     {
       "path": "../../resolving/resolver-base"
+    },
+    {
+      "path": "../../worker"
     },
     {
       "path": "../cafs"

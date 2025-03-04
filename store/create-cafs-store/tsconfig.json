@@ -13,10 +13,16 @@
       "path": "../../__utils__/prepare"
     },
     {
+      "path": "../../exec/pkg-requires-build"
+    },
+    {
       "path": "../../fetching/fetcher-base"
     },
     {
       "path": "../../fs/indexed-pkg-importer"
+    },
+    {
+      "path": "../../packages/logger"
     },
     {
       "path": "../cafs"
