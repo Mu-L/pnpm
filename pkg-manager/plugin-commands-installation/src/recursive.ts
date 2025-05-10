@@ -4,7 +4,13 @@ import {
   type RecursiveSummary,
   throwOnCommandFail,
 } from '@pnpm/cli-utils'
-import { type Config, getOptionsFromRootManifest, readLocalConfig } from '@pnpm/config'
+import {
+  type Config,
+  type OptionsFromRootManifest,
+  getOptionsFromRootManifest,
+  getWorkspaceConcurrency,
+  readLocalConfig,
+} from '@pnpm/config'
 import { PnpmError } from '@pnpm/error'
 import { arrayOfWorkspacePackagesToMap } from '@pnpm/get-context'
 import { logger } from '@pnpm/logger'
@@ -289,7 +295,7 @@ export async function recursive (
 
   const pkgPaths = (Object.keys(opts.selectedProjectsGraph) as ProjectRootDir[]).sort()
 
-  const limitInstallation = pLimit(opts.workspaceConcurrency ?? 4)
+  const limitInstallation = pLimit(getWorkspaceConcurrency(opts.workspaceConcurrency))
   await Promise.all(pkgPaths.map(async (rootDir) =>
     limitInstallation(async () => {
       const hooks = opts.ignorePnpmfile
@@ -325,10 +331,24 @@ export async function recursive (
           }
         }
 
-        let action!: any // eslint-disable-line @typescript-eslint/no-explicit-any
+        type ActionOpts =
+          & Omit<InstallOptions, 'allProjects'>
+          & OptionsFromRootManifest
+          & Project
+          & Pick<Config, 'bin'>
+          & { pinnedVersion: 'major' | 'minor' | 'patch' }
+
+        interface ActionResult {
+          updatedManifest: ProjectManifest
+          ignoredBuilds: string[] | undefined
+        }
+
+        type ActionFunction = (manifest: PackageManifest | ProjectManifest, opts: ActionOpts) => Promise<ActionResult>
+
+        let action: ActionFunction
         switch (cmdFullName) {
         case 'remove':
-          action = async (manifest: PackageManifest, opts: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+          action = async (manifest, opts) => {
             const mutationResult = await mutateModules([
               {
                 dependencyNames: currentInput,
@@ -342,7 +362,7 @@ export async function recursive (
         default:
           action = currentInput.length === 0
             ? install
-            : async (manifest: PackageManifest, opts: any) => addDependenciesToPackage(manifest, currentInput, opts) // eslint-disable-line @typescript-eslint/no-explicit-any
+            : async (manifest, opts) => addDependenciesToPackage(manifest, currentInput, opts)
           break
         }
 

@@ -92,7 +92,7 @@ export interface Config extends OptionsFromRootManifest {
   sideEffectsCacheWrite?: boolean
   shamefullyHoist?: boolean
   dev?: boolean
-  ignoreCurrentPrefs?: boolean
+  ignoreCurrentSpecifiers?: boolean
   recursive?: boolean
   enablePrePostScripts?: boolean
   useNodeVersion?: string
@@ -218,6 +218,8 @@ export interface Config extends OptionsFromRootManifest {
   strictDepBuilds: boolean
   syncInjectedDepsAfterScripts?: string[]
   initPackageManager: boolean
+  initType: 'commonjs' | 'module'
+  dangerouslyAllowAllBuilds: boolean
 }
 
 export interface ConfigWithDeprecatedSettings extends Config {

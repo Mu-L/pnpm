@@ -29,7 +29,7 @@ import {
   type VerifyDepsBeforeRun,
   type WantedPackageManager,
 } from './Config'
-import { getWorkspaceConcurrency } from './concurrency'
+import { getDefaultWorkspaceConcurrency, getWorkspaceConcurrency } from './concurrency'
 import { readWorkspaceManifest } from '@pnpm/workspace.read-manifest'
 
 import { types } from './types'
@@ -38,6 +38,7 @@ export { types }
 
 export { getOptionsFromRootManifest, getOptionsFromPnpmSettings, type OptionsFromRootManifest } from './getOptionsFromRootManifest'
 export * from './readLocalConfig'
+export { getDefaultWorkspaceConcurrency, getWorkspaceConcurrency } from './concurrency'
 
 export type { Config, UniversalOptions, WantedPackageManager, VerifyDepsBeforeRun }
 
@@ -121,6 +122,7 @@ export async function getConfig (opts: {
     'auto-install-peers': true,
     bail: true,
     color: 'auto',
+    'dangerously-allow-all-builds': false,
     'deploy-all-files': false,
     'dedupe-peer-dependents': true,
     'dedupe-direct-deps': false,
@@ -154,6 +156,7 @@ export async function getConfig (opts: {
     'ignore-workspace-root-check': false,
     'optimistic-repeat-install': false,
     'init-package-manager': true,
+    'init-type': 'commonjs',
     'inject-workspace-packages': false,
     'link-workspace-packages': false,
     'lockfile-include-tarball-url': false,
@@ -189,7 +192,7 @@ export async function getConfig (opts: {
     'verify-deps-before-run': false,
     'verify-store-integrity': true,
     'virtual-store-dir': 'node_modules/.pnpm',
-    'workspace-concurrency': 4,
+    'workspace-concurrency': getDefaultWorkspaceConcurrency(),
     'workspace-prefix': opts.workspaceDir,
     'embed-readme': false,
     'registry-supports-time-field': false,
@@ -242,7 +245,10 @@ export async function getConfig (opts: {
     ? pnpmConfig.rawLocalConfig['user-agent']
     : `${packageManager.name}/${packageManager.version} npm/? node/${process.version} ${process.platform} ${process.arch}`
   pnpmConfig.rawConfig = Object.assign.apply(Object, [
-    { registry: 'https://registry.npmjs.org/' },
+    {
+      registry: 'https://registry.npmjs.org/',
+      '@jsr:registry': 'https://npm.jsr.io/',
+    },
     ...[...npmConfig.list].reverse(),
     cliOptions,
     { 'user-agent': pnpmConfig.userAgent },
@@ -290,7 +296,7 @@ export async function getConfig (opts: {
     }
     pnpmConfig.save = true
     pnpmConfig.allowNew = true
-    pnpmConfig.ignoreCurrentPrefs = true
+    pnpmConfig.ignoreCurrentSpecifiers = true
     pnpmConfig.saveProd = true
     pnpmConfig.saveDev = false
     pnpmConfig.saveOptional = false
@@ -514,6 +520,13 @@ export async function getConfig (opts: {
   } else {
     pnpmConfig.production = true
     pnpmConfig.dev = true
+  }
+
+  if (pnpmConfig.dangerouslyAllowAllBuilds) {
+    if (pnpmConfig.neverBuiltDependencies && pnpmConfig.neverBuiltDependencies.length > 0) {
+      warnings.push('You have set dangerouslyAllowAllBuilds to true. The dependencies listed in neverBuiltDependencies will run their scripts.')
+    }
+    pnpmConfig.neverBuiltDependencies = []
   }
 
   transformPathKeys(pnpmConfig, os.homedir())

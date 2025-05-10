@@ -13,6 +13,7 @@ export function rcOptionsTypes (): Record<string, unknown> {
   return pick([
     'cache-dir',
     'child-concurrency',
+    'dangerously-allow-all-builds',
     'dev',
     'engine-strict',
     'fetch-retries',
@@ -315,6 +316,7 @@ export type InstallCommandOptions = Pick<Config,
 | 'resolutionMode'
 | 'ignoreWorkspaceCycles'
 | 'disallowWorkspaceCycles'
+| 'updateConfig'
 > & CreateStoreControllerOptions & {
   argv: {
     original: string[]

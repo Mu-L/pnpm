@@ -1,5 +1,38 @@
 # @pnpm/cli-utils
 
+## 1000.1.3
+
+### Patch Changes
+
+- Updated dependencies [e5c58f0]
+  - @pnpm/pnpmfile@1001.2.0
+  - @pnpm/config@1003.0.1
+  - @pnpm/config.deps-installer@1000.0.3
+  - @pnpm/default-reporter@1001.4.3
+  - @pnpm/store-connection-manager@1002.0.1
+
+## 1000.1.2
+
+### Patch Changes
+
+- Updated dependencies [56bb69b]
+- Updated dependencies [8a9f3a4]
+- Updated dependencies [5b73df1]
+- Updated dependencies [5b73df1]
+- Updated dependencies [9c3dd03]
+- Updated dependencies [5b73df1]
+  - @pnpm/config@1003.0.0
+  - @pnpm/logger@1001.0.0
+  - @pnpm/manifest-utils@1001.0.0
+  - @pnpm/store-connection-manager@1002.0.0
+  - @pnpm/types@1000.5.0
+  - @pnpm/default-reporter@1001.4.2
+  - @pnpm/config.deps-installer@1000.0.2
+  - @pnpm/pnpmfile@1001.1.2
+  - @pnpm/package-is-installable@1000.0.9
+  - @pnpm/cli-meta@1000.0.7
+  - @pnpm/read-project-manifest@1000.0.10
+
 ## 1000.1.1
 
 ### Patch Changes

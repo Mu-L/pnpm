@@ -2,4 +2,4 @@
 "@pnpm/types": minor
 ---
 
-Added `PinnedVersion`.
+Export AuditConfig.

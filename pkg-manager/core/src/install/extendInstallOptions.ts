@@ -13,6 +13,7 @@ import {
   type SupportedArchitectures,
   type AllowedDeprecatedVersions,
   type PackageExtension,
+  type PeerDependencyRules,
   type ReadPackageHook,
   type Registries,
   type PrepareExecutionEnv,
@@ -92,7 +93,7 @@ export interface StrictInstallOptions {
   strictPeerDependencies: boolean
   include: IncludedDependencies
   includeDirect: IncludedDependencies
-  ignoreCurrentPrefs: boolean
+  ignoreCurrentSpecifiers: boolean
   ignoreScripts: boolean
   childConcurrency: number
   userAgent: string
@@ -111,6 +112,7 @@ export interface StrictInstallOptions {
   symlink: boolean
   enableModulesDir: boolean
   modulesCacheMaxAge: number
+  peerDependencyRules: PeerDependencyRules
   allowedDeprecatedVersions: AllowedDeprecatedVersions
   ignorePatchFailures?: boolean
   allowUnusedPatches: boolean
@@ -186,7 +188,7 @@ const defaults = (opts: InstallOptions): StrictInstallOptions => {
     hoistPattern: undefined,
     publicHoistPattern: undefined,
     hooks: {},
-    ignoreCurrentPrefs: false,
+    ignoreCurrentSpecifiers: false,
     ignoreDepScripts: false,
     ignoreScripts: false,
     include: {
