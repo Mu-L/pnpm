@@ -175,6 +175,7 @@ export async function getConfig (opts: {
     'resolution-mode': 'highest',
     'resolve-peers-from-workspace-root': true,
     'save-peer': false,
+    'save-catalog-name': undefined,
     'save-workspace-protocol': 'rolling',
     'scripts-prepend-node-path': false,
     'strict-dep-builds': false,
@@ -288,6 +289,7 @@ export async function getConfig (opts: {
   }
   pnpmConfig.globalPkgDir = path.join(globalDirRoot, LAYOUT_VERSION.toString())
   if (cliOptions['global']) {
+    delete pnpmConfig.workspaceDir
     pnpmConfig.dir = pnpmConfig.globalPkgDir
     pnpmConfig.bin = npmConfig.get('global-bin-dir') ?? env.PNPM_HOME
     if (pnpmConfig.bin) {
@@ -387,7 +389,7 @@ export async function getConfig (opts: {
     pnpmConfig.filterProd = (pnpmConfig.filterProd as string).split(' ')
   }
 
-  if (!pnpmConfig.ignoreScripts && pnpmConfig.workspaceDir) {
+  if (pnpmConfig.workspaceDir) {
     pnpmConfig.extraBinPaths = [path.join(pnpmConfig.workspaceDir, 'node_modules', '.bin')]
   } else {
     pnpmConfig.extraBinPaths = []
