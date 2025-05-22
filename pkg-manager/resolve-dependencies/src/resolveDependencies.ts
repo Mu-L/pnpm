@@ -204,6 +204,7 @@ export type PkgAddress = {
   catalogLookup?: CatalogLookupMetadata
   optional: boolean
   normalizedBareSpecifier?: string
+  saveCatalogName?: string
 } & ({
   isLinkedDependency: true
   version: string
@@ -638,7 +639,7 @@ export async function resolveDependencies (
   const postponedResolutionsQueue: PostponedResolutionFunction[] = []
   const postponedPeersResolutionQueue: PostponedPeersResolutionFunction[] = []
   const pkgAddresses: PkgAddress[] = []
-  ;(await Promise.all(
+  await Promise.all(
     extendedWantedDeps.map(async (extendedWantedDep) => {
       const {
         resolveDependencyResult,
@@ -660,7 +661,7 @@ export async function resolveDependencies (
         postponedPeersResolutionQueue.push(postponedPeersResolution)
       }
     })
-  ))
+  )
   const newPreferredVersions = Object.create(preferredVersions) as PreferredVersions
   const currentParentPkgAliases: Record<string, PkgAddress | true> = {}
   for (const pkgAddress of pkgAddresses) {
@@ -1565,6 +1566,9 @@ async function resolveDependency (
       }
     }
   }
+
+  const resolvedPkg = ctx.resolvedPkgsById[pkgResponse.body.id]
+
   return {
     alias: wantedDependency.alias ?? pkgResponse.body.alias ?? pkg.name,
     depIsLinked,
@@ -1576,7 +1580,9 @@ async function resolveDependency (
     pkgId: pkgResponse.body.id,
     rootDir,
     missingPeers: getMissingPeers(pkg),
-    optional: ctx.resolvedPkgsById[pkgResponse.body.id].optional,
+    optional: resolvedPkg.optional,
+    version: resolvedPkg.version,
+    saveCatalogName: wantedDependency.saveCatalogName,
 
     // Next fields are actually only needed when isNew = true
     installable,

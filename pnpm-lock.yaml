@@ -4499,6 +4499,9 @@ importers:
       '@pnpm/catalogs.protocol-parser':
         specifier: workspace:*
         version: link:../../catalogs/protocol-parser
+      '@pnpm/catalogs.resolver':
+        specifier: workspace:*
+        version: link:../../catalogs/resolver
       '@pnpm/catalogs.types':
         specifier: workspace:*
         version: link:../../catalogs/types
@@ -5472,6 +5475,9 @@ importers:
       '@pnpm/workspace.find-packages':
         specifier: workspace:*
         version: link:../../workspace/find-packages
+      '@pnpm/workspace.manifest-writer':
+        specifier: workspace:*
+        version: link:../../workspace/manifest-writer
       '@pnpm/workspace.pkgs-graph':
         specifier: workspace:*
         version: link:../../workspace/pkgs-graph
@@ -8273,6 +8279,9 @@ importers:
       '@pnpm/constants':
         specifier: workspace:*
         version: link:../../packages/constants
+      '@pnpm/lockfile.types':
+        specifier: workspace:*
+        version: link:../../lockfile/types
       '@pnpm/object.key-sorting':
         specifier: workspace:*
         version: link:../../object/key-sorting

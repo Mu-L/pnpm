@@ -52,6 +52,7 @@ export interface Config extends OptionsFromRootManifest {
   saveDev?: boolean
   saveOptional?: boolean
   savePeer?: boolean
+  saveCatalogName?: string
   saveWorkspaceProtocol?: boolean | 'rolling'
   lockfileIncludeTarballUrl?: boolean
   scriptShell?: string
@@ -148,6 +149,7 @@ export interface Config extends OptionsFromRootManifest {
   workspaceDir?: string
   workspacePackagePatterns?: string[]
   catalogs?: Catalogs
+  catalogMode?: 'strict' | 'prefer' | 'manual'
   reporter?: string
   aggregateOutput: boolean
   linkWorkspacePackages: boolean | 'deep'
